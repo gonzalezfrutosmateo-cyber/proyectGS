@@ -258,3 +258,132 @@ table tbody tr.highlight {
         padding: 0.5rem;
     }
 }
+
+:root {
+    --ink: #17263c;
+    --paper: #f4efe6;
+    --paper-light: #fffdf8;
+    --line: #d9d0c2;
+    --coral: #d66a4b;
+    --gold: #d5a64a;
+}
+
+/* Archivo historico: una portada mas calida y editorial */
+
+/* body es la fuente de la pagina, con tipografia serif y colores suaves para la lectura :3 */
+body { font-family: Georgia, 'Times New Roman', serif; 
+    color: var(--ink); 
+    background: var(--paper); 
+    background-image: radial-gradient(rgba(23, 38, 60, 0.06) 0.7px, transparent 0.7px); 
+    background-size: 9px 9px; }
+
+    /* Navbar es la barra de navegacion, con fondo oscuro y sombra para resaltar */
+.navbar { background: var(--ink); 
+    box-shadow: 0 4px 18px rgba(23, 38, 60, 0.2); }
+
+.nav-container { padding: 1.1rem 2rem; }
+
+/* Logo es el nombre del sitio, con tipografia serif y un punto dorado antes del texto */
+.logo { font-family: Georgia, 'Times New Roman', serif; 
+    font-size: 1.35rem; 
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem; }
+
+.logo img { width: 38px; 
+    height: 38px; 
+    object-fit: contain; }
+
+.nav-links { gap: 1.65rem; }
+
+.nav-links a { color: #e9edf2; 
+    font-family: 'Trebuchet MS', sans-serif; 
+    font-size: 0.88rem; }
+
+.nav-links a:hover, .nav-links a.active { color: #f2c66d; }
+
+.nav-links a.active { border-bottom-color: #f2c66d; }
+
+/* Main es el contenedor principal de la pagina, con ancho maximo y padding para separar del borde */
+main { max-width: 1240px; 
+    padding: 3.2rem 2rem 4rem; }
+
+/* Hero es la seccion principal de la pagina, con fondo oscuro y texto claro, con padding y borde redondeado */
+.hero { background: var(--ink); 
+    color: var(--paper-light); 
+    text-align: left; padding: clamp(2.5rem, 7vw, 5rem) clamp(1.5rem, 7vw, 6rem); 
+    border-radius: 2px 38px 2px 38px; 
+    box-shadow: 14px 14px 0 var(--coral); }
+
+.hero h2 { max-width: 720px; 
+    font-size: clamp(2.2rem, 5vw, 4rem); 
+    line-height: 1.02; 
+    font-weight: normal; }
+
+.hero p { max-width: 620px;
+    margin: 1.4rem 0 0; 
+    color: #d9e0e8; 
+    font: 1rem/1.7 'Trebuchet MS', sans-serif; }
+
+    /* h3 es un subtitulo, con color oscuro y tamaño grande para resaltar */
+h3 { color: var(--ink); 
+    font-size: 2rem; 
+    font-weight: normal; }
+
+/* Secciones de busqueda, tarjetas y arbitros, con fondo claro y borde redondeado, con sombra para resaltar */
+.search-section, .card, .arbitros-section { background: var(--paper-light); 
+    border: 1px solid var(--line); 
+    border-radius: 2px 18px 2px 18px; 
+    box-shadow: 8px 8px 0 rgba(23, 38, 60, 0.08); }
+
+.search-section, .card { padding: 1.7rem; }
+
+.search-form input, .search-form select { min-height: 45px; 
+    border: 1px solid var(--line); 
+    border-radius: 2px; 
+    background: #fffefa; 
+    color: var(--ink); 
+    font-family: 'Trebuchet MS', sans-serif; }
+
+.search-form button { min-height: 45px; 
+    background: var(--coral); 
+    border-radius: 2px; 
+    font-family: 'Trebuchet MS', sans-serif; }
+
+.search-form button:hover { background: var(--ink); }
+
+/* Card h4 y Arbitros-section h4 son los titulos de las tarjetas y secciones de arbitros, con color oscuro y borde inferior dorado */
+.card h4, .arbitros-section h4 { color: var(--ink); border-bottom-color: var(--gold); 
+    font-size: 1.35rem; 
+    font-weight: normal; }
+
+/* Table-container es el contenedor de la tabla, con borde y borde redondeado, sin sombra */
+.table-container { border: 1px solid var(--line); 
+    border-radius: 2px; 
+    box-shadow: none; }
+
+table thead { background: var(--ink); }
+
+table th { font-family: 'Trebuchet MS', sans-serif; 
+    font-size: 0.78rem; 
+    letter-spacing: 0.04em; 
+    text-transform: uppercase; }
+
+table td { border-bottom-color: var(--line); 
+    font-family: 'Trebuchet MS', sans-serif; 
+    font-size: 0.9rem; }
+
+table tbody tr:hover { background: #fff5e7; }
+
+/* Arbitros-list li es cada elemento de la lista de arbitros, con fondo claro y borde izquierdo coral, con borde redondeado y tipografia sans-serif */
+.arbitros-list li { background: #f9f2e8; 
+    border-left-color: var(--coral); 
+    border-radius: 2px; 
+    font-family: 'Trebuchet MS', sans-serif; }
+
+    /* Media queries para pantallas pequeñas, ajustando el tamaño de la hero y las secciones de busqueda, tarjetas y arbitros */
+@media (max-width: 768px) {
+    .hero { box-shadow: 8px 8px 0 var(--coral); }
+    .search-section, .card, .arbitros-section { box-shadow: 4px 4px 0 rgba(23, 38, 60, 0.08); }
+}

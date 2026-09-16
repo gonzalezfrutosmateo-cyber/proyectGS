@@ -245,3 +245,142 @@ table tbody tr.highlight {
         padding: 0.5rem;
     }
 }
+
+:root {
+    --ink: #17263c;
+    --ink-soft: #3c526d;
+    --paper: #f4efe6;
+    --paper-light: #fffdf8;
+    --line: #d9d0c2;
+    --coral: #d66a4b;
+    --gold: #d5a64a;
+}
+
+/* Archivo historico: una portada mas calida y editorial. */
+
+/* El body y la tipografía se ajustan para dar una sensación más cálida y editorial, con colores suaves y un fondo de papel. :3 siu*/
+
+
+body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--ink);
+    background: var(--paper);
+    background-image: radial-gradient(rgba(23, 38, 60, 0.06) 0.7px, transparent 0.7px);
+    background-size: 9px 9px;
+}
+
+/* Navbar se ajusta para mantener la coherencia con el tema editorial, con un fondo oscuro y sombra sutil. */
+
+.navbar { background: var(--ink); 
+    box-shadow: 0 4px 18px rgba(23, 38, 60, 0.2); }
+
+    /* El contenedor de navegación se centra y se ajusta para mantener la coherencia con el diseño general. */
+.nav-container { padding: 1.1rem 2rem; }
+
+/* Logo se ajusta para mantener la coherencia con el tema editorial, con tipografía serif y un punto dorado antes del texto. */
+.logo { font-family: Georgia, 'Times New Roman', serif; 
+    font-size: 1.35rem; 
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem; }
+
+.logo img { width: 38px; 
+    height: 38px; 
+    object-fit: contain; }
+
+    /* Los enlaces de navegación se ajustan para mantener la coherencia con el tema editorial, con colores suaves y tipografía sans-serif. */
+.nav-links { gap: 1.65rem; }
+
+.nav-links a { color: #e9edf2; 
+    font-family: 'Trebuchet MS', sans-serif; 
+    font-size: 0.88rem; }
+
+.nav-links a:hover, .nav-links a.active { color: #f2c66d; }
+
+.nav-links a.active { border-bottom-color: #f2c66d; }
+
+/* Main se ajusta para mantener la coherencia con el tema editorial, con un ancho máximo y relleno adecuado. */
+
+main { max-width: 1240px; 
+    padding: 3.2rem 2rem 4rem; }
+
+    /* Hero se ajusta para mantener la coherencia con el tema editorial, con un fondo oscuro y texto claro, y un diseño atractivo. */
+.hero { background: var(--ink); 
+    color: var(--paper-light); 
+    text-align: left; 
+    padding: clamp(2.5rem, 7vw, 5rem) clamp(1.5rem, 7vw, 6rem); border-radius: 2px 38px 2px 38px; 
+    box-shadow: 14px 14px 0 var(--coral); }
+
+.hero h2 { max-width: 720px; 
+    font-size: clamp(2.2rem, 5vw, 4rem); 
+    line-height: 1.02; 
+    font-weight: normal; }
+
+.hero p { max-width: 620px; 
+    margin: 1.4rem 0 0; 
+    color: #d9e0e8; 
+    font: 1rem/1.7 'Trebuchet MS', sans-serif; }
+
+h3 { color: var(--ink); 
+    font-size: 2rem; 
+    font-weight: normal; }
+
+    /* Secciones de búsqueda y tarjetas se ajustan para mantener la coherencia con el tema editorial, con fondos claros, bordes suaves y sombras sutiles. */
+.search-section, .card { background: var(--paper-light); 
+    border: 1px solid var(--line); 
+    border-radius: 2px 18px 2px 18px; 
+    box-shadow: 8px 8px 0 rgba(23, 38, 60, 0.08); }
+
+.search-section { padding: 1.7rem; }
+
+.search-form input, .search-form select { min-height: 45px; 
+    border: 1px solid var(--line); 
+    border-radius: 2px; 
+    background: #fffefa; 
+    color: var(--ink); 
+    font-family: 'Trebuchet MS', sans-serif; }
+
+.search-form input:focus, .search-form select:focus { outline: 2px solid rgba(214, 106, 75, 0.35); 
+    border-color: var(--coral); }
+
+.search-form button { min-height: 45px; 
+    background: var(--coral); 
+    border-radius: 2px; 
+    font-family: 'Trebuchet MS', sans-serif; 
+    letter-spacing: 0.03em; }
+
+.search-form button:hover { background: var(--ink); }
+
+
+/* Tarjetas se ajustan para mantener la coherencia con el tema editorial, con relleno adecuado y tipografía clara. */
+.card { padding: 1.7rem; }
+
+.card h4 { color: var(--ink); 
+    border-bottom-color: var(--gold); 
+    font-size: 1.35rem; 
+    font-weight: normal; }
+
+    /* Contenedor de tabla se ajusta para mantener la coherencia con el tema editorial, con borde y borde redondeado, sin sombra. */
+.table-container { border: 1px solid var(--line); 
+    border-radius: 2px; 
+    box-shadow: none; }
+
+table thead { background: var(--ink); }
+
+table th { font-family: 'Trebuchet MS', sans-serif; 
+    font-size: 0.78rem; 
+    letter-spacing: 0.04em; 
+    text-transform: uppercase; }
+
+table td { border-bottom-color: var(--line); 
+    font-family: 'Trebuchet MS', sans-serif; 
+    font-size: 0.9rem; }
+
+table tbody tr:hover { background: #fff5e7; }
+
+/* Media queries para ajustar el diseño en pantallas más pequeñas, manteniendo la coherencia con el tema editorial y asegurando una buena experiencia de usuario. */
+@media (max-width: 768px) {
+    .hero { box-shadow: 8px 8px 0 var(--coral); }
+    .search-section, .card { box-shadow: 4px 4px 0 rgba(23, 38, 60, 0.08); }
+}
