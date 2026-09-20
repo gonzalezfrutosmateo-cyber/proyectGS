@@ -88,6 +88,7 @@ mysql -u root -p < sql/schema.sql              # crea la base grand_slam y las 1
 mysql -u root -p < sql/roles.sql               # roles y usuarios (cambiar las claves antes)
 mysql -u root -p grand_slam < sql/seed.sql     # datos de ejemplo de la consigna
 mysql -u root -p grand_slam --table < sql/verificacion.sql   # los 9 ejemplos, para controlar
+mysql -u root -p grand_slam --table < sql/consultas.sql       # las consultas de la consigna
 ```
 
 `schema.sql` sale del Forward Engineer de `torneo.mwb`: si cambia el modelo, se regenera, no se edita a
