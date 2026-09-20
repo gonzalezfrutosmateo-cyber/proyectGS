@@ -61,7 +61,7 @@ GROUP BY j.id_jugador, j.apellido;
 
 -- ----------------------------------------------------------------------------
 -- 4. Entrenadores de un jugador y las fechas en que lo entrenaron
---    Perez -> Ruiz (2018-2019), Diaz (2019-2021) y Ruiz otra vez (2022, sigue)
+--    Perez -> Ruiz, Diaz, Ruiz otra vez y Lima: 4 periodos, 3 entrenadores distintos
 -- ----------------------------------------------------------------------------
 SELECT CONCAT(j.apellido, ', ', j.nombre) AS jugador,
        CONCAT(en.apellido, ', ', en.nombre) AS entrenador,

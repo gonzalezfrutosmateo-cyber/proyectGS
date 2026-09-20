@@ -182,3 +182,68 @@ JOIN JUGADOR j ON j.id_jugador = pj.JUGADOR_id_jugador
 WHERE pj.rol = 'perdedor'
 GROUP BY j.id_jugador, j.apellido, t.id_torneo, t.nombre, e.anio, p.modalidad
 HAVING veces_que_perdio > 1;
+
+-- ----------------------------------------------------------------------------
+-- Consulta 4. Entrenadores que entrenaron a un jugador, y desde cuando
+--
+-- Entrada: @apellido.
+-- Salida:  un renglon por periodo, ordenado por fecha. Si el entrenamiento sigue
+--          abierto (fecha_fin NULL) se muestra "actualidad".
+--
+-- Sale directo de ENTRENAMIENTO, que desde la task #4 es la tabla que relaciona
+-- jugador con entrenador. Un mismo entrenador puede aparecer dos veces si lo
+-- entreno en dos epocas: por eso la PK incluye fecha_inicio.
+--
+-- Alimenta la tabla "Entrenadores" de jugadores.html.
+--
+-- En el backend: WHERE j.apellido = ?
+-- ----------------------------------------------------------------------------
+SET @apellido = 'Pérez';
+
+SELECT en.apellido,
+       en.nombre,
+       e.fecha_inicio,
+       COALESCE(DATE_FORMAT(e.fecha_fin, '%Y-%m-%d'), 'actualidad') AS fecha_fin,
+       TIMESTAMPDIFF(MONTH, e.fecha_inicio, COALESCE(e.fecha_fin, CURDATE())) AS meses
+FROM ENTRENAMIENTO e
+JOIN ENTRENADOR en ON en.id_entrenador = e.ENTRENADOR_id_entrenador
+JOIN JUGADOR    j  ON j.id_jugador = e.JUGADOR_id_jugador
+WHERE j.apellido = @apellido
+ORDER BY e.fecha_inicio;
+
+-- ----------------------------------------------------------------------------
+-- Variante de la consulta 4: los que lo entrenaron durante una edicion concreta
+--
+-- La consigna dice "a lo largo del torneo", que se puede leer como toda la
+-- carrera del jugador (la consulta de arriba) o como una edicion puntual (esta).
+-- Quedan las dos para que el profe elija.
+--
+-- EDICION no tiene fechas propias, asi que la ventana de la edicion se toma de
+-- las fechas de sus partidos. Un entrenamiento cuenta si se superpone con esa
+-- ventana: empezo antes de que terminara la edicion y no habia terminado cuando
+-- la edicion empezo.
+-- ----------------------------------------------------------------------------
+SET @apellido = 'Borg';
+SET @torneo   = 'Roland Garros';
+SET @anio     = 1979;
+
+SELECT en.apellido,
+       en.nombre,
+       e.fecha_inicio,
+       COALESCE(DATE_FORMAT(e.fecha_fin, '%Y-%m-%d'), 'actualidad') AS fecha_fin
+FROM ENTRENAMIENTO e
+JOIN ENTRENADOR en ON en.id_entrenador = e.ENTRENADOR_id_entrenador
+JOIN JUGADOR    j  ON j.id_jugador = e.JUGADOR_id_jugador
+WHERE j.apellido = @apellido
+  AND e.fecha_inicio <= (SELECT MAX(p.fecha)
+                           FROM PARTIDO p
+                           JOIN EDICION ed ON ed.id_edicion = p.EDICION_id_edicion
+                           JOIN TORNEO  t  ON t.id_torneo = ed.TORNEO_id_torneo
+                          WHERE t.nombre = @torneo AND ed.anio = @anio)
+  AND (e.fecha_fin IS NULL
+       OR e.fecha_fin >= (SELECT MIN(p.fecha)
+                            FROM PARTIDO p
+                            JOIN EDICION ed ON ed.id_edicion = p.EDICION_id_edicion
+                            JOIN TORNEO  t  ON t.id_torneo = ed.TORNEO_id_torneo
+                           WHERE t.nombre = @torneo AND ed.anio = @anio))
+ORDER BY e.fecha_inicio;

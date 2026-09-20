@@ -108,14 +108,16 @@ INSERT INTO ARBITRO (id_arbitro, nombre, apellido) VALUES
 INSERT INTO ENTRENADOR (id_entrenador, nombre, apellido) VALUES
   (1, 'Lennart', 'Bergelin'),
   (2, 'Pablo',   'Ruiz'),
-  (3, 'Marta',   'Díaz');
+  (3, 'Marta',   'Díaz'),
+  (4, 'Sofía',   'Lima');
 
--- Perez tiene 3 entrenamientos en periodos distintos, y Ruiz vuelve a entrenarla
+-- Perez tuvo 3 entrenadores distintos en 4 periodos, y Ruiz volvio a entrenarla
 INSERT INTO ENTRENAMIENTO (JUGADOR_id_jugador, ENTRENADOR_id_entrenador, fecha_inicio, fecha_fin) VALUES
   (1,  1, '1974-01-01', '1981-12-31'),
   (12, 2, '2018-01-01', '2019-06-30'),
   (12, 3, '2019-07-01', '2021-12-31'),
-  (12, 2, '2022-01-01', NULL);
+  (12, 2, '2022-01-01', '2023-12-31'),
+  (12, 4, '2024-01-01', NULL);
 
 -- ----------------------------------------------------------------------------
 -- PREMIO: por edicion, modalidad y fase. El campeon solo en la Final.
