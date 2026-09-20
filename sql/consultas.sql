@@ -100,3 +100,85 @@ WHERE t.nombre = @torneo
   AND (@anio IS NULL OR e.anio = @anio)
 GROUP BY a.id_arbitro, a.apellido, a.nombre
 ORDER BY partidos_dirigidos DESC, a.apellido;
+
+-- ----------------------------------------------------------------------------
+-- Consulta 3. Ganancias percibidas en premios por un jugador
+--
+-- Entrada: @apellido.
+-- Salida:  cuanto cobro en total en premios.
+--
+-- Como cobra un jugador, segun PREMIO (por edicion, modalidad y fase):
+--   * Si perdio un partido, cobra el premio de consolacion de esa fase.
+--   * Si gano la final, cobra el premio del campeon de esa edicion y modalidad.
+--   * Ganar un partido que no es la final no paga nada: se cobra al quedar
+--     eliminado, o al salir campeon.
+--
+-- DECISION (version A). Se suma el premio de cada partido perdido, mas el de
+-- campeon si gano la final. La alternativa (version B) era, por cada edicion,
+-- buscar la fase mas avanzada que alcanzo y pagar solo esa.
+--   Las dos dan lo mismo mientras un jugador pierda una sola vez por edicion y
+--   modalidad, que es lo normal: al perder queda eliminado. La A es mas simple y
+--   aguanta bien los walkovers y los abandonos.
+--   Para que no quede como un supuesto silencioso, mas abajo esta la consulta de
+--   control que busca el caso que las diferenciaria. Si alguna vez devuelve
+--   filas, hay que pasar a la version B.
+--
+-- Un jugador puede jugar varias modalidades en la misma edicion (individual y
+-- dobles) y cobra por cada una: el JOIN con PREMIO usa edicion + modalidad +
+-- fase, asi que las suma todas.
+--
+-- El JOIN con PREMIO es interno a proposito: un partido sin su fila de PREMIO no
+-- suma. Al cargar una edicion hay que cargar los premios de todas sus fases.
+--
+-- En el backend: WHERE j.apellido = ?
+-- ----------------------------------------------------------------------------
+SET @apellido = 'Borg';
+
+SELECT CONCAT(j.apellido, ', ', j.nombre) AS jugador,
+       SUM(CASE WHEN pj.rol = 'perdedor'                     THEN pr.monto_perdedor
+                WHEN pj.rol = 'ganador' AND p.fase = 'Final' THEN pr.monto_campeon
+                ELSE 0 END) AS ganancias
+FROM JUGADOR j
+JOIN PARTIDO_JUGADOR pj ON pj.JUGADOR_id_jugador = j.id_jugador
+JOIN PARTIDO p  ON p.id_partido = pj.PARTIDO_id_partido
+JOIN PREMIO  pr ON pr.EDICION_id_edicion = p.EDICION_id_edicion
+                AND pr.modalidad = p.modalidad
+                AND pr.fase      = p.fase
+WHERE j.apellido = @apellido
+GROUP BY j.id_jugador, j.apellido, j.nombre;
+
+-- Detalle de donde sale cada peso, para mostrarlo en la pagina o para controlar
+SELECT t.nombre AS torneo,
+       e.anio,
+       p.modalidad,
+       p.fase,
+       CASE WHEN pj.rol = 'perdedor'  THEN 'perdio'
+            WHEN p.fase = 'Final'     THEN 'campeon'
+            ELSE 'gano y siguio' END AS que_paso,
+       CASE WHEN pj.rol = 'perdedor'  THEN pr.monto_perdedor
+            WHEN p.fase = 'Final'     THEN pr.monto_campeon
+            ELSE 0 END AS cobro
+FROM JUGADOR j
+JOIN PARTIDO_JUGADOR pj ON pj.JUGADOR_id_jugador = j.id_jugador
+JOIN PARTIDO p  ON p.id_partido = pj.PARTIDO_id_partido
+JOIN EDICION e  ON e.id_edicion = p.EDICION_id_edicion
+JOIN TORNEO  t  ON t.id_torneo  = e.TORNEO_id_torneo
+JOIN PREMIO  pr ON pr.EDICION_id_edicion = p.EDICION_id_edicion
+                AND pr.modalidad = p.modalidad
+                AND pr.fase      = p.fase
+WHERE j.apellido = @apellido
+ORDER BY e.anio, p.modalidad,
+         FIELD(p.fase, 'R128', 'R64', 'R32', 'Octavos', 'Cuartos', 'Semifinal', 'Final');
+
+-- Control de la decision: nadie tendria que perder dos veces en la misma edicion
+-- y modalidad. Si esto devuelve filas, los datos estan mal cargados o hay que
+-- pasar a la version B.
+SELECT j.apellido, t.nombre AS torneo, e.anio, p.modalidad, COUNT(*) AS veces_que_perdio
+FROM PARTIDO_JUGADOR pj
+JOIN PARTIDO p ON p.id_partido = pj.PARTIDO_id_partido
+JOIN EDICION e ON e.id_edicion = p.EDICION_id_edicion
+JOIN TORNEO  t ON t.id_torneo  = e.TORNEO_id_torneo
+JOIN JUGADOR j ON j.id_jugador = pj.JUGADOR_id_jugador
+WHERE pj.rol = 'perdedor'
+GROUP BY j.id_jugador, j.apellido, t.id_torneo, t.nombre, e.anio, p.modalidad
+HAVING veces_que_perdio > 1;
