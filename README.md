@@ -63,7 +63,7 @@ tiene una columna de sexo, asi que esa parte no se puede validar. La consigna no
 
 El script es [`sql/roles.sql`](sql/roles.sql). Se ejecuta una vez, como root, despues de crear el esquema.
 
-| Rol | Permisos sobre `torne` | Usuario | Para que |
+| Rol | Permisos sobre `grand_slam` | Usuario | Para que |
 |---|---|---|---|
 | `gs_consulta` | SELECT | `web_consulta` | Las paginas publicas de consulta |
 | `gs_carga` | SELECT, INSERT, UPDATE | `app_carga` | Cargar torneos, jugadores, partidos y resultados |
@@ -78,3 +78,19 @@ Reglas de uso:
 - Un DELETE real lo hace solo `gs_dba`, y ahi siguen valiendo las reglas ON DELETE de las FK: los
   borrados que se llevarian la historia estan frenados con RESTRICT.
 - Las claves del script son un marcador de posicion. Hay que cambiarlas antes de ejecutarlo.
+
+## Como levantar la base
+
+Los scripts estan en `sql/` y se corren en este orden:
+
+```bash
+mysql -u root -p < sql/schema.sql              # crea la base grand_slam y las 13 tablas
+mysql -u root -p < sql/roles.sql               # roles y usuarios (cambiar las claves antes)
+mysql -u root -p grand_slam < sql/seed.sql     # datos de ejemplo de la consigna
+mysql -u root -p grand_slam --table < sql/verificacion.sql   # los 9 ejemplos, para controlar
+```
+
+`schema.sql` sale del Forward Engineer de `torneo.mwb`: si cambia el modelo, se regenera, no se edita a
+mano. El `.mwb` tambien tiene unos pocos datos cargados en su pestana Inserts, que son de cuando se
+probaron las tasks #7 y #10; el seed de verdad es `sql/seed.sql`, asi que al hacer el Forward Engineer
+conviene dejar destildado "Generate INSERT statements for tables".

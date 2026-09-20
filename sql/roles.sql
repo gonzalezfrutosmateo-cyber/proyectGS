@@ -7,7 +7,7 @@
 -- Requiere MySQL 8.0 o superior, que es donde existen los roles. Al final esta
 -- la version equivalente para MySQL 5.7, que no tiene CREATE ROLE.
 --
--- El esquema del modelo se llama `torne`. Si se renombra, cambiarlo aca tambien.
+-- El esquema del modelo se llama `grand_slam`. Si se renombra, cambiarlo aca tambien.
 --
 -- IMPORTANTE: las claves de este archivo son un marcador de posicion.
 -- Cambiarlas antes de ejecutar y NO commitear la clave real: va en el .env del
@@ -20,15 +20,15 @@
 CREATE ROLE IF NOT EXISTS 'gs_consulta', 'gs_carga', 'gs_admin';
 
 -- Solo lectura: las paginas publicas de consulta
-GRANT SELECT ON `torne`.* TO 'gs_consulta';
+GRANT SELECT ON `grand_slam`.* TO 'gs_consulta';
 
 -- Carga: altas y modificaciones de torneos, jugadores, partidos y resultados.
 -- No tiene DELETE: las bajas son logicas (UPDATE activo = 0), segun la politica
 -- de bajas de la task #11.
-GRANT SELECT, INSERT, UPDATE ON `torne`.* TO 'gs_carga';
+GRANT SELECT, INSERT, UPDATE ON `grand_slam`.* TO 'gs_carga';
 
 -- Admin: todo, incluido DELETE y el mantenimiento del esquema
-GRANT ALL PRIVILEGES ON `torne`.* TO 'gs_admin';
+GRANT ALL PRIVILEGES ON `grand_slam`.* TO 'gs_admin';
 
 -- ----------------------------------------------------------------------------
 -- 2. Usuarios
@@ -62,9 +62,9 @@ CREATE USER 'web_consulta'@'localhost' IDENTIFIED BY 'CAMBIAR_ESTA_CLAVE';
 CREATE USER 'app_carga'@'localhost'    IDENTIFIED BY 'CAMBIAR_ESTA_CLAVE';
 CREATE USER 'gs_dba'@'localhost'       IDENTIFIED BY 'CAMBIAR_ESTA_CLAVE';
 
-GRANT SELECT                 ON `torne`.* TO 'web_consulta'@'localhost';
-GRANT SELECT, INSERT, UPDATE ON `torne`.* TO 'app_carga'@'localhost';
-GRANT ALL PRIVILEGES         ON `torne`.* TO 'gs_dba'@'localhost';
+GRANT SELECT                 ON `grand_slam`.* TO 'web_consulta'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON `grand_slam`.* TO 'app_carga'@'localhost';
+GRANT ALL PRIVILEGES         ON `grand_slam`.* TO 'gs_dba'@'localhost';
 
 FLUSH PRIVILEGES;
 */
