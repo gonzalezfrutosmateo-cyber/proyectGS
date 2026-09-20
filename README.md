@@ -58,3 +58,23 @@ GROUP BY j2.id_jugador, j2.apellido;
 
 Pendiente con el profe: los dobles mixtos suponen una pareja de un varon y una mujer, pero `JUGADOR` no
 tiene una columna de sexo, asi que esa parte no se puede validar. La consigna no la pide.
+
+## Roles y permisos de MySQL
+
+El script es [`sql/roles.sql`](sql/roles.sql). Se ejecuta una vez, como root, despues de crear el esquema.
+
+| Rol | Permisos sobre `torne` | Usuario | Para que |
+|---|---|---|---|
+| `gs_consulta` | SELECT | `web_consulta` | Las paginas publicas de consulta |
+| `gs_carga` | SELECT, INSERT, UPDATE | `app_carga` | Cargar torneos, jugadores, partidos y resultados |
+| `gs_admin` | ALL PRIVILEGES, incluido DELETE | `gs_dba` | Bajas fisicas y mantenimiento del esquema |
+
+Reglas de uso:
+
+- **El backend se conecta con `app_carga` (rol `gs_carga`), nunca con root.** La clave va en el `.env`,
+  no en el repo.
+- `gs_carga` **no tiene DELETE** a proposito: las bajas son logicas (`UPDATE ... SET activo = 0`), segun
+  la politica de bajas. El boton de eliminar del front hace esa baja logica, no un DELETE.
+- Un DELETE real lo hace solo `gs_dba`, y ahi siguen valiendo las reglas ON DELETE de las FK: los
+  borrados que se llevarian la historia estan frenados con RESTRICT.
+- Las claves del script son un marcador de posicion. Hay que cambiarlas antes de ejecutarlo.
