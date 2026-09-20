@@ -64,3 +64,39 @@ WHERE t.nombre = @torneo
   AND e.anio   = @anio
 ORDER BY FIELD(p.fase, 'R128', 'R64', 'R32', 'Octavos', 'Cuartos', 'Semifinal', 'Final'),
          p.modalidad, p.fecha;
+
+-- ----------------------------------------------------------------------------
+-- Consulta 2. Arbitros que participaron en un torneo
+--
+-- Entrada: @torneo, y @anio, que es opcional.
+--   * @anio = 1979 -> los arbitros de esa edicion.
+--   * @anio = NULL -> los de todas las ediciones del torneo.
+--   La consigna no aclara si pide una edicion o la historia completa, asi que la
+--   consulta sirve para las dos: el filtro del anio se aplica solo si no es NULL.
+--
+-- Salida: cada arbitro una sola vez, con cuantos partidos dirigio y en que anios.
+--
+-- Detalles:
+--   * El COUNT(*) cuenta partidos porque la fila se repite una vez por partido.
+--   * No se filtra por ARBITRO.activo: la baja logica lo saca de los listados de
+--     alta, pero los partidos que dirigio son historia y tienen que seguir.
+--
+-- En el backend:
+--     WHERE t.nombre = ? AND (? IS NULL OR e.anio = ?)
+-- ----------------------------------------------------------------------------
+SET @torneo = 'Roland Garros';
+SET @anio   = 1979;   -- NULL para toda la historia del torneo
+
+SELECT a.apellido,
+       a.nombre,
+       COUNT(*)                      AS partidos_dirigidos,
+       COUNT(DISTINCT e.id_edicion)  AS ediciones,
+       GROUP_CONCAT(DISTINCT e.anio ORDER BY e.anio SEPARATOR ', ') AS anios
+FROM ARBITRO a
+JOIN PARTIDO p ON p.ARBITRO_id_arbitro = a.id_arbitro
+JOIN EDICION e ON e.id_edicion = p.EDICION_id_edicion
+JOIN TORNEO  t ON t.id_torneo  = e.TORNEO_id_torneo
+WHERE t.nombre = @torneo
+  AND (@anio IS NULL OR e.anio = @anio)
+GROUP BY a.id_arbitro, a.apellido, a.nombre
+ORDER BY partidos_dirigidos DESC, a.apellido;
