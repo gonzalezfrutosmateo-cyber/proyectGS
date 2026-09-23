@@ -61,6 +61,25 @@ body {
     padding-bottom: 2px;
 }
 
+.role-switcher {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.role-switcher select {
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.role-switcher select option {
+    color: #333;
+}
+
 main {
     max-width: 1200px;
     margin: 0 auto;
@@ -178,6 +197,146 @@ table tbody tr.highlight {
     font-size: 1.2rem;
     border-bottom: 2px solid #81c784;
     padding-bottom: 0.5rem;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+}
+
+.btn-add {
+    min-height: 45px;
+    padding: 0.8rem 1.5rem;
+    background-color: #558b2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-edit,
+.btn-delete {
+    padding: 0.45rem 0.9rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+
+.btn-edit {
+    background-color: #d5a64a;
+    color: #333;
+}
+
+.btn-delete {
+    background-color: #c0392b;
+    color: white;
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+    opacity: 0.85;
+}
+
+.no-results td {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 200;
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-box {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modal-box h4 {
+    color: #2d5016;
+    border-bottom: 2px solid #81c784;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.2rem;
+    font-size: 1.35rem;
+}
+
+.form-field {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-field label {
+    font-size: 0.85rem;
+    color: #2d5016;
+    font-weight: 500;
+}
+
+.form-field input,
+.form-field select {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.95rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 1.2rem;
+}
+
+.btn-guardar {
+    min-height: 45px;
+    padding: 0.6rem 1.3rem;
+    background-color: #558b2f;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-cancel {
+    min-height: 45px;
+    padding: 0.6rem 1.3rem;
+    background: transparent;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
 }
 
 .stats-box {
@@ -377,13 +536,93 @@ table td { border-bottom-color: var(--line);
 table tbody tr:hover { background: #fff5e7; }
 
 /* Arbitros-list li es cada elemento de la lista de arbitros, con fondo claro y borde izquierdo coral, con borde redondeado y tipografia sans-serif */
-.arbitros-list li { background: #f9f2e8; 
-    border-left-color: var(--coral); 
-    border-radius: 2px; 
+.arbitros-list li { background: #f9f2e8;
+    border-left-color: var(--coral);
+    border-radius: 2px;
     font-family: 'Trebuchet MS', sans-serif; }
+
+/* Estilos para el botón de agregar partido y los botones de acción por fila */
+.btn-add, .btn-guardar { background: var(--coral); border-radius: 2px; font-family: 'Trebuchet MS', sans-serif; }
+.btn-add:hover, .btn-guardar:hover { background: var(--ink); }
+
+.btn-edit, .btn-delete { border-radius: 2px; font-family: 'Trebuchet MS', sans-serif; }
+.btn-edit { background: var(--gold); color: var(--ink); }
+.btn-delete { background: var(--coral); color: white; }
+
+.no-results td { color: var(--ink-soft, #3c526d); }
+
+/* Estilos para el modal de agregar/modificar partido */
+.modal-box { background: var(--paper-light); border: 1px solid var(--line); border-radius: 2px 18px 2px 18px; box-shadow: 8px 8px 0 rgba(23, 38, 60, 0.08); }
+
+.modal-box h4 { color: var(--ink); border-bottom-color: var(--gold); font-weight: normal; }
+
+.form-field label { color: var(--ink); font-family: 'Trebuchet MS', sans-serif; }
+
+.form-field input, .form-field select { border: 1px solid var(--line); border-radius: 2px; background: #fffefa; color: var(--ink); font-family: 'Trebuchet MS', sans-serif; }
+
+.sets-grid { display: flex; flex-direction: column; gap: 0.5rem; }
+.set-row { display: flex; align-items: center; gap: 0.5rem; }
+.set-row span { width: 3.5rem; font-size: 0.85rem; color: var(--ink); }
+.set-row input { width: 100%; padding: 0.5rem; }
+
+.btn-cancel { border-radius: 2px; color: var(--ink); border-color: var(--line); font-family: 'Trebuchet MS', sans-serif; }
+.btn-cancel:hover { background: var(--paper); }
 
     /* Media queries para pantallas pequeñas, ajustando el tamaño de la hero y las secciones de busqueda, tarjetas y arbitros */
 @media (max-width: 768px) {
     .hero { box-shadow: 8px 8px 0 var(--coral); }
     .search-section, .card, .arbitros-section { box-shadow: 4px 4px 0 rgba(23, 38, 60, 0.08); }
+    .modal-box { padding: 1.2rem; }
+    .modal-actions { flex-direction: column; }
+    .btn-guardar, .btn-cancel { width: 100%; }
+    .actions-cell { flex-direction: column; }
+    .card-actions { justify-content: stretch; }
+    .btn-add { width: 100%; }
 }
+
+/* Bloque de sesion del navbar: el nombre de usuario es un chip con borde y,
+   al clickearlo, despliega debajo el boton de cerrar sesion. */
+.role-switcher { position: relative; }
+
+.chip-usuario {
+    background: transparent;
+    color: #e9edf2;
+    border: 1px solid rgba(233, 237, 242, 0.55);
+    border-radius: 3px;
+    padding: 0.45rem 0.9rem;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.88rem;
+}
+
+.chip-usuario:hover { border-color: #f2c66d; color: #f2c66d; }
+
+.menu-usuario {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.6rem;
+    z-index: 300;
+    box-shadow: 0 4px 12px rgba(23, 38, 60, 0.25);
+}
+
+.menu-usuario[hidden] { display: none; }
+
+.btn-logout {
+    min-height: 45px;
+    padding: 0.8rem 1.5rem;
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Trebuchet MS', sans-serif;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+
+.btn-logout:hover { background: var(--ink); }

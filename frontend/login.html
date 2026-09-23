@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión — Grand History</title>
+    <link rel="stylesheet" href="jugadores.css">
+    <style>
+        .login-section { max-width: 420px; margin: 0 auto; }
+        .login-error { color: #c0392b; margin-bottom: 1rem; display: none; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><img src="Raquetas.png" alt=""><span>Grand History</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="torneos.html">Torneos</a></li>
+                <li><a href="partidos.html">Partidos</a></li>
+                <li><a href="jugadores.html">Jugadores</a></li>
+                <li><a href="entrenadores.html">Entrenadores</a></li>
+                <li><a href="arbitros.html">Árbitros</a></li>
+            </ul>
+            <div class="role-switcher" id="sesion-navbar"></div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="search-section login-section">
+            <h3>Iniciar sesión</h3>
+            <form id="form-login">
+                <div class="form-field">
+                    <label for="input-usuario">Usuario</label>
+                    <input type="text" id="input-usuario" maxlength="40" required>
+                </div>
+                <div class="form-field">
+                    <label for="input-password">Contraseña</label>
+                    <input type="password" id="input-password" maxlength="40" required>
+                </div>
+                <p class="login-error" id="login-error">Usuario o contraseña incorrectos.</p>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-guardar">Entrar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+    <script src="permisos.js"></script>
+    <script src="scriptLogin.js"></script>
+</body>
+</html>

@@ -15,7 +15,10 @@
                 <li><a href="torneos.html">Torneos</a></li>
                 <li><a href="partidos.html">Partidos</a></li>
                 <li><a href="jugadores.html" class="active">Jugadores</a></li>
+                <li><a href="entrenadores.html">Entrenadores</a></li>
+                <li><a href="arbitros.html">Árbitros</a></li>
             </ul>
+            <div class="role-switcher" id="sesion-navbar"></div>
         </div>
     </nav>
 
@@ -44,10 +47,11 @@
                         <tr>
                             <th>Nombre</th>
                             <th>Apellido</th>
+                            <th>Sexo</th>
                             <th>Nacionalidad</th>
                             <th>Período Activo</th>
                             <th>Ganancias Totales</th>
-                            <th>Acciones</th>
+                            <th id="th-acciones">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="jugadores-tbody">
@@ -71,12 +75,24 @@
                     <input type="text" id="input-apellido" maxlength="20" required>
                 </div>
                 <div class="form-field">
+                    <label for="input-sexo">Sexo</label>
+                    <select id="input-sexo" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                </div>
+                <div class="form-field">
                     <label for="input-nacionalidad">Nacionalidad</label>
                     <input type="text" id="input-nacionalidad" maxlength="30" required>
                 </div>
                 <div class="form-field">
+                    <label for="input-periodo-activo">Período Activo</label>
+                    <input type="text" id="input-periodo-activo" maxlength="30" placeholder="Ej: 2001-2024">
+                </div>
+                <div class="form-field">
                     <label for="input-ganancias">Ganancias Totales</label>
-                    <input type="text" id="input-ganancias" maxlength="10" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 134000000">
+                    <input type="text" id="input-ganancias" maxlength="14" inputmode="numeric" pattern="[0-9]*" placeholder="Ej: 134000000">
                 </div>
                 <div class="modal-actions">
                     <button type="button" id="btn-cancelar-jugador" class="btn-cancel">Cancelar</button>
@@ -85,6 +101,7 @@
             </form>
         </div>
     </div>
+    <script src="permisos.js"></script>
     <script src="scriptJugador.js"></script>
 </body>
 </html>

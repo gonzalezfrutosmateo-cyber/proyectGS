@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidos y Árbitros — Grand History</title>
+    <link rel="stylesheet" href="partidos.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><img src="Raquetas.png" alt=""><span>Grand History</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="torneos.html">Torneos</a></li>
+                <li><a href="partidos.html" class="active">Partidos</a></li>
+                <li><a href="jugadores.html">Jugadores</a></li>
+                <li><a href="entrenadores.html">Entrenadores</a></li>
+                <li><a href="arbitros.html">Árbitros</a></li>
+            </ul>
+            <div class="role-switcher" id="sesion-navbar"></div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h2>Donde se decide cada historia</h2>
+            <p>Revisa cada encuentro, quién estuvo en la silla y cómo se repartieron los premios en cada fase.</p>
+        </section>
+
+        <section class="search-section">
+            <h3>Buscar Partidos</h3>
+            <form class="search-form">
+                <select id="filtro-torneo">
+                    <option value="">Seleccionar torneo...</option>
+                    <option value="wimbledon">Wimbledon</option>
+                    <option value="us-open">US Open</option>
+                    <option value="roland-garros">Roland Garros</option>
+                    <option value="australian-open">Australian Open</option>
+                </select>
+                <select id="filtro-anio">
+                    <option value="">Seleccionar año...</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                </select>
+                <select id="filtro-modalidad">
+                    <option value="">Seleccionar modalidad...</option>
+                    <option value="individual-masculino">Individual Masculino</option>
+                    <option value="individual-femenino">Individual Femenino</option>
+                    <option value="dobles-masculino">Dobles Masculino</option>
+                    <option value="dobles-femenino">Dobles Femenino</option>
+                    <option value="dobles-mixto">Dobles Mixto</option>
+                </select>
+                <button type="button" id="btn-buscar-partido">Buscar</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h4>Partidos</h4>
+            <div class="card-actions">
+                <button type="button" id="btn-agregar-partido" class="btn-add">Agregar Partido</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Torneo</th>
+                            <th>Año</th>
+                            <th>Fase</th>
+                            <th>Modalidad</th>
+                            <th>Ganador(es)</th>
+                            <th>Perdedor(es)</th>
+                            <th>Resultado</th>
+                            <th>Árbitro</th>
+                            <th id="th-acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="partidos-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="partido-modal-overlay" hidden>
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="partido-modal-title">
+            <h4 id="partido-modal-title">Agregar Partido</h4>
+            <form id="form-partido">
+                <input type="hidden" id="input-partido-id" value="">
+                <div class="form-field">
+                    <label for="input-edicion">Torneo / Año</label>
+                    <select id="input-edicion" required></select>
+                </div>
+                <div class="form-field">
+                    <label for="input-fecha">Fecha</label>
+                    <input type="date" id="input-fecha" required>
+                </div>
+                <div class="form-field">
+                    <label for="input-fase">Fase</label>
+                    <select id="input-fase" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="R128">R128</option>
+                        <option value="R64">R64</option>
+                        <option value="R32">R32</option>
+                        <option value="Octavos">Octavos</option>
+                        <option value="Cuartos">Cuartos</option>
+                        <option value="Semifinal">Semifinal</option>
+                        <option value="Final">Final</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="input-modalidad">Modalidad</label>
+                    <select id="input-modalidad" required>
+                        <option value="">Seleccionar modalidad...</option>
+                        <option value="individual-masculino">Individual Masculino</option>
+                        <option value="individual-femenino">Individual Femenino</option>
+                        <option value="dobles-masculino">Dobles Masculino</option>
+                        <option value="dobles-femenino">Dobles Femenino</option>
+                        <option value="dobles-mixto">Dobles Mixto</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="input-estado">Estado</label>
+                    <select id="input-estado">
+                        <option value="jugado">Jugado</option>
+                        <option value="abandono">Abandono</option>
+                        <option value="walkover">Walkover</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="input-arbitro">Árbitro</label>
+                    <select id="input-arbitro" required></select>
+                </div>
+                <div class="form-field">
+                    <label for="input-ganador1">Ganador 1</label>
+                    <select id="input-ganador1" required></select>
+                </div>
+                <div class="form-field campo-dobles" hidden>
+                    <label for="input-ganador2">Ganador 2</label>
+                    <select id="input-ganador2"></select>
+                </div>
+                <div class="form-field">
+                    <label for="input-perdedor1">Perdedor 1</label>
+                    <select id="input-perdedor1" required></select>
+                </div>
+                <div class="form-field campo-dobles" hidden>
+                    <label for="input-perdedor2">Perdedor 2</label>
+                    <select id="input-perdedor2"></select>
+                </div>
+                <div class="form-field">
+                    <label>Sets (dejar vacío el que no se jugó)</label>
+                    <div class="sets-grid" id="sets-grid"></div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="btn-cancelar-partido" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="permisos.js"></script>
+    <script src="scriptPartido.js"></script>
+</body>
+</html>

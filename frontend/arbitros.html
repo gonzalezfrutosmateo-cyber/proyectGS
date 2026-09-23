@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árbitros — Grand History</title>
+    <link rel="stylesheet" href="jugadores.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><img src="Raquetas.png" alt=""><span>Grand History</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="torneos.html">Torneos</a></li>
+                <li><a href="partidos.html">Partidos</a></li>
+                <li><a href="jugadores.html">Jugadores</a></li>
+                <li><a href="entrenadores.html">Entrenadores</a></li>
+                <li><a href="arbitros.html" class="active">Árbitros</a></li>
+            </ul>
+            <div class="role-switcher" id="sesion-navbar"></div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <h2>Quienes cantan el punto</h2>
+            <p>Los árbitros que estuvieron en la silla en cada partido de la historia del Grand Slam.</p>
+        </section>
+
+        <section class="search-section">
+            <h3>Buscar Árbitro</h3>
+            <form class="search-form" id="form-buscar-arbitro">
+                <input type="text" id="input-buscar-apellido" placeholder="Buscar por apellido..." maxlength="20">
+                <button type="button" id="btn-buscar-arbitro">Buscar</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h4>Árbitros</h4>
+            <div class="card-actions">
+                <button type="button" id="btn-agregar-arbitro" class="btn-add">Agregar Árbitro</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th id="th-acciones">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="arbitros-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="arbitro-modal-overlay" hidden>
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="arbitro-modal-title">
+            <h4 id="arbitro-modal-title">Agregar Árbitro</h4>
+            <form id="form-arbitro">
+                <input type="hidden" id="input-arbitro-id" value="">
+                <div class="form-field">
+                    <label for="input-nombre">Nombre</label>
+                    <input type="text" id="input-nombre" maxlength="20" required>
+                </div>
+                <div class="form-field">
+                    <label for="input-apellido">Apellido</label>
+                    <input type="text" id="input-apellido" maxlength="20" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="btn-cancelar-arbitro" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="permisos.js"></script>
+    <script src="scriptArbitro.js"></script>
+</body>
+</html>
