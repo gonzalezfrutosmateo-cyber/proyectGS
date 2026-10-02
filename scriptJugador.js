@@ -12,6 +12,7 @@ const form = document.getElementById('form-jugador');
 const inputNombre = document.getElementById('input-nombre');
 const inputApellido = document.getElementById('input-apellido');
 const inputNacionalidad = document.getElementById('input-nacionalidad');
+const inputPeriodo = document.getElementById('input-periodo');
 const inputGanancias = document.getElementById('input-ganancias');
 const inputBuscarApellido = document.getElementById('input-buscar-apellido');
 const btnBuscar = document.getElementById('btn-buscar-jugador');
@@ -64,7 +65,7 @@ function cerrarModal() {
     form.reset();
 }
 
-function agregarJugador(nombre, apellido, nacionalidad, ganancias) {
+function agregarJugador(nombre, apellido, nacionalidad, ganancias, periodo) {
     const nuevoId = jugadores.reduce(function (maxId, j) { return Math.max(maxId, j.id); }, 0) + 1;
     jugadores.push({
         id: nuevoId,
@@ -72,7 +73,7 @@ function agregarJugador(nombre, apellido, nacionalidad, ganancias) {
         apellido: apellido,
         nacionalidad: nacionalidad,
         ganancias: ganancias,
-        periodoActivo: '-',
+        periodoActivo: periodo || '-',
     });
 }
 
@@ -102,13 +103,16 @@ form.addEventListener('submit', function (evento) {
     const nombre = inputNombre.value.trim();
     const apellido = inputApellido.value.trim();
     const nacionalidad = inputNacionalidad.value.trim();
+    const periodo = inputPeriodo.value.trim();
     const ganancias = inputGanancias.value.replace(/\D/g, '');
 
     if (!nombre || !apellido || !nacionalidad) {
         return;
     }
 
-    agregarJugador(nombre, apellido, nacionalidad, ganancias);
+    agregarJugador(nombre, apellido, nacionalidad, ganancias, periodo);
     cerrarModal();
     buscar();
 });
+
+buscar();
