@@ -1,4 +1,10 @@
-let jugadores = [];
+let jugadores = [
+    { id: 1, nombre: 'Rafael', apellido: 'Nadal', nacionalidad: 'España', periodoActivo: '2001-2024', ganancias: '134000000' },
+    { id: 2, nombre: 'Roger', apellido: 'Federer', nacionalidad: 'Suiza', periodoActivo: '1998-2022', ganancias: '130000000' },
+    { id: 3, nombre: 'Serena', apellido: 'Williams', nacionalidad: 'Estados Unidos', periodoActivo: '1995-2022', ganancias: '94000000' },
+    { id: 4, nombre: 'Novak', apellido: 'Djokovic', nacionalidad: 'Serbia', periodoActivo: '2003-Presente', ganancias: '180000000' },
+];
+
 let ultimaBusqueda = '';
 let enviandoFormulario = false;
 
@@ -9,14 +15,11 @@ const form = document.getElementById('form-jugador');
 const inputId = document.getElementById('input-jugador-id');
 const inputNombre = document.getElementById('input-nombre');
 const inputApellido = document.getElementById('input-apellido');
-const inputSexo = document.getElementById('input-sexo');
 const inputNacionalidad = document.getElementById('input-nacionalidad');
-const inputPeriodoActivo = document.getElementById('input-periodo-activo');
 const inputGanancias = document.getElementById('input-ganancias');
 const inputBuscarApellido = document.getElementById('input-buscar-apellido');
 const btnBuscar = document.getElementById('btn-buscar-jugador');
 const btnAgregar = document.getElementById('btn-agregar-jugador');
-const thAcciones = document.getElementById('th-acciones');
 const btnCancelar = document.getElementById('btn-cancelar-jugador');
 
 function escapeHtml(valor) {
@@ -29,29 +32,24 @@ function escapeHtml(valor) {
 }
 
 function renderTabla(lista) {
-    const permitido = puedeEscribir('jugadores');
-
     if (lista.length === 0) {
-        tbody.innerHTML = '<tr class="no-results"><td colspan="' + (permitido ? 7 : 6) + '">No se encontraron jugadores.</td></tr>';
+        tbody.innerHTML = '<tr class="no-results"><td colspan="6">No se encontraron jugadores.</td></tr>';
         return;
     }
 
     tbody.innerHTML = lista.map(function (jugador) {
-        const acciones = permitido
-            ? '<div class="actions-cell">'
-                + '<button type="button" class="btn-edit" data-action="editar" data-id="' + jugador.id + '">Modificar</button>'
-                + '<button type="button" class="btn-delete" data-action="eliminar" data-id="' + jugador.id + '">Eliminar</button>'
-                + '</div>'
-            : '';
-
         return '<tr>'
             + '<td>' + escapeHtml(jugador.nombre) + '</td>'
             + '<td>' + escapeHtml(jugador.apellido) + '</td>'
-            + '<td>' + escapeHtml(jugador.sexo === 'F' ? 'Femenino' : 'Masculino') + '</td>'
-            + '<td>' + escapeHtml(jugador.nacionalidad || '-') + '</td>'
-            + '<td>' + escapeHtml(jugador.periodoActivo || '-') + '</td>'
-            + '<td>' + escapeHtml(jugador.ganancias || '-') + '</td>'
-            + (permitido ? '<td>' + acciones + '</td>' : '')
+            + '<td>' + escapeHtml(jugador.nacionalidad) + '</td>'
+            + '<td>' + escapeHtml(jugador.periodoActivo) + '</td>'
+            + '<td>' + escapeHtml(jugador.ganancias) + '</td>'
+            + '<td>'
+            + '<div class="actions-cell">'
+            + '<button type="button" class="btn-edit" data-action="editar" data-id="' + jugador.id + '">Modificar</button>'
+            + '<button type="button" class="btn-delete" data-action="eliminar" data-id="' + jugador.id + '">Eliminar</button>'
+            + '</div>'
+            + '</td>'
             + '</tr>';
     }).join('');
 }
@@ -70,26 +68,7 @@ function renderConFiltroActual() {
     renderTabla(listaFiltrada());
 }
 
-function aplicarPermisosUI() {
-    btnAgregar.hidden = !puedeEscribir('jugadores');
-    thAcciones.hidden = !puedeEscribir('jugadores');
-    renderConFiltroActual();
-}
-
-async function cargarJugadores() {
-    try {
-        const respuesta = await fetch('/api/jugadores');
-        jugadores = respuesta.ok ? await respuesta.json() : [];
-        renderConFiltroActual();
-    } catch (error) {
-        tbody.innerHTML = '<tr class="no-results"><td colspan="7">No se pudo conectar con el servidor. Entrá por http://localhost:3000/ con el backend corriendo (npm start).</td></tr>';
-    }
-}
-
 function abrirModalAgregar() {
-    if (!puedeEscribir('jugadores')) {
-        return;
-    }
     form.reset();
     inputId.value = '';
     modalTitle.textContent = 'Agregar Jugador';
@@ -98,9 +77,6 @@ function abrirModalAgregar() {
 }
 
 function abrirModalEditar(id) {
-    if (!puedeEscribir('jugadores')) {
-        return;
-    }
     const jugador = jugadores.find(function (j) { return j.id === id; });
     if (!jugador) {
         return;
@@ -108,10 +84,8 @@ function abrirModalEditar(id) {
     inputId.value = jugador.id;
     inputNombre.value = jugador.nombre;
     inputApellido.value = jugador.apellido;
-    inputSexo.value = jugador.sexo;
-    inputNacionalidad.value = jugador.nacionalidad || '';
-    inputPeriodoActivo.value = jugador.periodoActivo || '';
-    inputGanancias.value = jugador.ganancias || '';
+    inputNacionalidad.value = jugador.nacionalidad;
+    inputGanancias.value = jugador.ganancias;
     modalTitle.textContent = 'Modificar Jugador';
     overlay.hidden = false;
     inputNombre.focus();
@@ -123,10 +97,30 @@ function cerrarModal() {
     inputId.value = '';
 }
 
-async function eliminarJugador(id) {
-    if (!puedeEscribir('jugadores')) {
+function agregarJugador(nombre, apellido, nacionalidad, ganancias) {
+    const nuevoId = jugadores.reduce(function (maxId, j) { return Math.max(maxId, j.id); }, 0) + 1;
+    jugadores.push({
+        id: nuevoId,
+        nombre: nombre,
+        apellido: apellido,
+        nacionalidad: nacionalidad,
+        ganancias: ganancias,
+        periodoActivo: '-',
+    });
+}
+
+function modificarJugador(id, nombre, apellido, nacionalidad, ganancias) {
+    const jugador = jugadores.find(function (j) { return j.id === id; });
+    if (!jugador) {
         return;
     }
+    jugador.nombre = nombre;
+    jugador.apellido = apellido;
+    jugador.nacionalidad = nacionalidad;
+    jugador.ganancias = ganancias;
+}
+
+function eliminarJugador(id) {
     const jugador = jugadores.find(function (j) { return j.id === id; });
     if (!jugador) {
         return;
@@ -135,12 +129,8 @@ async function eliminarJugador(id) {
     if (!confirmado) {
         return;
     }
-    const respuesta = await fetch('/api/jugadores/' + id, { method: 'DELETE' });
-    if (!respuesta.ok) {
-        alert('No se pudo eliminar el jugador.');
-        return;
-    }
-    await cargarJugadores();
+    jugadores = jugadores.filter(function (j) { return j.id !== id; });
+    renderConFiltroActual();
     alert('Jugador eliminado correctamente.');
 }
 
@@ -181,49 +171,34 @@ document.addEventListener('keydown', function (evento) {
     }
 });
 
-document.addEventListener('rolCambiado', aplicarPermisosUI);
-
-form.addEventListener('submit', async function (evento) {
+form.addEventListener('submit', function (evento) {
     evento.preventDefault();
-    if (enviandoFormulario || !puedeEscribir('jugadores')) {
+    if (enviandoFormulario) {
         return;
     }
     enviandoFormulario = true;
 
-    const datos = {
-        nombre: inputNombre.value.trim(),
-        apellido: inputApellido.value.trim(),
-        sexo: inputSexo.value,
-        nacionalidad: inputNacionalidad.value.trim(),
-        periodoActivo: inputPeriodoActivo.value.trim(),
-        ganancias: inputGanancias.value.replace(/\D/g, ''),
-    };
+    const nombre = inputNombre.value.trim();
+    const apellido = inputApellido.value.trim();
+    const nacionalidad = inputNacionalidad.value.trim();
+    const ganancias = inputGanancias.value.replace(/\D/g, '');
 
-    if (!datos.nombre || !datos.apellido || !datos.sexo || !datos.nacionalidad) {
+    if (!nombre || !apellido || !nacionalidad) {
         enviandoFormulario = false;
         return;
     }
 
     const idEditado = inputId.value ? Number(inputId.value) : null;
-    const url = idEditado !== null ? '/api/jugadores/' + idEditado : '/api/jugadores';
-    const metodo = idEditado !== null ? 'PUT' : 'POST';
 
-    const respuesta = await fetch(url, {
-        method: metodo,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(datos),
-    });
-
-    if (!respuesta.ok) {
-        alert('No se pudo guardar el jugador.');
-        enviandoFormulario = false;
-        return;
+    if (idEditado !== null) {
+        modificarJugador(idEditado, nombre, apellido, nacionalidad, ganancias);
+    } else {
+        agregarJugador(nombre, apellido, nacionalidad, ganancias);
     }
 
-    await cargarJugadores();
+    renderConFiltroActual();
     cerrarModal();
     enviandoFormulario = false;
 });
 
-aplicarPermisosUI();
-cargarJugadores();
+renderTabla(jugadores);

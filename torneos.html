@@ -15,10 +15,7 @@
                 <li><a href="torneos.html" class="active">Torneos</a></li>
                 <li><a href="partidos.html">Partidos</a></li>
                 <li><a href="jugadores.html">Jugadores</a></li>
-                <li><a href="entrenadores.html">Entrenadores</a></li>
-                <li><a href="arbitros.html">Árbitros</a></li>
             </ul>
-            <div class="role-switcher" id="sesion-navbar"></div>
         </div>
     </nav>
 
@@ -31,35 +28,42 @@
         <section class="search-section">
             <h3>Buscar Torneo</h3>
             <form class="search-form">
-                <select id="filtro-anio">
+                <select>
                     <option value="">Seleccionar año...</option>
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
                 </select>
-                <select id="filtro-torneo">
+                <select>
                     <option value="">Seleccionar torneo...</option>
+                    <option value="wimbledon">Wimbledon</option>
+                    <option value="us-open">US Open</option>
+                    <option value="roland-garros">Roland Garros</option>
+                    <option value="australian-open">Australian Open</option>
                 </select>
-                <button type="button" id="btn-buscar-torneo">Buscar</button>
+                <button type="button">Buscar</button>
             </form>
         </section>
 
         <section class="card">
-            <h4>Resultados del Torneo</h4>
+            <h4>Partidos del Torneo</h4>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>Modalidad</th>
-                            <th>Campeón</th>
-                            <th>Finalista</th>
-                            <th>Dinero repartido</th>
+                            <th>Fase</th>
+                            <th>Jugador 1</th>
+                            <th>Jugador 2</th>
+                            <th>Resultado</th>
                         </tr>
                     </thead>
-                    <tbody id="torneos-tbody">
+                    <tbody>
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
-    <script src="permisos.js"></script>
-    <script src="scriptTorneo.js"></script>
 </body>
 </html>
