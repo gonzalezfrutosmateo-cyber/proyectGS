@@ -5,14 +5,10 @@ let jugadores = [
     { id: 4, nombre: 'Novak', apellido: 'Djokovic', nacionalidad: 'Serbia', periodoActivo: '2003-Presente', ganancias: '180000000' },
 ];
 
-let ultimaBusqueda = '';
-let enviandoFormulario = false;
-
 const tbody = document.getElementById('jugadores-tbody');
 const overlay = document.getElementById('jugador-modal-overlay');
 const modalTitle = document.getElementById('jugador-modal-title');
 const form = document.getElementById('form-jugador');
-const inputId = document.getElementById('input-jugador-id');
 const inputNombre = document.getElementById('input-nombre');
 const inputApellido = document.getElementById('input-apellido');
 const inputNacionalidad = document.getElementById('input-nacionalidad');
@@ -33,7 +29,7 @@ function escapeHtml(valor) {
 
 function renderTabla(lista) {
     if (lista.length === 0) {
-        tbody.innerHTML = '<tr class="no-results"><td colspan="6">No se encontraron jugadores.</td></tr>';
+        tbody.innerHTML = '<tr class="no-results"><td colspan="5">No se encontraron jugadores.</td></tr>';
         return;
     }
 
@@ -44,49 +40,21 @@ function renderTabla(lista) {
             + '<td>' + escapeHtml(jugador.nacionalidad) + '</td>'
             + '<td>' + escapeHtml(jugador.periodoActivo) + '</td>'
             + '<td>' + escapeHtml(jugador.ganancias) + '</td>'
-            + '<td>'
-            + '<div class="actions-cell">'
-            + '<button type="button" class="btn-edit" data-action="editar" data-id="' + jugador.id + '">Modificar</button>'
-            + '<button type="button" class="btn-delete" data-action="eliminar" data-id="' + jugador.id + '">Eliminar</button>'
-            + '</div>'
-            + '</td>'
             + '</tr>';
     }).join('');
 }
 
-function listaFiltrada() {
-    if (!ultimaBusqueda) {
-        return jugadores;
-    }
-    const consulta = ultimaBusqueda.toLowerCase();
-    return jugadores.filter(function (jugador) {
-        return jugador.apellido.toLowerCase().includes(consulta);
-    });
-}
-
-function renderConFiltroActual() {
-    renderTabla(listaFiltrada());
+function buscar() {
+    const consulta = inputBuscarApellido.value.trim().toLowerCase();
+    const lista = consulta
+        ? jugadores.filter(function (jugador) { return jugador.apellido.toLowerCase().includes(consulta); })
+        : jugadores;
+    renderTabla(lista);
 }
 
 function abrirModalAgregar() {
     form.reset();
-    inputId.value = '';
     modalTitle.textContent = 'Agregar Jugador';
-    overlay.hidden = false;
-    inputNombre.focus();
-}
-
-function abrirModalEditar(id) {
-    const jugador = jugadores.find(function (j) { return j.id === id; });
-    if (!jugador) {
-        return;
-    }
-    inputId.value = jugador.id;
-    inputNombre.value = jugador.nombre;
-    inputApellido.value = jugador.apellido;
-    inputNacionalidad.value = jugador.nacionalidad;
-    inputGanancias.value = jugador.ganancias;
-    modalTitle.textContent = 'Modificar Jugador';
     overlay.hidden = false;
     inputNombre.focus();
 }
@@ -94,7 +62,6 @@ function abrirModalEditar(id) {
 function cerrarModal() {
     overlay.hidden = true;
     form.reset();
-    inputId.value = '';
 }
 
 function agregarJugador(nombre, apellido, nacionalidad, ganancias) {
@@ -109,49 +76,7 @@ function agregarJugador(nombre, apellido, nacionalidad, ganancias) {
     });
 }
 
-function modificarJugador(id, nombre, apellido, nacionalidad, ganancias) {
-    const jugador = jugadores.find(function (j) { return j.id === id; });
-    if (!jugador) {
-        return;
-    }
-    jugador.nombre = nombre;
-    jugador.apellido = apellido;
-    jugador.nacionalidad = nacionalidad;
-    jugador.ganancias = ganancias;
-}
-
-function eliminarJugador(id) {
-    const jugador = jugadores.find(function (j) { return j.id === id; });
-    if (!jugador) {
-        return;
-    }
-    const confirmado = confirm('¿Seguro que deseas eliminar a ' + jugador.nombre + ' ' + jugador.apellido + '?');
-    if (!confirmado) {
-        return;
-    }
-    jugadores = jugadores.filter(function (j) { return j.id !== id; });
-    renderConFiltroActual();
-    alert('Jugador eliminado correctamente.');
-}
-
-tbody.addEventListener('click', function (evento) {
-    const boton = evento.target.closest('button[data-action]');
-    if (!boton) {
-        return;
-    }
-    const id = Number(boton.dataset.id);
-    if (boton.dataset.action === 'editar') {
-        abrirModalEditar(id);
-    } else if (boton.dataset.action === 'eliminar') {
-        eliminarJugador(id);
-    }
-});
-
-btnBuscar.addEventListener('click', function () {
-    ultimaBusqueda = inputBuscarApellido.value.trim();
-    renderConFiltroActual();
-});
-
+btnBuscar.addEventListener('click', buscar);
 btnAgregar.addEventListener('click', abrirModalAgregar);
 btnCancelar.addEventListener('click', cerrarModal);
 
@@ -173,10 +98,6 @@ document.addEventListener('keydown', function (evento) {
 
 form.addEventListener('submit', function (evento) {
     evento.preventDefault();
-    if (enviandoFormulario) {
-        return;
-    }
-    enviandoFormulario = true;
 
     const nombre = inputNombre.value.trim();
     const apellido = inputApellido.value.trim();
@@ -184,21 +105,10 @@ form.addEventListener('submit', function (evento) {
     const ganancias = inputGanancias.value.replace(/\D/g, '');
 
     if (!nombre || !apellido || !nacionalidad) {
-        enviandoFormulario = false;
         return;
     }
 
-    const idEditado = inputId.value ? Number(inputId.value) : null;
-
-    if (idEditado !== null) {
-        modificarJugador(idEditado, nombre, apellido, nacionalidad, ganancias);
-    } else {
-        agregarJugador(nombre, apellido, nacionalidad, ganancias);
-    }
-
-    renderConFiltroActual();
+    agregarJugador(nombre, apellido, nacionalidad, ganancias);
     cerrarModal();
-    enviandoFormulario = false;
+    buscar();
 });
-
-renderTabla(jugadores);
