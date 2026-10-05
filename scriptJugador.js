@@ -110,9 +110,13 @@ form.addEventListener('submit', function (evento) {
         return;
     }
 
+    fetch('/nuevojugador', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ nombre: nombre, apellido: apellido }),
+    });
+
     agregarJugador(nombre, apellido, nacionalidad, ganancias, periodo);
     cerrarModal();
     buscar();
 });
-
-buscar();

@@ -89,6 +89,12 @@ form.addEventListener('submit', function (evento) {
         return;
     }
 
+    fetch('/nuevoarbitro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ nombre: nombre, apellido: apellido }),
+    });
+
     agregarArbitro(nombre, apellido);
     cerrarModal();
     buscar();

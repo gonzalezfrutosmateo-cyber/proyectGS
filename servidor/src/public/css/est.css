@@ -1,0 +1,56 @@
+.a {
+    background-color: green;
+    text-align: center;
+}
+
+.b {
+    background-color: rgb(249, 209, 2);
+    text-align: center;
+}
+
+.c {
+    background-color: red;
+    text-align: center;
+}
+
+.d {
+    background-color: blue;
+    text-align: center;
+}
+
+.abajin {
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+.camisa {
+    text-decoration: none;
+    color: black;
+    font-size: 10vh;
+}
+
+.camisuli {
+    text-decoration: none;
+    color: black;
+    font-size: 5vh;
+}
+
+.sera {
+    font-size: larger;
+    justify-content: center;
+    align-items: center;
+}
+
+#btn-buscar {
+    text-decoration: none;
+    color: black;
+    margin: 10px;
+}
+
+.agregador,
+.eliminador,
+.modificador,
+.mostrador {
+
+    margin: 10px;
+}

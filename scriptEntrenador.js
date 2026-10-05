@@ -101,6 +101,12 @@ form.addEventListener('submit', function (evento) {
         return;
     }
 
+    fetch('/nuevoentrenador', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ nombre: nombre, apellido: apellido }),
+    });
+
     agregarEntrenador(nombre, apellido, nacionalidad, especialidad);
     cerrarModal();
     buscar();
