@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Entrenador — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'entrenadores' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/entrenadores" class="volver">← Volver a Entrenadores</a>
+            <h3>Buscar entrenador</h3>
+        </div>
+
+        <section class="search-section">
+            <form class="search-form" action="/consultarent" method="GET">
+                <input type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>" autofocus>
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <% if (entrenadores !== null) { %>
+            <section class="card">
+                <h4>Resultados (<%= entrenadores.length %>)</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Jugadores Entrenados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (entrenadores.length === 0) { %>
+                                <tr class="no-results"><td colspan="3">No se encontraron entrenadores.</td></tr>
+                            <% } %>
+                            <% entrenadores.forEach(e => { %>
+                                <tr>
+                                    <td><%= e.nombre %></td>
+                                    <td><%= e.apellido %></td>
+                                    <td><%= e.jugadores || '-' %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <% } %>
+    </main>
+</body>
+
+</html>

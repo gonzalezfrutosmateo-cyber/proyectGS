@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Torneos — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'torneos' }) %>
+
+    <main>
+        <section class="hero">
+            <h2>Torneos y Ediciones</h2>
+            <p>Consulta los detalles de cada edición del Grand Slam, sus resultados y composición de partidos.</p>
+        </section>
+
+        <h3>Torneos</h3>
+        <div class="menu-grid">
+            <a href="/altator" class="menu-boton agregador">
+                <span class="menu-titulo">Agregar edición</span>
+                <span class="menu-texto">Cargar un torneo de un año nuevo con su sede.</span>
+            </a>
+            <a href="/bajator" class="menu-boton eliminador">
+                <span class="menu-titulo">Eliminar edición</span>
+                <span class="menu-texto">Borrar una edición que no tenga partidos cargados.</span>
+            </a>
+            <a href="/modtor" class="menu-boton modificador">
+                <span class="menu-titulo">Modificar edición</span>
+                <span class="menu-texto">Corregir el torneo, el año o la sede.</span>
+            </a>
+            <a href="/mostrartor" class="menu-boton mostrador">
+                <span class="menu-titulo">Ver torneos y ediciones</span>
+                <span class="menu-texto">Los cuatro Grand Slam y todas sus ediciones.</span>
+            </a>
+            <a href="/consultartor" class="menu-boton buscador">
+                <span class="menu-titulo">Buscar torneo</span>
+                <span class="menu-texto">Ver los partidos de un torneo en un año.</span>
+            </a>
+        </div>
+    </main>
+</body>
+
+</html>

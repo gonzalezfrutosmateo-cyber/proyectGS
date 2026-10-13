@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Jugador — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'jugadores' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/jugadores" class="volver">← Volver a Jugadores</a>
+            <h3>Agregar jugador</h3>
+        </div>
+
+        <section class="card">
+            <h4>Datos del jugador</h4>
+
+            <% if (error) { %>
+                <p class="aviso aviso-error"><%= error %></p>
+            <% } %>
+
+            <form action="/nuevojug" method="POST">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" name="nombre" type="text" maxlength="50" required value="<%= jugador.nombre || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="apellido">Apellido</label>
+                        <input id="apellido" name="apellido" type="text" maxlength="50" required value="<%= jugador.apellido || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="nacionalidad">Nacionalidad</label>
+                        <input id="nacionalidad" name="nacionalidad" type="text" maxlength="120" list="lista-paises" placeholder="Ej: España" value="<%= jugador.nacionalidad || '' %>">
+                        <small>Si tiene más de una, separalas con coma.</small>
+                    </div>
+                </div>
+
+                <datalist id="lista-paises">
+                    <% paises.forEach(pais => { %>
+                        <option value="<%= pais.nombre %>">
+                    <% }) %>
+                </datalist>
+
+                <div class="form-actions">
+                    <a href="/jugadores" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>

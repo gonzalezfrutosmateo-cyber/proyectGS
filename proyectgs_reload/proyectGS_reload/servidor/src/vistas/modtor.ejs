@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Edición — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'torneos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/torneos" class="volver">← Volver a Torneos</a>
+            <h3>Modificar edición</h3>
+        </div>
+
+        <% if (edicion) { %>
+            <!-- Formulario con los datos de la edición elegida -->
+            <section class="card">
+                <h4>Datos de la edición</h4>
+
+                <% if (error) { %>
+                    <p class="aviso aviso-error"><%= error %></p>
+                <% } %>
+
+                <form action="/actualizartor" method="POST">
+                    <input type="hidden" name="id" value="<%= edicion.id_edicion %>">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="torneo">Torneo</label>
+                            <select id="torneo" name="torneo" required>
+                                <option value="">Seleccionar torneo...</option>
+                                <% torneos.forEach(t => { %>
+                                    <option value="<%= t.id_torneo %>" <%= String(edicion.id_torneo) === String(t.id_torneo) ? 'selected' : '' %>><%= t.nombre %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label for="anio">Año</label>
+                            <input id="anio" name="anio" type="number" min="1877" max="2100" required value="<%= edicion.anio %>">
+                        </div>
+                        <div class="form-field">
+                            <label for="sede">Sede</label>
+                            <input id="sede" name="sede" type="text" maxlength="80" list="lista-sedes" required value="<%= edicion.sede %>">
+                            <small>Si la sede no existe se agrega en el país del torneo.</small>
+                        </div>
+                    </div>
+
+                    <datalist id="lista-sedes">
+                        <% sedes.forEach(s => { %>
+                            <option value="<%= s.nombre %>">
+                        <% }) %>
+                    </datalist>
+
+                    <div class="form-actions">
+                        <a href="/modtor" class="btn-cancel">Cancelar</a>
+                        <button type="submit" class="btn-guardar">Guardar cambios</button>
+                    </div>
+                </form>
+            </section>
+        <% } else { %>
+            <!-- Lista para elegir qué edición modificar -->
+            <section class="search-section">
+                <form class="search-form" action="/modtor" method="GET">
+                    <select name="torneo">
+                        <option value="">Todos los torneos</option>
+                        <% torneos.forEach(t => { %>
+                            <option value="<%= t.id_torneo %>" <%= String(filtros.torneo) === String(t.id_torneo) ? 'selected' : '' %>><%= t.nombre %></option>
+                        <% }) %>
+                    </select>
+                    <select name="anio">
+                        <option value="">Todos los años</option>
+                        <% anios.forEach(a => { %>
+                            <option value="<%= a %>" <%= String(filtros.anio) === String(a) ? 'selected' : '' %>><%= a %></option>
+                        <% }) %>
+                    </select>
+                    <button type="submit">Buscar</button>
+                </form>
+            </section>
+
+            <section class="card">
+                <h4>Elegí la edición que querés modificar</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Torneo</th>
+                                <th>Año</th>
+                                <th>Sede</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (ediciones.length === 0) { %>
+                                <tr class="no-results"><td colspan="4">No se encontraron ediciones.</td></tr>
+                            <% } %>
+                            <% ediciones.forEach(e => { %>
+                                <tr>
+                                    <td><%= e.torneo %></td>
+                                    <td><%= e.anio %></td>
+                                    <td><%= e.sede %></td>
+                                    <td class="celda-accion"><a href="/modtor?id=<%= e.id_edicion %>" class="btn-edit">Modificar</a></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <% } %>
+    </main>
+</body>
+
+</html>

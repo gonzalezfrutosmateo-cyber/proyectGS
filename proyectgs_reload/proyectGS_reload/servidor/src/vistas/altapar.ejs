@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Partido — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'partidos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/partidos" class="volver">← Volver a Partidos</a>
+            <h3>Agregar partido</h3>
+        </div>
+
+        <section class="card">
+            <h4>Datos del partido</h4>
+
+            <% if (error) { %>
+                <p class="aviso aviso-error"><%= error %></p>
+            <% } %>
+
+            <%- include('partials/formpartido', { accion: '/nuevopar', cancelar: '/partidos', boton: 'Guardar' }) %>
+        </section>
+    </main>
+</body>
+
+</html>

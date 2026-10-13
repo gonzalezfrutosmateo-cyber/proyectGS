@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Entrenador — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'entrenadores' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/entrenadores" class="volver">← Volver a Entrenadores</a>
+            <h3>Agregar entrenador</h3>
+        </div>
+
+        <section class="card">
+            <h4>Datos del entrenador</h4>
+
+            <% if (error) { %>
+                <p class="aviso aviso-error"><%= error %></p>
+            <% } %>
+
+            <form action="/nuevoent" method="POST">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" name="nombre" type="text" maxlength="50" required value="<%= entrenador.nombre || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="apellido">Apellido</label>
+                        <input id="apellido" name="apellido" type="text" maxlength="50" required value="<%= entrenador.apellido || '' %>">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/entrenadores" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>

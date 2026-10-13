@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partidos — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'partidos' }) %>
+
+    <main>
+        <section class="hero">
+            <h2>Donde se decide cada historia</h2>
+            <p>Revisa cada encuentro, quién estuvo en la silla y cómo se repartieron los premios en cada fase.</p>
+        </section>
+
+        <h3>Partidos</h3>
+        <div class="menu-grid">
+            <a href="/altapar" class="menu-boton agregador">
+                <span class="menu-titulo">Agregar partido</span>
+                <span class="menu-texto">Cargar un partido con sus jugadores, árbitro y resultado.</span>
+            </a>
+            <a href="/bajapar" class="menu-boton eliminador">
+                <span class="menu-titulo">Eliminar partido</span>
+                <span class="menu-texto">Borrar un partido cargado por error.</span>
+            </a>
+            <a href="/modpar" class="menu-boton modificador">
+                <span class="menu-titulo">Modificar partido</span>
+                <span class="menu-texto">Corregir los datos o el resultado de un partido.</span>
+            </a>
+            <a href="/mostrarpar" class="menu-boton mostrador">
+                <span class="menu-titulo">Ver lista de partidos</span>
+                <span class="menu-texto">Todos los partidos con su resultado y premio.</span>
+            </a>
+            <a href="/consultarpar" class="menu-boton buscador">
+                <span class="menu-titulo">Buscar partidos</span>
+                <span class="menu-texto">Filtrar por torneo, año y modalidad.</span>
+            </a>
+        </div>
+    </main>
+</body>
+
+</html>

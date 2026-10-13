@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Partidos — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'partidos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/partidos" class="volver">← Volver a Partidos</a>
+            <h3>Buscar partidos</h3>
+        </div>
+
+        <%- include('partials/filtrospartido', { accion: '/consultarpar' }) %>
+
+        <% if (partidos !== null) { %>
+            <section class="card">
+                <h4>Resultados (<%= partidos.length %>)</h4>
+                <%- include('partials/tablapartidos', { accion: '' }) %>
+            </section>
+        <% } %>
+    </main>
+</body>
+
+</html>

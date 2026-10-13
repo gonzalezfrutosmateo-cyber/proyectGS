@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Entrenadores — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'entrenadores' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/entrenadores" class="volver">← Volver a Entrenadores</a>
+            <h3>Lista de entrenadores</h3>
+        </div>
+
+        <section class="card">
+            <h4>Entrenadores (<%= entrenadores.length %>)</h4>
+
+            <% if (mensaje) { %>
+                <p class="aviso aviso-ok"><%= mensaje %></p>
+            <% } %>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Jugadores Entrenados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (entrenadores.length === 0) { %>
+                            <tr class="no-results"><td colspan="3">Todavía no hay entrenadores cargados.</td></tr>
+                        <% } %>
+                        <% entrenadores.forEach(e => { %>
+                            <tr>
+                                <td><%= e.nombre %></td>
+                                <td><%= e.apellido %></td>
+                                <td><%= e.jugadores || '-' %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

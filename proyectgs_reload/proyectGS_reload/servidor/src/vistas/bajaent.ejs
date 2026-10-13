@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Entrenador — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'entrenadores' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/entrenadores" class="volver">← Volver a Entrenadores</a>
+            <h3>Eliminar entrenador</h3>
+        </div>
+
+        <section class="search-section">
+            <form class="search-form" action="/bajaent" method="GET">
+                <input type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>">
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h4>Elegí el entrenador que querés dar de baja</h4>
+
+            <% if (mensaje) { %>
+                <p class="aviso aviso-ok"><%= mensaje %></p>
+            <% } %>
+            <% if (error) { %>
+                <p class="aviso aviso-error"><%= error %></p>
+            <% } %>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (entrenadores.length === 0) { %>
+                            <tr class="no-results"><td colspan="3">No se encontraron entrenadores.</td></tr>
+                        <% } %>
+                        <% entrenadores.forEach(e => { %>
+                            <tr>
+                                <td><%= e.nombre %></td>
+                                <td><%= e.apellido %></td>
+                                <td class="celda-accion">
+                                    <form action="/eliminarent" method="POST" onsubmit="return confirm('¿Seguro que querés dar de baja a este entrenador?')">
+                                        <input type="hidden" name="id" value="<%= e.id_entrenador %>">
+                                        <button type="submit" class="btn-delete">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
