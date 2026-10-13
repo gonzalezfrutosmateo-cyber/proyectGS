@@ -40,7 +40,7 @@ export const entrenadores = (pet, resp) => {
     resp.render('entrenadores');
 };
 
-// ---------- ALTA ----------
+// ALTA
 export const altaent = (pet, resp) => {
     resp.render('altaent', { entrenador: {}, error: '' });
 };
@@ -66,7 +66,7 @@ export const nuevoent = async (pet, resp) => {
     }
 };
 
-// ---------- BAJA (lógica, activo = 0) ----------
+// BAJA (lógica, activo = 0)
 export const bajaent = async (pet, resp) => {
     const apellido = (pet.query.apellido || '').trim();
     const lista = await listarEntrenadores(apellido);
@@ -87,7 +87,7 @@ export const eliminarent = async (pet, resp) => {
     }
 };
 
-// ---------- MODIFICACIÓN ----------
+
 export const modent = async (pet, resp) => {
     const id = pet.query.id;
     if (id) {
@@ -127,13 +127,13 @@ export const actualizarent = async (pet, resp) => {
     }
 };
 
-// ---------- MOSTRAR TODOS ----------
+
 export const mostrarent = async (pet, resp) => {
     const lista = await listarEntrenadores('');
     resp.render('mostrarent', { entrenadores: lista, mensaje: avisos[pet.query.msg] || '' });
 };
 
-// ---------- CONSULTA (buscar por apellido) ----------
+
 export const consultarent = async (pet, resp) => {
     const apellido = (pet.query.apellido || '').trim();
     let lista = null;

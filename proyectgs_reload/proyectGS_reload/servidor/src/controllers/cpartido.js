@@ -49,7 +49,7 @@ const sqlpartidos = `
     LEFT JOIN PREMIO pr ON pr.EDICION_id_edicion = p.EDICION_id_edicion
         AND pr.modalidad = p.modalidad AND pr.fase = p.fase`;
 
-// Lista de partidos filtrada por torneo, año y/o modalidad (también la usa el controller de torneos)
+// Lista de partidos filtrada por torneo, año y/o modalidad 
 export async function listarPartidos(filtros) {
     let sql = sqlpartidos;
     let condiciones = [];
@@ -79,7 +79,7 @@ export async function listarPartidos(filtros) {
     return filas;
 }
 
-// Torneos y años para los selects de búsqueda (también los usa el controller de torneos)
+// Torneos y años para los selects de búsqueda 
 export async function datosFiltros() {
     const [torneos] = await bdd.query('SELECT id_torneo, nombre FROM TORNEO ORDER BY nombre');
     const [anios] = await bdd.query('SELECT DISTINCT anio FROM EDICION ORDER BY anio DESC');
@@ -203,7 +203,7 @@ function validarPartido(partido) {
     return '';
 }
 
-// Guarda los jugadores (PARTIDO_JUGADOR) y los sets (RESULTADO_SET) del partido.
+// Guarda los jugadores y los sets  del partido.
 // Primero borra los que tenía, así sirve tanto para el alta como para la modificación.
 async function guardarDetalle(idpar, partido) {
     await bdd.query('DELETE FROM PARTIDO_JUGADOR WHERE PARTIDO_id_partido = ?', [idpar]);
@@ -276,7 +276,7 @@ export const partidos = (pet, resp) => {
     resp.render('partidos');
 };
 
-// ---------- ALTA ----------
+// ALTA
 export const altapar = async (pet, resp) => {
     await mostrarFormulario(resp, 'altapar', partidoVacio(), '');
 };
@@ -305,7 +305,7 @@ export const nuevopar = async (pet, resp) => {
     }
 };
 
-// ---------- BAJA ----------
+// BAJA
 // Los partidos no tienen columna activo, así que se borran junto con sus jugadores y sets.
 export const bajapar = async (pet, resp) => {
     const filtros = leerFiltros(pet.query);
@@ -335,7 +335,7 @@ export const eliminarpar = async (pet, resp) => {
     }
 };
 
-// ---------- MODIFICACIÓN ----------
+// MODIFICACIÓN
 export const modpar = async (pet, resp) => {
     const id = pet.query.id;
     if (id) {
@@ -377,13 +377,13 @@ export const actualizarpar = async (pet, resp) => {
     }
 };
 
-// ---------- MOSTRAR TODOS ----------
+// MOSTRAR TODOS
 export const mostrarpar = async (pet, resp) => {
     const lista = await listarPartidos({});
     resp.render('mostrarpar', { partidos: lista, mensaje: avisos[pet.query.msg] || '' });
 };
 
-// ---------- CONSULTA (buscar por torneo, año y modalidad) ----------
+// CONSULTA
 export const consultarpar = async (pet, resp) => {
     const filtros = leerFiltros(pet.query);
     const datos = await datosFiltros();

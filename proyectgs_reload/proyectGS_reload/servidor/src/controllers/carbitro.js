@@ -37,7 +37,7 @@ export const arbitros = (pet, resp) => {
     resp.render('arbitros');
 };
 
-// ---------- ALTA ----------
+// ALTA
 export const altaarb = (pet, resp) => {
     resp.render('altaarb', { arbitro: {}, error: '' });
 };
@@ -63,7 +63,7 @@ export const nuevoarb = async (pet, resp) => {
     }
 };
 
-// ---------- BAJA (lógica, activo = 0) ----------
+// BAJA 
 export const bajaarb = async (pet, resp) => {
     const apellido = (pet.query.apellido || '').trim();
     const lista = await listarArbitros(apellido);
@@ -84,7 +84,7 @@ export const eliminararb = async (pet, resp) => {
     }
 };
 
-// ---------- MODIFICACIÓN ----------
+// MODIFICACIÓN
 export const modarb = async (pet, resp) => {
     const id = pet.query.id;
     if (id) {
@@ -124,13 +124,13 @@ export const actualizararb = async (pet, resp) => {
     }
 };
 
-// ---------- MOSTRAR TODOS ----------
+// MOSTRAR TODOS
 export const mostrararb = async (pet, resp) => {
     const lista = await listarArbitros('');
     resp.render('mostrararb', { arbitros: lista, mensaje: avisos[pet.query.msg] || '' });
 };
 
-// ---------- CONSULTA (buscar por apellido) ----------
+// CONSULTA
 export const consultararb = async (pet, resp) => {
     const apellido = (pet.query.apellido || '').trim();
     let lista = null;

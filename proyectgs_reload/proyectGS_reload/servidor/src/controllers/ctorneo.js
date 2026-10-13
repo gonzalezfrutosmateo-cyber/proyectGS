@@ -53,14 +53,14 @@ function leerFiltros(query) {
     };
 }
 
-// Torneos y sedes para el formulario (al modificar se incluye el torneo actual aunque esté inactivo)
+// Torneos y sedes para el formulario 
 async function datosFormulario(idtorneo) {
     const [torneos] = await bdd.query('SELECT id_torneo, nombre FROM TORNEO WHERE activo = 1 OR id_torneo = ? ORDER BY nombre', [idtorneo || 0]);
     const [sedes] = await bdd.query('SELECT DISTINCT nombre FROM SEDE ORDER BY nombre');
     return { torneos, sedes };
 }
 
-// Busca la sede en el país del torneo; si no existe la agrega a la tabla SEDE
+// Busca la sede en el país del torneo
 async function obtenerSede(idtorneo, nombre) {
     const [torneo] = await bdd.query('SELECT PAIS_id_pais FROM TORNEO WHERE id_torneo = ?', [idtorneo]);
     const idpais = torneo[0].PAIS_id_pais;
@@ -97,7 +97,7 @@ export const torneos = (pet, resp) => {
     resp.render('torneos');
 };
 
-// ---------- ALTA (nueva edición de un torneo) ----------
+// ALTA 
 export const altator = async (pet, resp) => {
     const datos = await datosFormulario();
     resp.render('altator', { ...datos, edicion: leerEdicion({}), error: '' });
@@ -129,7 +129,7 @@ export const nuevotor = async (pet, resp) => {
     }
 };
 
-// ---------- BAJA ----------
+// BAJA
 // EDICION no tiene columna activo: se borra, pero solo si no tiene partidos cargados.
 export const bajator = async (pet, resp) => {
     const filtros = leerFiltros(pet.query);
@@ -157,7 +157,7 @@ export const eliminartor = async (pet, resp) => {
     }
 };
 
-// ---------- MODIFICACIÓN ----------
+// MODIFICACIÓN
 export const modtor = async (pet, resp) => {
     const id = pet.query.id;
     if (id) {
@@ -201,7 +201,7 @@ export const actualizartor = async (pet, resp) => {
     }
 };
 
-// ---------- MOSTRAR TODOS ----------
+// MOSTRAR TODOS
 export const mostrartor = async (pet, resp) => {
     const [listatorneos] = await bdd.query(`
         SELECT t.nombre, pa.nombre AS pais,
@@ -214,7 +214,7 @@ export const mostrartor = async (pet, resp) => {
     resp.render('mostrartor', { torneos: listatorneos, ediciones: lista, mensaje: avisos[pet.query.msg] || '' });
 };
 
-// ---------- CONSULTA (partidos de un torneo en un año) ----------
+// CONSULTA 
 export const consultartor = async (pet, resp) => {
     const filtros = leerFiltros(pet.query);
     const datos = await datosFiltros();

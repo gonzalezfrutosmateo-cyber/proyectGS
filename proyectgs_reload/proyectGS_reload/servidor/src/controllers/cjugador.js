@@ -84,7 +84,7 @@ export const jugadores = (pet, resp) => {
     resp.render('jugadores');
 };
 
-// ---------- ALTA ----------
+// ALTA
 export const altajug = async (pet, resp) => {
     const paises = await listarPaises();
     resp.render('altajug', { paises, jugador: {}, error: '' });
@@ -119,7 +119,7 @@ export const nuevojug = async (pet, resp) => {
     }
 };
 
-// ---------- BAJA ----------
+// BAJA
 // La baja es lógica: se pone activo = 0 para no perder los partidos que jugó.
 export const bajajug = async (pet, resp) => {
     const apellido = (pet.query.apellido || '').trim();
@@ -141,7 +141,7 @@ export const eliminarjug = async (pet, resp) => {
     }
 };
 
-// ---------- MODIFICACIÓN ----------
+// MODIFICACIÓN
 // Sin id muestra la lista para elegir; con id muestra el formulario con los datos cargados.
 export const modjug = async (pet, resp) => {
     const id = pet.query.id;
@@ -191,13 +191,13 @@ export const actualizarjug = async (pet, resp) => {
     }
 };
 
-// ---------- MOSTRAR TODOS ----------
+// MOSTRAR TODOS
 export const mostrarjug = async (pet, resp) => {
     const lista = await listarJugadores('');
     resp.render('mostrarjug', { jugadores: lista, mensaje: avisos[pet.query.msg] || '' });
 };
 
-// ---------- CONSULTA (buscar por apellido) ----------
+// CONSULTA
 export const consultarjug = async (pet, resp) => {
     const apellido = (pet.query.apellido || '').trim();
     let lista = null;
