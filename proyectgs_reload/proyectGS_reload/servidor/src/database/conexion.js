@@ -6,7 +6,7 @@ export async function conectar() {
             host: 'localhost',
             database: 'grand_slam',
             user: 'root',
-            password: "Puchus25"
+            password: "1234"
         });
         console.log(`conectado`);
         return bdd;
