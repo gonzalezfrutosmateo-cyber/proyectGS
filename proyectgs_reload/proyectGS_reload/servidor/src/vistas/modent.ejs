@@ -31,11 +31,11 @@
                     <div class="form-grid">
                         <div class="form-field">
                             <label for="nombre">Nombre</label>
-                            <input id="nombre" name="nombre" type="text" maxlength="50" required value="<%= entrenador.nombre %>">
+                            <input data-solo="letras" id="nombre" name="nombre" type="text" maxlength="50" required value="<%= entrenador.nombre %>">
                         </div>
                         <div class="form-field">
                             <label for="apellido">Apellido</label>
-                            <input id="apellido" name="apellido" type="text" maxlength="50" required value="<%= entrenador.apellido %>">
+                            <input data-solo="letras" id="apellido" name="apellido" type="text" maxlength="50" required value="<%= entrenador.apellido %>">
                         </div>
                     </div>
 
@@ -49,7 +49,7 @@
             <!-- Lista para elegir qué entrenador modificar -->
             <section class="search-section">
                 <form class="search-form" action="/modent" method="GET">
-                    <input type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>">
+                    <input data-solo="letras" type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>">
                     <button type="submit">Buscar</button>
                 </form>
             </section>

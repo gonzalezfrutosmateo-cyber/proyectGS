@@ -99,8 +99,8 @@
         <% partido.sets.forEach((set, i) => { %>
             <div class="set-box">
                 <span>Set <%= i + 1 %></span>
-                <input type="number" name="set<%= i + 1 %>g" min="0" max="127" placeholder="Ganador" aria-label="Set <%= i + 1 %>: games del ganador" value="<%= set.ganador %>">
-                <input type="number" name="set<%= i + 1 %>p" min="0" max="127" placeholder="Perdedor" aria-label="Set <%= i + 1 %>: games del perdedor" value="<%= set.perdedor %>">
+                <input data-solo="numeros" type="number" name="set<%= i + 1 %>g" min="0" max="127" placeholder="Ganador" aria-label="Set <%= i + 1 %>: games del ganador" value="<%= set.ganador %>">
+                <input data-solo="numeros" type="number" name="set<%= i + 1 %>p" min="0" max="127" placeholder="Perdedor" aria-label="Set <%= i + 1 %>: games del perdedor" value="<%= set.perdedor %>">
             </div>
         <% }) %>
     </div>

@@ -31,15 +31,15 @@
                     <div class="form-grid">
                         <div class="form-field">
                             <label for="nombre">Nombre</label>
-                            <input id="nombre" name="nombre" type="text" maxlength="50" required value="<%= jugador.nombre %>">
+                            <input data-solo="letras" id="nombre" name="nombre" type="text" maxlength="50" required value="<%= jugador.nombre %>">
                         </div>
                         <div class="form-field">
                             <label for="apellido">Apellido</label>
-                            <input id="apellido" name="apellido" type="text" maxlength="50" required value="<%= jugador.apellido %>">
+                            <input data-solo="letras" id="apellido" name="apellido" type="text" maxlength="50" required value="<%= jugador.apellido %>">
                         </div>
                         <div class="form-field">
                             <label for="nacionalidad">Nacionalidad</label>
-                            <input id="nacionalidad" name="nacionalidad" type="text" maxlength="120" list="lista-paises" value="<%= jugador.nacionalidad || '' %>">
+                            <input data-solo="letras" id="nacionalidad" name="nacionalidad" type="text" maxlength="120" list="lista-paises" value="<%= jugador.nacionalidad || '' %>">
                             <small>Si tiene más de una, separalas con coma.</small>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
             <!-- Lista para elegir qué jugador modificar -->
             <section class="search-section">
                 <form class="search-form" action="/modjug" method="GET">
-                    <input type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>">
+                    <input data-solo="letras" type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>">
                     <button type="submit">Buscar</button>
                 </form>
             </section>
