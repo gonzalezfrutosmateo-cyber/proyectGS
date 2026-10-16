@@ -41,18 +41,22 @@
                             <th>Nombre</th>
                             <th>Apellido</th>
                             <th>Nacionalidad</th>
+                            <th>Período Activo</th>
+                            <th>Ganancias Totales</th>
                             <th>Acción</th>
                         </tr>
                     </thead>
                     <tbody>
                         <% if (jugadores.length === 0) { %>
-                            <tr class="no-results"><td colspan="4">No se encontraron jugadores.</td></tr>
+                            <tr class="no-results"><td colspan="6">No se encontraron jugadores.</td></tr>
                         <% } %>
                         <% jugadores.forEach(j => { %>
                             <tr>
                                 <td><%= j.nombre %></td>
                                 <td><%= j.apellido %></td>
                                 <td><%= j.nacionalidad || '-' %></td>
+                                <td><%= j.periodo || '-' %></td>
+                                <td><%= j.ganancias != null ? '$ ' + Number(j.ganancias).toLocaleString('es-AR') : '-' %></td>
                                 <td class="celda-accion">
                                     <form action="/eliminarjug" method="POST" onsubmit="return confirm('¿Seguro que querés dar de baja a este jugador?')">
                                         <input type="hidden" name="id" value="<%= j.id_jugador %>">

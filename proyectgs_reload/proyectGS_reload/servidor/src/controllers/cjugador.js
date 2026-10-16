@@ -9,27 +9,12 @@ const avisos = {
 };
 
 // Jugadores activos con su nacionalidad, el período en que jugaron y lo que ganaron.
-// El período y las ganancias se calculan con los partidos y los premios cargados.
 const sqljugadores = `
-    SELECT j.id_jugador, j.nombre, j.apellido,
+    SELECT j.id_jugador, j.nombre, j.apellido, j.periodo_activo AS periodo, j.ganancias,
         (SELECT GROUP_CONCAT(pa.nombre SEPARATOR ', ')
             FROM JUGADOR_PAIS jp
             JOIN PAIS pa ON pa.id_pais = jp.PAIS_id_pais
-            WHERE jp.JUGADOR_id_jugador = j.id_jugador) AS nacionalidad,
-        (SELECT IF(MIN(YEAR(p.fecha)) = MAX(YEAR(p.fecha)),
-                   MIN(YEAR(p.fecha)),
-                   CONCAT(MIN(YEAR(p.fecha)), '-', MAX(YEAR(p.fecha))))
-            FROM PARTIDO_JUGADOR pj
-            JOIN PARTIDO p ON p.id_partido = pj.PARTIDO_id_partido
-            WHERE pj.JUGADOR_id_jugador = j.id_jugador) AS periodo,
-        (SELECT SUM(CASE WHEN pj.rol = 'perdedor' THEN pr.monto_perdedor
-                         WHEN p.fase = 'Final' THEN pr.monto_campeon
-                         ELSE 0 END)
-            FROM PARTIDO_JUGADOR pj
-            JOIN PARTIDO p ON p.id_partido = pj.PARTIDO_id_partido
-            JOIN PREMIO pr ON pr.EDICION_id_edicion = p.EDICION_id_edicion
-                AND pr.modalidad = p.modalidad AND pr.fase = p.fase
-            WHERE pj.JUGADOR_id_jugador = j.id_jugador) AS ganancias
+            WHERE jp.JUGADOR_id_jugador = j.id_jugador) AS nacionalidad
     FROM JUGADOR j
     WHERE j.activo = 1`;
 
@@ -91,11 +76,13 @@ export const altajug = async (pet, resp) => {
 };
 
 export const nuevojug = async (pet, resp) => {
-    let nom, ape, nac;
+    let nom, ape, nac, per, gan;
 
     nom = (pet.body.nombre || '').trim();
     ape = (pet.body.apellido || '').trim();
     nac = (pet.body.nacionalidad || '').trim();
+    per = (pet.body.periodo || '').trim() || null;
+    gan = pet.body.ganancias || null;
 
     if (nom === '' || ape === '') {
         const paises = await listarPaises();
@@ -105,8 +92,8 @@ export const nuevojug = async (pet, resp) => {
     try {
         await bdd.beginTransaction();
 
-        let altasql = 'INSERT INTO JUGADOR (nombre, apellido) VALUES (?, ?)';
-        const [registro] = await bdd.query(altasql, [nom, ape]);
+        let altasql = 'INSERT INTO JUGADOR (nombre, apellido, periodo_activo, ganancias) VALUES (?, ?, ?, ?)';
+        const [registro] = await bdd.query(altasql, [nom, ape, per, gan]);
         await guardarNacionalidad(registro.insertId, nac);
 
         await bdd.commit();
@@ -160,14 +147,16 @@ export const modjug = async (pet, resp) => {
 };
 
 export const actualizarjug = async (pet, resp) => {
-    let id, nom, ape, nac;
+    let id, nom, ape, nac, per, gan;
 
     id = pet.body.id;
     nom = (pet.body.nombre || '').trim();
     ape = (pet.body.apellido || '').trim();
     nac = (pet.body.nacionalidad || '').trim();
+    per = (pet.body.periodo || '').trim() || null;
+    gan = pet.body.ganancias || null;
 
-    const jugador = { id_jugador: id, nombre: nom, apellido: ape, nacionalidad: nac };
+    const jugador = { id_jugador: id, nombre: nom, apellido: ape, nacionalidad: nac, periodo: per, ganancias: gan };
 
     if (nom === '' || ape === '') {
         const paises = await listarPaises();
@@ -177,8 +166,8 @@ export const actualizarjug = async (pet, resp) => {
     try {
         await bdd.beginTransaction();
 
-        let modsql = 'UPDATE JUGADOR SET nombre = ?, apellido = ? WHERE id_jugador = ?';
-        await bdd.query(modsql, [nom, ape, id]);
+        let modsql = 'UPDATE JUGADOR SET nombre = ?, apellido = ?, periodo_activo = ?, ganancias = ? WHERE id_jugador = ?';
+        await bdd.query(modsql, [nom, ape, per, gan, id]);
         await guardarNacionalidad(id, nac);
 
         await bdd.commit();
