@@ -39,7 +39,7 @@ export const arbitros = (pet, resp) => {
 
 // ALTA
 export const altaarb = (pet, resp) => {
-    resp.render('altaarb', { arbitro: {}, error: '' });
+    resp.render('altaarb', { arbitro: {}, error: '', exito: false });
 };
 
 export const nuevoarb = async (pet, resp) => {
@@ -49,17 +49,17 @@ export const nuevoarb = async (pet, resp) => {
     ape = (pet.body.apellido || '').trim();
 
     if (nom === '' || ape === '') {
-        return resp.render('altaarb', { arbitro: pet.body, error: 'El nombre y el apellido son obligatorios.' });
+        return resp.render('altaarb', { arbitro: pet.body, error: 'El nombre y el apellido son obligatorios.', exito: false });
     }
 
     try {
         let altasql = 'INSERT INTO ARBITRO (nombre, apellido) VALUES (?, ?)';
         const [registro] = await bdd.query(altasql, [nom, ape]);
 
-        resp.redirect('/mostrararb?msg=alta');
+        resp.render('altaarb', { arbitro: {}, error: '', exito: true });
     } catch (error) {
         console.log("Error en la sentencia:", error);
-        resp.render('altaarb', { arbitro: pet.body, error: 'No se pudo guardar el árbitro.' });
+        resp.render('altaarb', { arbitro: pet.body, error: 'No se pudo guardar el árbitro.', exito: false });
     }
 };
 
@@ -123,6 +123,7 @@ export const actualizararb = async (pet, resp) => {
         resp.render('modarb', { arbitro, arbitros: [], apellido: '', error: 'No se pudo modificar el árbitro.' });
     }
 };
+
 
 // MOSTRAR TODOS
 export const mostrararb = async (pet, resp) => {

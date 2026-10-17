@@ -26,6 +26,18 @@
                 <script>Swal.fire("Error", "<%= error %>", "error");</script>
             <% } %>
 
+            <% if (exito) { %>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    Swal.fire({
+                        title: "¡Éxito!",
+                        text: "Árbitro cargado con éxito",
+                        icon: "success",
+                        confirmButtonText: "Aceptar"
+                    });
+                </script>
+            <% } %>
+
             <form action="/nuevoarb" method="POST">
                 <div class="form-grid">
                     <div class="form-field">
@@ -46,5 +58,4 @@
         </section>
     </main>
 </body>
-
 </html>

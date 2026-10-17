@@ -3,6 +3,7 @@ import { arbitros, altaarb, nuevoarb, bajaarb, eliminararb, modarb, actualizarar
 
 const rarbitro = express.Router();
 
+
 rarbitro.get('/arbitros', arbitros);
 rarbitro.get('/altaarb', altaarb);
 rarbitro.post('/nuevoarb', nuevoarb);
