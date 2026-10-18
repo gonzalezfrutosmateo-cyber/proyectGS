@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenadores — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'entrenadores' }) %>
+
+    <main>
+        <section class="hero">
+            <h2>Los maestros del juego</h2>
+            <p>Descubre a los entrenadores que moldearon carreras, estrategias y campeones en la historia del Grand Slam.</p>
+        </section>
+
+        <h3>Entrenadores</h3>
+        <div class="menu-grid">
+            <a href="/altaent" class="menu-boton agregador">
+                <span class="menu-titulo">Agregar entrenador</span>
+                <span class="menu-texto">Registrar un entrenador nuevo.</span>
+            </a>
+            <a href="/bajaent" class="menu-boton eliminador">
+                <span class="menu-titulo">Eliminar entrenador</span>
+                <span class="menu-texto">Dar de baja a un entrenador del sistema.</span>
+            </a>
+            <a href="/modent" class="menu-boton modificador">
+                <span class="menu-titulo">Modificar entrenador</span>
+                <span class="menu-texto">Corregir el nombre o el apellido.</span>
+            </a>
+            <a href="/mostrarent" class="menu-boton mostrador">
+                <span class="menu-titulo">Ver lista de entrenadores</span>
+                <span class="menu-texto">Todos los entrenadores y los jugadores que entrenaron.</span>
+            </a>
+            <a href="/consultarent" class="menu-boton buscador">
+                <span class="menu-titulo">Buscar entrenador</span>
+                <span class="menu-texto">Buscar entrenadores por apellido.</span>
+            </a>
+        </div>
+    </main>
+</body>
+
+</html>

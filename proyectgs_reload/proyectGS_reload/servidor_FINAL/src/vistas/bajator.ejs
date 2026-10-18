@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Edición — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+    <%- include('partials/confirmarbaja') %>
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'torneos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/torneos" class="volver">← Volver a Torneos</a>
+            <h3>Eliminar edición</h3>
+        </div>
+
+        <section class="search-section">
+            <form class="search-form" action="/bajator" method="GET">
+                <select name="torneo">
+                    <option value="">Todos los torneos</option>
+                    <% torneos.forEach(t => { %>
+                        <option value="<%= t.id_torneo %>" <%= String(filtros.torneo) === String(t.id_torneo) ? 'selected' : '' %>><%= t.nombre %></option>
+                    <% }) %>
+                </select>
+                <select name="anio">
+                    <option value="">Todos los años</option>
+                    <% anios.forEach(a => { %>
+                        <option value="<%= a %>" <%= String(filtros.anio) === String(a) ? 'selected' : '' %>><%= a %></option>
+                    <% }) %>
+                </select>
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h4>Elegí la edición que querés eliminar</h4>
+
+            <% if (mensaje) { %>
+                <script>Swal.fire("¡Éxito!", "<%= mensaje %>", "success");</script>
+            <% } %>
+            <% if (error) { %>
+                <script>Swal.fire("Error", "<%= error %>", "error");</script>
+            <% } %>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Torneo</th>
+                            <th>Año</th>
+                            <th>Sede</th>
+                            <th>Partidos Cargados</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (ediciones.length === 0) { %>
+                            <tr class="no-results"><td colspan="5">No se encontraron ediciones.</td></tr>
+                        <% } %>
+                        <% ediciones.forEach(e => { %>
+                            <tr>
+                                <td><%= e.torneo %></td>
+                                <td><%= e.anio %></td>
+                                <td><%= e.sede %></td>
+                                <td><%= e.partidos %></td>
+                                <td class="celda-accion">
+                                    <form action="/eliminartor" method="POST" onsubmit="return confirmarBaja(this, '¿Seguro que querés eliminar esta edición?')">
+                                        <input type="hidden" name="id" value="<%= e.id_edicion %>">
+                                        <button type="submit" class="btn-delete">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

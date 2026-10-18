@@ -1,0 +1,621 @@
+/* ===== Colores del sitio ===== */
+:root {
+    --ink: #17263c;
+    --ink-soft: #3c526d;
+    --paper: #f4efe6;
+    --paper-light: #fffdf8;
+    --line: #d9d0c2;
+    --coral: #d66a4b;
+    --gold: #d5a64a;
+    --verde: #1e584c;
+    --azul: #28678a;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', serif;
+    color: var(--ink);
+    background: var(--paper);
+    background-image: radial-gradient(rgba(23, 38, 60, 0.06) 0.7px, transparent 0.7px);
+    background-size: 9px 9px;
+    line-height: 1.6;
+}
+
+/* ===== Barra de navegación ===== */
+.navbar {
+    background: var(--ink);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 18px rgba(23, 38, 60, 0.2);
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: white;
+    text-decoration: none;
+    font-size: 1.35rem;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+}
+
+.logo img {
+    width: 38px;
+    height: 38px;
+    object-fit: contain;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 1.65rem;
+}
+
+.nav-links a {
+    color: #e9edf2;
+    text-decoration: none;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #f2c66d;
+}
+
+.nav-links a.active {
+    border-bottom: 2px solid #f2c66d;
+    padding-bottom: 2px;
+}
+
+main {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 3.2rem 2rem 4rem;
+}
+
+/* ===== Portada de cada sección ===== */
+.hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink);
+    color: var(--paper-light);
+    text-align: left;
+    padding: clamp(2.5rem, 7vw, 5rem) clamp(1.5rem, 7vw, 6rem);
+    border-radius: 2px 38px 2px 38px;
+    box-shadow: 14px 14px 0 var(--coral);
+    margin-bottom: 3rem;
+}
+
+.hero h2 {
+    max-width: 720px;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    line-height: 1.02;
+    font-weight: normal;
+    letter-spacing: -0.03em;
+}
+
+.hero p {
+    max-width: 620px;
+    margin-top: 1.4rem;
+    color: #d9e0e8;
+    font: 1rem/1.7 'Trebuchet MS', sans-serif;
+}
+
+.hero-inicio::after {
+    content: 'GRAND SLAM / ARCHIVO VIVO';
+    position: absolute;
+    right: 2rem;
+    bottom: 1.2rem;
+    color: rgba(255, 253, 248, 0.5);
+    font: 0.65rem 'Trebuchet MS', sans-serif;
+    letter-spacing: 0.2em;
+}
+
+h3 {
+    margin-bottom: 1.4rem;
+    color: var(--ink);
+    font-size: 2rem;
+    font-weight: normal;
+}
+
+/* ===== Inicio: tarjetas de los torneos ===== */
+.torneos-section {
+    margin-top: 4.5rem;
+}
+
+.torneos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.torneo-card {
+    position: relative;
+    min-height: 225px;
+    color: white;
+    overflow: hidden;
+    border-radius: 2px;
+    box-shadow: 0 8px 20px rgba(23, 38, 60, 0.12);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.torneo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.torneo-card img {
+    display: block;
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+}
+
+.torneo-card-content {
+    padding: 0 1.7rem 1.7rem;
+}
+
+.torneo-card h4 {
+    margin: 1.5rem 0 1rem;
+    font-size: 1.65rem;
+    font-weight: normal;
+}
+
+.torneo-card p {
+    margin: 0.5rem 0;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.86rem;
+}
+
+.country-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.country-name img {
+    width: 28px;
+    height: 18px;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.wimbledon { background: var(--verde); }
+.us-open { background: var(--azul); }
+.roland-garros { background: #bc634b; }
+.australian-open { background: #d5943c; }
+
+/* ===== Menú de botones de cada sección ===== */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+}
+
+.menu-boton {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.5rem;
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--ink);
+    border-radius: 2px 18px 2px 18px;
+    box-shadow: 8px 8px 0 rgba(23, 38, 60, 0.08);
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.menu-boton:hover {
+    transform: translateY(-4px);
+    box-shadow: 10px 12px 0 rgba(23, 38, 60, 0.12);
+}
+
+.menu-titulo {
+    font-size: 1.35rem;
+}
+
+.menu-texto {
+    color: var(--ink-soft);
+    font: 0.85rem/1.5 'Trebuchet MS', sans-serif;
+}
+
+.agregador { border-top-color: var(--verde); }
+.eliminador { border-top-color: var(--coral); }
+.modificador { border-top-color: var(--gold); }
+.mostrador { border-top-color: var(--azul); }
+.buscador { border-top-color: var(--ink); }
+
+/* ===== Encabezado de las subpáginas ===== */
+.encabezado {
+    margin-bottom: 1.6rem;
+}
+
+.volver {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+    color: var(--coral);
+    font: 0.9rem 'Trebuchet MS', sans-serif;
+    text-decoration: none;
+}
+
+.volver:hover {
+    color: var(--ink);
+    text-decoration: underline;
+}
+
+.encabezado h3 {
+    margin-bottom: 0;
+}
+
+/* ===== Tarjetas y búsqueda ===== */
+.search-section,
+.card {
+    background: var(--paper-light);
+    border: 1px solid var(--line);
+    border-radius: 2px 18px 2px 18px;
+    box-shadow: 8px 8px 0 rgba(23, 38, 60, 0.08);
+    padding: 1.7rem;
+    margin-bottom: 2rem;
+}
+
+.card h4 {
+    color: var(--ink);
+    margin-bottom: 1rem;
+    font-size: 1.35rem;
+    font-weight: normal;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 0.5rem;
+}
+
+.search-form {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.search-form input,
+.search-form select {
+    min-height: 45px;
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: #fffefa;
+    color: var(--ink);
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+}
+
+.search-form button {
+    min-height: 45px;
+    padding: 0.8rem 1.5rem;
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.search-form button:hover {
+    background: var(--ink);
+}
+
+.texto-chico {
+    margin: 0.8rem 0;
+    color: var(--ink-soft);
+    font: 0.85rem 'Trebuchet MS', sans-serif;
+}
+
+/* ===== Tablas ===== */
+.table-container {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table thead {
+    background: var(--ink);
+    color: white;
+}
+
+table th {
+    padding: 1rem;
+    text-align: left;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--line);
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.9rem;
+}
+
+table tbody tr:hover {
+    background: #fff5e7;
+}
+
+.no-results td {
+    text-align: center;
+    color: var(--ink-soft);
+    font-style: italic;
+}
+
+.celda-accion form {
+    display: inline;
+}
+
+/* ===== Botones ===== */
+.btn-guardar,
+.btn-add {
+    min-height: 45px;
+    padding: 0.6rem 1.3rem;
+    background: var(--coral);
+    color: white;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.btn-guardar:hover,
+.btn-add:hover {
+    background: var(--ink);
+}
+
+.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    min-height: 45px;
+    padding: 0.6rem 1.3rem;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    background: var(--paper);
+}
+
+.btn-edit,
+.btn-delete {
+    display: inline-block;
+    padding: 0.45rem 0.9rem;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.btn-edit {
+    background: var(--gold);
+    color: var(--ink);
+}
+
+.btn-delete {
+    background: var(--coral);
+    color: white;
+}
+
+.btn-edit:hover,
+.btn-delete:hover {
+    opacity: 0.85;
+}
+
+/* ===== Formularios de alta y modificación ===== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0 1.2rem;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+}
+
+.form-field label {
+    color: var(--ink);
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.form-field input,
+.form-field select {
+    min-height: 45px;
+    padding: 0.8rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: #fffefa;
+    color: var(--ink);
+    font-family: 'Trebuchet MS', sans-serif;
+    font-size: 0.95rem;
+}
+
+.form-field[hidden] {
+    display: none;
+}
+
+.form-field small {
+    color: var(--ink-soft);
+    font: 0.78rem 'Trebuchet MS', sans-serif;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+}
+
+.form-subtitulo {
+    margin: 0.8rem 0 0.8rem;
+    color: var(--ink-soft);
+    font: 600 0.8rem 'Trebuchet MS', sans-serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.sets-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.set-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.7rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: #fffefa;
+}
+
+.set-box span {
+    font: 600 0.8rem 'Trebuchet MS', sans-serif;
+}
+
+.set-box input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    font: 0.9rem 'Trebuchet MS', sans-serif;
+}
+
+/* ===== Avisos ===== */
+.aviso {
+    margin-bottom: 1.2rem;
+    padding: 0.8rem 1rem;
+    border-radius: 2px;
+    font: 0.92rem 'Trebuchet MS', sans-serif;
+}
+
+.aviso-ok {
+    background: #e6f0ea;
+    border-left: 4px solid var(--verde);
+}
+
+.aviso-error {
+    background: #fbe9e4;
+    border-left: 4px solid var(--coral);
+}
+
+/* ===== Celulares ===== */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.6rem 1.2rem;
+    }
+
+    main {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .hero {
+        box-shadow: 8px 8px 0 var(--coral);
+    }
+
+    .hero-inicio::after {
+        display: none;
+    }
+
+    .search-section,
+    .card,
+    .menu-boton {
+        box-shadow: 4px 4px 0 rgba(23, 38, 60, 0.08);
+    }
+
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-form input,
+    .search-form select,
+    .search-form button {
+        width: 100%;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem;
+    }
+
+    .sets-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-guardar,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+    }
+}

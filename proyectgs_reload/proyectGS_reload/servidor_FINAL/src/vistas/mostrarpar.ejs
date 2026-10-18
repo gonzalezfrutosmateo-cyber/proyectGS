@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Partidos — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'partidos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/partidos" class="volver">← Volver a Partidos</a>
+            <h3>Lista de partidos</h3>
+        </div>
+
+        <section class="card">
+            <h4>Partidos (<%= partidos.length %>)</h4>
+
+            <% if (mensaje) { %>
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>Swal.fire("¡Éxito!", "<%= mensaje %>", "success");</script>
+            <% } %>
+
+            <%- include('partials/tablapartidos', { accion: '' }) %>
+        </section>
+    </main>
+</body>
+
+</html>

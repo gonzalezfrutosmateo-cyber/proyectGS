@@ -57,6 +57,8 @@ CREATE TABLE IF NOT EXISTS JUGADOR (
     id_jugador INT NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(50) NOT NULL,
     apellido VARCHAR(50) NOT NULL,
+    periodo_activo VARCHAR(20) NOT NULL,
+    ganancias DECIMAL(12,2) NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (id_jugador),
     INDEX apellido_idx (apellido)
@@ -190,8 +192,11 @@ INSERT INTO SEDE (nombre, PAIS_id_pais)
 INSERT INTO SEDE (nombre, PAIS_id_pais)
     SELECT 'Melbourne Park', id_pais FROM PAIS WHERE nombre = 'Australia';
 
-INSERT INTO JUGADOR (nombre, apellido) VALUES
-    ('Rafael', 'Nadal'), ('Roger', 'Federer'), ('Serena', 'Williams'), ('Novak', 'Djokovic');
+INSERT INTO JUGADOR (nombre, apellido, periodo_activo, ganancias) VALUES
+    ('Rafael', 'Nadal', '2001-2024', 134946100.00),
+    ('Roger', 'Federer', '1998-2022', 130594339.00),
+    ('Serena', 'Williams', '1995-2022', 94816730.00),
+    ('Novak', 'Djokovic', '2003-Presente', 185000000.00);
 
 INSERT INTO JUGADOR_PAIS (JUGADOR_id_jugador, PAIS_id_pais)
     SELECT j.id_jugador, p.id_pais FROM JUGADOR j, PAIS p

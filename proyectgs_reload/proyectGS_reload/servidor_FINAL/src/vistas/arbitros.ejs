@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Árbitros — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'arbitros' }) %>
+
+    <main>
+        <section class="hero">
+            <h2>Quienes cantan el punto</h2>
+            <p>Los árbitros que estuvieron en la silla en cada partido de la historia del Grand Slam.</p>
+        </section>
+
+        <h3>Árbitros</h3>
+        <div class="menu-grid">
+            <a href="/altaarb" class="menu-boton agregador">
+                <span class="menu-titulo">Agregar árbitro</span>
+                <span class="menu-texto">Registrar un árbitro nuevo.</span>
+            </a>
+            <a href="/bajaarb" class="menu-boton eliminador">
+                <span class="menu-titulo">Eliminar árbitro</span>
+                <span class="menu-texto">Dar de baja a un árbitro del sistema.</span>
+            </a>
+            <a href="/modarb" class="menu-boton modificador">
+                <span class="menu-titulo">Modificar árbitro</span>
+                <span class="menu-texto">Corregir el nombre o el apellido.</span>
+            </a>
+            <a href="/mostrararb" class="menu-boton mostrador">
+                <span class="menu-titulo">Ver lista de árbitros</span>
+                <span class="menu-texto">Todos los árbitros y cuántos partidos dirigieron.</span>
+            </a>
+            <a href="/consultararb" class="menu-boton buscador">
+                <span class="menu-titulo">Buscar árbitro</span>
+                <span class="menu-texto">Buscar árbitros por apellido.</span>
+            </a>
+        </div>
+    </main>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Pide confirmación con SweetAlert2 antes de mandar el formulario de baja
+    function confirmarBaja(form, texto) {
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: texto,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then(resultado => {
+            if (resultado.isConfirmed) {
+                form.submit();
+            }
+        });
+        return false;
+    }
+</script>

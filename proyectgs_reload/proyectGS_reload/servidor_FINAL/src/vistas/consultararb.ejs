@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Árbitro — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'arbitros' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/arbitros" class="volver">← Volver a Árbitros</a>
+            <h3>Buscar árbitro</h3>
+        </div>
+
+        <section class="search-section">
+            <form class="search-form" action="/consultararb" method="GET">
+                <input data-solo="letras" type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>" autofocus>
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <% if (arbitros !== null) { %>
+            <section class="card">
+                <h4>Resultados (<%= arbitros.length %>)</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Apellido</th>
+                                <th>Partidos Dirigidos</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (arbitros.length === 0) { %>
+                                <tr class="no-results"><td colspan="3">No se encontraron árbitros.</td></tr>
+                            <% } %>
+                            <% arbitros.forEach(a => { %>
+                                <tr>
+                                    <td><%= a.nombre %></td>
+                                    <td><%= a.apellido %></td>
+                                    <td><%= a.partidos %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <% } %>
+    </main>
+</body>
+
+</html>

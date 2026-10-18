@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Jugador — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'jugadores' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/jugadores" class="volver">← Volver a Jugadores</a>
+            <h3>Agregar jugador</h3>
+        </div>
+
+        <% if (mensaje) { %>
+            <script>Swal.fire("¡Éxito!", "<%= mensaje %>", "success");</script>
+        <% } %>
+
+        <section class="card">
+            <h4>Datos del jugador</h4>
+
+            <% if (error) { %>
+                <script>Swal.fire("Error", "<%= error %>", "error");</script>
+            <% } %>
+
+            <form action="/nuevojug" method="POST">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="nombre">Nombre</label>
+                        <input data-solo="letras" id="nombre" name="nombre" type="text" maxlength="50" required value="<%= jugador.nombre || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="apellido">Apellido</label>
+                        <input data-solo="letras" id="apellido" name="apellido" type="text" maxlength="50" required value="<%= jugador.apellido || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="nacionalidad">Nacionalidad</label>
+                        <input data-solo="letras" id="nacionalidad" name="nacionalidad" type="text" maxlength="120" list="lista-paises" placeholder="Ej: España" value="<%= jugador.nacionalidad || '' %>">
+                        <small>Si tiene más de una, separalas con coma.</small>
+                    </div>
+                    <div class="form-field">
+                        <label for="periodo">Período activo</label>
+                        <input id="periodo" name="periodo" type="text" maxlength="13" pattern="\d{4}(-(\d{4}|Presente))?" title="Ej: 2001-2024 o 2003-Presente" placeholder="Ej: 2001-2024" required value="<%= jugador.periodo || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="ganancias">Ganancias ($)</label>
+                        <input id="ganancias" name="ganancias" type="number" min="0" max="9999999999.99" step="0.01" placeholder="Ej: 134000000" required value="<%= jugador.ganancias || '' %>">
+                    </div>
+                </div>
+
+                <datalist id="lista-paises">
+                    <% paises.forEach(pais => { %>
+                        <option value="<%= pais.nombre %>">
+                    <% }) %>
+                </datalist>
+
+                <div class="form-actions">
+                    <a href="/jugadores" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>

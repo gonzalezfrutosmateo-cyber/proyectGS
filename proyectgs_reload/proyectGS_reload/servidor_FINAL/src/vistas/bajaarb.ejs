@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Árbitro — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+    <%- include('partials/confirmarbaja') %>
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'arbitros' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/arbitros" class="volver">← Volver a Árbitros</a>
+            <h3>Eliminar árbitro</h3>
+        </div>
+
+        <section class="search-section">
+            <form class="search-form" action="/bajaarb" method="GET">
+                <input data-solo="letras" type="text" name="apellido" placeholder="Buscar por apellido..." maxlength="50" value="<%= apellido %>">
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <section class="card">
+            <h4>Elegí el árbitro que querés dar de baja</h4>
+
+            <% if (mensaje) { %>
+                <script>Swal.fire("¡Éxito!", "<%= mensaje %>", "success");</script>
+            <% } %>
+            <% if (error) { %>
+                <script>Swal.fire("Error", "<%= error %>", "error");</script>
+            <% } %>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (arbitros.length === 0) { %>
+                            <tr class="no-results"><td colspan="3">No se encontraron árbitros.</td></tr>
+                        <% } %>
+                        <% arbitros.forEach(a => { %>
+                            <tr>
+                                <td><%= a.nombre %></td>
+                                <td><%= a.apellido %></td>
+                                <td class="celda-accion">
+                                    <form action="/eliminararb" method="POST" onsubmit="return confirmarBaja(this, '¿Seguro que querés dar de baja a este árbitro?')">
+                                        <input type="hidden" name="id" value="<%= a.id_arbitro %>">
+                                        <button type="submit" class="btn-delete">Eliminar</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

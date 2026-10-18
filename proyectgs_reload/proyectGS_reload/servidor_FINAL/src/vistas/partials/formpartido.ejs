@@ -1,0 +1,239 @@
+<%
+    // Opciones del select de jugadores, marcando el que ya estaba elegido
+    function opcionesJugadores(elegido) {
+%>
+    <option value="">Seleccionar jugador...</option>
+    <% jugadores.forEach(j => { %>
+        <option value="<%= j.id_jugador %>" <%= String(elegido) === String(j.id_jugador) ? 'selected' : '' %>><%= j.apellido %>, <%= j.nombre %></option>
+    <% }) %>
+<% } %>
+
+<form action="<%= accion %>" method="POST">
+    <input type="hidden" name="id" value="<%= partido.id %>">
+
+    <p class="form-subtitulo">Datos del partido</p>
+    <div class="form-grid">
+        <div class="form-field">
+            <label for="edicion">Torneo y año</label>
+            <select id="edicion" name="edicion" required>
+                <option value="">Seleccionar edición...</option>
+                <% ediciones.forEach(e => { %>
+                    <option value="<%= e.id_edicion %>" <%= String(partido.edicion) === String(e.id_edicion) ? 'selected' : '' %>><%= e.torneo %> <%= e.anio %></option>
+                <% }) %>
+            </select>
+            <% if (ediciones.length === 0) { %>
+                <small>Primero cargá una edición en Torneos → Agregar edición.</small>
+            <% } %>
+        </div>
+        <div class="form-field">
+            <label for="fecha">Fecha</label>
+            <input id="fecha" name="fecha" type="date" min="1877-01-01" max="<%= new Date().toISOString().slice(0, 10) %>" required value="<%= partido.fecha %>">
+        </div>
+        <div class="form-field">
+            <label for="fase">Fase</label>
+            <select id="fase" name="fase" required>
+                <option value="">Seleccionar fase...</option>
+                <% fases.forEach(f => { %>
+                    <option value="<%= f %>" <%= partido.fase === f ? 'selected' : '' %>><%= f %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="modalidad">Modalidad</label>
+            <select id="modalidad" name="modalidad" required>
+                <option value="">Seleccionar modalidad...</option>
+                <% Object.keys(modalidades).forEach(valor => { %>
+                    <option value="<%= valor %>" <%= partido.modalidad === valor ? 'selected' : '' %>><%= modalidades[valor] %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+                <% Object.keys(estados).forEach(valor => { %>
+                    <option value="<%= valor %>" <%= partido.estado === valor ? 'selected' : '' %>><%= estados[valor] %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="arbitro">Árbitro</label>
+            <select id="arbitro" name="arbitro" required>
+                <option value="">Seleccionar árbitro...</option>
+                <% arbitros.forEach(a => { %>
+                    <option value="<%= a.id_arbitro %>" <%= String(partido.arbitro) === String(a.id_arbitro) ? 'selected' : '' %>><%= a.apellido %>, <%= a.nombre %></option>
+                <% }) %>
+            </select>
+        </div>
+    </div>
+
+    <p class="form-subtitulo">Jugadores</p>
+    <div class="form-grid">
+        <div class="form-field">
+            <label for="ganador1">Ganador</label>
+            <select id="ganador1" name="ganador1" required>
+                <% opcionesJugadores(partido.ganador1) %>
+            </select>
+        </div>
+        <div class="form-field solo-dobles">
+            <label for="ganador2">Compañero del ganador</label>
+            <select id="ganador2" name="ganador2">
+                <% opcionesJugadores(partido.ganador2) %>
+            </select>
+        </div>
+        <div class="form-field">
+            <label for="perdedor1">Perdedor</label>
+            <select id="perdedor1" name="perdedor1" required>
+                <% opcionesJugadores(partido.perdedor1) %>
+            </select>
+        </div>
+        <div class="form-field solo-dobles">
+            <label for="perdedor2">Compañero del perdedor</label>
+            <select id="perdedor2" name="perdedor2">
+                <% opcionesJugadores(partido.perdedor2) %>
+            </select>
+        </div>
+    </div>
+
+    <p class="form-subtitulo">Resultado: games del ganador y del perdedor en cada set</p>
+    <div class="sets-grid">
+        <% partido.sets.forEach((set, i) => { %>
+            <div class="set-box">
+                <span>Set <%= i + 1 %></span>
+                <input data-solo="numeros" type="number" name="set<%= i + 1 %>g" min="0" max="127" placeholder="Ganador" aria-label="Set <%= i + 1 %>: games del ganador" value="<%= set.ganador %>">
+                <input data-solo="numeros" type="number" name="set<%= i + 1 %>p" min="0" max="127" placeholder="Perdedor" aria-label="Set <%= i + 1 %>: games del perdedor" value="<%= set.perdedor %>">
+            </div>
+        <% }) %>
+    </div>
+
+    <div class="form-actions">
+        <a href="<%= cancelar %>" class="btn-cancel">Cancelar</a>
+        <button type="submit" class="btn-guardar"><%= boton %></button>
+    </div>
+</form>
+
+<script>
+    // Los campos del compañero solo se muestran (y son obligatorios) en las modalidades de dobles
+    const selectModalidad = document.getElementById('modalidad');
+
+    function actualizarDobles() {
+        const dobles = selectModalidad.value.startsWith('dobles');
+        document.querySelectorAll('.solo-dobles').forEach(campo => {
+            campo.hidden = !dobles;
+            campo.querySelector('select').required = dobles;
+        });
+    }
+
+    selectModalidad.addEventListener('change', actualizarDobles);
+    actualizarDobles();
+
+    // En un walkover no se juega, así que los sets se deshabilitan (no se cargan)
+    const selectEstado = document.getElementById('estado');
+
+    function actualizarSets() {
+        const walkover = selectEstado.value === 'walkover';
+        document.querySelectorAll('.set-box input').forEach(input => {
+            input.disabled = walkover;
+        });
+    }
+
+    selectEstado.addEventListener('change', actualizarSets);
+    actualizarSets();
+
+    // Revisa el resultado antes de mandar el formulario (son las mismas reglas que valida el servidor)
+    // Un set terminado puede quedar 6-0 a 6-4, 7-5 o 7-6 (tie-break), o seguir hasta 2 games de diferencia (ej: 8-6).
+    function esSetTerminado(a, b) {
+        const mayor = Math.max(a, b);
+        const menor = Math.min(a, b);
+        if (mayor === 6) {
+            return menor <= 4;
+        }
+        if (mayor === 7) {
+            return menor === 5 || menor === 6;
+        }
+        return mayor > 7 && mayor - menor === 2;
+    }
+
+    function validarResultado() {
+        const estado = selectEstado.value;
+        if (estado === 'walkover') {
+            return '';
+        }
+
+        const sets = [];
+        const cajas = document.querySelectorAll('.set-box');
+        for (let i = 0; i < cajas.length; i++) {
+            const [inputGanador, inputPerdedor] = cajas[i].querySelectorAll('input');
+            const g = inputGanador.value;
+            const p = inputPerdedor.value;
+            if (g === '' && p === '') {
+                continue;
+            }
+            if (g === '' || p === '') {
+                return `Revisá los games del set ${i + 1}.`;
+            }
+            if (sets.length !== i) {
+                return 'Cargá los sets en orden, sin dejar sets vacíos en el medio.';
+            }
+            sets.push({ ganador: Number(g), perdedor: Number(p) });
+        }
+        if (sets.length === 0) {
+            return 'Cargá el resultado de al menos un set.';
+        }
+
+        // Individual masculino se juega al mejor de 5 sets (gana el que llega a 3), el resto al mejor de 3
+        const setsparaganar = selectModalidad.value === 'individual-masculino' ? 3 : 2;
+        let setsganador = 0;
+        let setsperdedor = 0;
+
+        for (let i = 0; i < sets.length; i++) {
+            const g = sets[i].ganador;
+            const p = sets[i].perdedor;
+
+            if (setsganador === setsparaganar || setsperdedor === setsparaganar) {
+                return `El partido ya estaba terminado antes del set ${i + 1}, sobran sets.`;
+            }
+
+            if (esSetTerminado(g, p)) {
+                if (g > p) {
+                    setsganador++;
+                } else {
+                    setsperdedor++;
+                }
+            } else {
+                // Solo en un abandono el último set puede haber quedado sin terminar (ej: 3-2)
+                const ultimo = i === sets.length - 1;
+                const sinterminar = Math.max(g, p) < 6 || (Math.max(g, p) === 6 && Math.min(g, p) >= 5);
+                if (!sinterminar) {
+                    return `El set ${i + 1} (${g}-${p}) no es un resultado posible: un set se gana 6-0 a 6-4, 7-5 o 7-6 (sin tie-break se sigue hasta sacar 2 games de diferencia, ej: 8-6).`;
+                }
+                if (estado !== 'abandono' || !ultimo) {
+                    let texto = `El set ${i + 1} (${g}-${p}) no está terminado: un set se gana 6-0 a 6-4, 7-5 o 7-6.`;
+                    if (ultimo) {
+                        texto += ' Si el partido se cortó en ese set, elegí el estado Abandono.';
+                    }
+                    return texto;
+                }
+            }
+        }
+
+        if (estado === 'jugado' && setsperdedor === setsparaganar) {
+            return 'Con ese resultado ganó el perdedor. Revisá los games: el primer número de cada set es el del ganador.';
+        }
+        if (estado === 'jugado' && setsganador !== setsparaganar) {
+            const modalidad = selectModalidad.selectedOptions[0].text;
+            return `En ${modalidad} el ganador tiene que ganar ${setsparaganar} sets.`;
+        }
+        if (estado === 'abandono' && (setsganador === setsparaganar || setsperdedor === setsparaganar)) {
+            return 'Si el partido terminó por abandono no puede estar completo: revisá los sets o cambiá el estado a Jugado.';
+        }
+        return '';
+    }
+
+    selectEstado.form.addEventListener('submit', e => {
+        const error = validarResultado();
+        if (error) {
+            e.preventDefault();
+            Swal.fire("Error", error, "error");
+        }
+    });
+</script>

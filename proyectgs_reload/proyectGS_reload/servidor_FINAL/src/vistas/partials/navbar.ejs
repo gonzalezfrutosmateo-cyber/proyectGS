@@ -1,0 +1,14 @@
+<script src="/js/restricciones.js"></script>
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="logo"><img src="/img/raquetas.png" alt=""><span>Grand History</span></a>
+        <ul class="nav-links">
+            <li><a href="/" class="<%= activo === 'inicio' ? 'active' : '' %>">Inicio</a></li>
+            <li><a href="/torneos" class="<%= activo === 'torneos' ? 'active' : '' %>">Torneos</a></li>
+            <li><a href="/partidos" class="<%= activo === 'partidos' ? 'active' : '' %>">Partidos</a></li>
+            <li><a href="/jugadores" class="<%= activo === 'jugadores' ? 'active' : '' %>">Jugadores</a></li>
+            <li><a href="/entrenadores" class="<%= activo === 'entrenadores' ? 'active' : '' %>">Entrenadores</a></li>
+            <li><a href="/arbitros" class="<%= activo === 'arbitros' ? 'active' : '' %>">Árbitros</a></li>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Árbitro — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+
+<body>
+    <%- include('partials/navbar', { activo: 'arbitros' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/arbitros" class="volver">← Volver a Árbitros</a>
+            <h3>Agregar árbitro</h3>
+        </div>
+
+        <% if (mensaje) { %>
+            <script>Swal.fire("¡Éxito!", "<%= mensaje %>", "success");</script>
+        <% } %>
+
+        <section class="card">
+            <h4>Datos del árbitro</h4>
+
+            <% if (error) { %>
+                <script>Swal.fire("Error", "<%= error %>", "error");</script>
+            <% } %>
+
+            <form action="/nuevoarb" method="POST">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="nombre">Nombre</label>
+                        <input data-solo="letras" id="nombre" name="nombre" type="text" maxlength="50" required value="<%= arbitro.nombre || '' %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="apellido">Apellido</label>
+                        <input data-solo="letras" id="apellido" name="apellido" type="text" maxlength="50" required value="<%= arbitro.apellido || '' %>">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/arbitros" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

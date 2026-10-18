@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Torneo — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'torneos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/torneos" class="volver">← Volver a Torneos</a>
+            <h3>Buscar torneo</h3>
+        </div>
+
+        <section class="search-section">
+            <form class="search-form" action="/consultartor" method="GET">
+                <select name="anio">
+                    <option value="">Todos los años</option>
+                    <% anios.forEach(a => { %>
+                        <option value="<%= a %>" <%= String(filtros.anio) === String(a) ? 'selected' : '' %>><%= a %></option>
+                    <% }) %>
+                </select>
+                <select name="torneo">
+                    <option value="">Todos los torneos</option>
+                    <% torneos.forEach(t => { %>
+                        <option value="<%= t.id_torneo %>" <%= String(filtros.torneo) === String(t.id_torneo) ? 'selected' : '' %>><%= t.nombre %></option>
+                    <% }) %>
+                </select>
+                <button type="submit">Buscar</button>
+            </form>
+        </section>
+
+        <% if (ediciones !== null) { %>
+            <section class="card">
+                <h4>Resultados (<%= ediciones.length %>)</h4>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Torneo</th>
+                                <th>Año</th>
+                                <th>Sede</th>
+                                <th>País</th>
+                                <th>Partidos Cargados</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (ediciones.length === 0) { %>
+                                <tr class="no-results"><td colspan="5">No se encontraron torneos.</td></tr>
+                            <% } %>
+                            <% ediciones.forEach(e => { %>
+                                <tr>
+                                    <td><%= e.torneo %></td>
+                                    <td><%= e.anio %></td>
+                                    <td><%= e.sede %></td>
+                                    <td><%= e.pais %></td>
+                                    <td><%= e.partidos %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <% } %>
+    </main>
+</body>
+
+</html>

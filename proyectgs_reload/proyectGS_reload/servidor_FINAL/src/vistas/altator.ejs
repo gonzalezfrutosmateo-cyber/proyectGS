@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Edición — Grand History</title>
+    <link rel="stylesheet" href="/css/est.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <%- include('partials/navbar', { activo: 'torneos' }) %>
+
+    <main>
+        <div class="encabezado">
+            <a href="/torneos" class="volver">← Volver a Torneos</a>
+            <h3>Agregar edición</h3>
+        </div>
+
+        <% if (mensaje) { %>
+            <script>Swal.fire("¡Éxito!", "<%= mensaje %>", "success");</script>
+        <% } %>
+
+        <section class="card">
+            <h4>Datos de la edición</h4>
+
+            <% if (error) { %>
+                <script>Swal.fire("Error", "<%= error %>", "error");</script>
+            <% } %>
+
+            <form action="/nuevotor" method="POST">
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label for="torneo">Torneo</label>
+                        <select id="torneo" name="torneo" required>
+                            <option value="">Seleccionar torneo...</option>
+                            <% torneos.forEach(t => { %>
+                                <option value="<%= t.id_torneo %>" <%= String(edicion.id_torneo) === String(t.id_torneo) ? 'selected' : '' %>><%= t.nombre %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="anio">Año</label>
+                        <input data-solo="numeros" id="anio" name="anio" type="number" min="1877" max="2100" required placeholder="Ej: 2024" value="<%= edicion.anio %>">
+                    </div>
+                    <div class="form-field">
+                        <label for="sede">Sede</label>
+                        <input id="sede" name="sede" type="text" maxlength="80" list="lista-sedes" required placeholder="Ej: All England Club" value="<%= edicion.sede %>">
+                        <small>Si la sede no existe se agrega en el país del torneo.</small>
+                    </div>
+                </div>
+
+                <datalist id="lista-sedes">
+                    <% sedes.forEach(s => { %>
+                        <option value="<%= s.nombre %>">
+                    <% }) %>
+                </datalist>
+
+                <div class="form-actions">
+                    <a href="/torneos" class="btn-cancel">Cancelar</a>
+                    <button type="submit" class="btn-guardar">Guardar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</body>
+
+</html>
