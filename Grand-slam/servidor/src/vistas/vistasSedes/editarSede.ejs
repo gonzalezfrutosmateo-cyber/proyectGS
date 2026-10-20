@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Sede</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Editando Sede</h1>
+    <form action="/sedes/modificar/<%= sede.id_sede %>" method="POST">
+        <label>Nombre de la Sede:</label>
+        <input type="text" name="nombre" value="<%= sede.nombre %>" required>
+
+        <label>País:</label>
+        <select name="id_pais" required>
+            <% paises.forEach(p => { %>
+                <option value="<%= p.id_pais %>" <%= p.id_pais === sede.id_pais ? 'selected' : '' %>>
+                    <%= p.nombre %>
+                </option>
+            <% }) %>
+        </select>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    <br><a href="/sedes/modificar">Cancelar</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

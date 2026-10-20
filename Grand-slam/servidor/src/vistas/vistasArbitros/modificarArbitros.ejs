@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Árbitro</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Selecciona un Árbitro para Modificar</h1>
+    <table>
+        <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Acción</th></tr>
+        <% arbitros.forEach(a => { %>
+            <tr>
+                <td><%= a.id_arbitro %></td>
+                <td><%= a.nombre %></td>
+                <td><%= a.apellido %></td>
+                <td><a href="/arbitros/modificar/<%= a.id_arbitro %>">Editar</a></td>
+            </tr>
+        <% }) %>
+    </table>
+    <br><a href="/arbitros">Volver</a>
+</body>
+</html>

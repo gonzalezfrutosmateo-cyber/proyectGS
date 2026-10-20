@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Partidos por Jugador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Consulta: Historial de Partidos por Jugador</h1>
+    <a href="/partidos">Volver al menú</a>
+    
+    <div class="filtro">
+        <form action="/partidos/jugador" method="GET">
+            <label>Seleccione un Jugador:</label>
+            <select name="id_jugador" required>
+                <option value="">Seleccione...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>" <%= idJugador == j.id_jugador ? 'selected' : '' %>>
+                        <%= j.nombre %> <%= j.apellido %>
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit">Buscar Partidos</button>
+        </form>
+    </div>
+
+    <% if (typeof idJugador !== 'undefined' && idJugador) { %>
+        <h2>Historial de Partidos</h2>
+        <% if (partidos.length > 0) { %>
+            <table>
+                <tr>
+                    <th>Torneo</th>
+                    <th>Fase</th>
+                    <th>Modalidad</th>
+                    <th>Rivales / Compañeros</th>
+                    <th>Resultado</th>
+                    <th>¿Ganó?</th>
+                </tr>
+                <% partidos.forEach(p => { %>
+                    <tr>
+                        <td><%= p.torneo %> (<%= p.anio %>)</td>
+                        <td><%= p.fase %></td>
+                        <td><%= p.modalidad %></td>
+                        <td><%= p.rivales_companeros %></td>
+                        <td><%= p.resultado %></td>
+                        <td><%= p.es_ganador === 1 ? 'Sí' : 'No' %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>Este jugador no tiene partidos registrados.</p>
+        <% } %>
+    <% } %>
+</body>
+</html>
