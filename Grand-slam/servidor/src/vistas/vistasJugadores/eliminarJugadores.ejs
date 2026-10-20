@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Jugador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Eliminar Jugadores</h1>
+    <a href="/jugadores" class="menu-btn" style="width: 200px; display: inline-block; margin-bottom: 10px;">⬅ Volver al Menú</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (jugadores && jugadores.length > 0) { %>
+                <% jugadores.forEach(jugador => { %>
+                    <tr>
+                        <td><%= jugador.id_jugador %></td>
+                        <td><%= jugador.nombre %></td>
+                        <td><%= jugador.apellido %></td>
+                        <td>
+                            <form action="/jugadores/eliminar/<%= jugador.id_jugador %>?_method=DELETE" method="POST" class="form-eliminar" style="border: none; padding: 0; width: auto; background: none; margin: 0;">
+                                <button type="submit" class="btn-danger" style="margin-top: 0;">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } %>
+        </tbody>
+    </table>
+
+    <script>
+        const formularios = document.querySelectorAll('.form-eliminar');
+        formularios.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: "Esta acción no se puede deshacer",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        this.submit();
+                    }
+                });
+            });
+        });
+    </script>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

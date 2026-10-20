@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Modalidad</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Selecciona una Modalidad para Eliminar</h1>
+    <table>
+        <tr><th>ID</th><th>Nombre</th><th>Acción</th></tr>
+        <% modalidades.forEach(m => { %>
+            <tr>
+                <td><%= m.id_modalidad %></td>
+                <td><%= m.nombre %></td>
+                <td><a href="/modalidades/eliminar/<%= m.id_modalidad %>" class="btn-danger" onclick="return confirm('¿Eliminar modalidad?')">Eliminar</a></td>
+            </tr>
+        <% }) %>
+    </table>
+    <br><a href="/modalidades">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

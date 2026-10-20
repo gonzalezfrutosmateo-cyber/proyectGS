@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Jugador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Seleccionar Jugador a Modificar</h1>
+    <a href="/jugadores" class="menu-btn" style="width: 200px; display: inline-block; margin-bottom: 10px;">⬅ Volver al Menú</a>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            // Aquí se listarán los jugadores para seleccionar cuál modificar
+            <% if (jugadores && jugadores.length > 0) { %>
+                <% jugadores.forEach(jugador => { %>
+                    <tr>
+                        <td><%= jugador.id_jugador %></td>
+                        <td><%= jugador.nombre %></td>
+                        <td><%= jugador.apellido %></td>
+                        <td>
+                            <a href="/jugadores/modificar/<%= jugador.id_jugador %>">Editar</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } %>
+        </tbody>
+    </table>
+</body>
+</html>

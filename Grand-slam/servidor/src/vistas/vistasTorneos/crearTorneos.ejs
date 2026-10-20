@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Registrar Nuevo Torneo</h1>
+    <form action="/torneos/crear" method="POST">
+        <label>Nombre del Torneo:</label>
+        <input type="text" name="nombre" required placeholder="Ej: Roland Garros">
+
+        <label>Año:</label>
+        <input type="number" name="anio" required placeholder="Ej: 1987">
+
+        <label>Sede:</label>
+        <select name="id_sede" required>
+            <option value="">Seleccione una sede...</option>
+            <% sedes.forEach(s => { %>
+                <option value="<%= s.id_sede %>"><%= s.nombre %></option>
+            <% }) %>
+        </select>
+
+        <button type="submit">Guardar Torneo</button>
+    </form>
+    <br><a href="/torneos">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Sede</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Selecciona una Sede para Modificar</h1>
+    <table>
+        <tr><th>ID</th><th>Nombre</th><th>Acción</th></tr>
+        <% sedes.forEach(s => { %>
+            <tr>
+                <td><%= s.id_sede %></td>
+                <td><%= s.nombre %></td>
+                <td><a href="/sedes/modificar/<%= s.id_sede %>">Editar</a></td>
+            </tr>
+        <% }) %>
+    </table>
+    <br><a href="/sedes">Volver</a>
+</body>
+</html>

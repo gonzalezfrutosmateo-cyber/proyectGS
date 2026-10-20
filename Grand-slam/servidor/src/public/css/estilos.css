@@ -1,0 +1,110 @@
+/* Estilos súper simples y clásicos */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    color: #000000;
+    margin: 20px;
+}
+
+h1, h2 {
+    color: #333333;
+}
+
+a {
+    color: #0000ee; /* Azul clásico de enlace de HTML */
+    text-decoration: underline;
+}
+
+/* Contenedor del menú */
+.contenedor {
+    width: 300px;
+    margin: 0 auto; /* Centrado en la pantalla */
+    border: 1px solid #000000;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+/* Botones del menú (simples) */
+.menu-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #e0e0e0;
+    color: #000000;
+    text-decoration: none;
+    border: 1px solid #000000;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+.menu-btn:hover {
+    background-color: #cccccc;
+}
+
+/* Tablas básicas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+th, td {
+    border: 1px solid #000000;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #e0e0e0;
+}
+
+/* Formularios básicos */
+form {
+    border: 1px solid #000000;
+    padding: 15px;
+    width: 400px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input[type="text"], 
+input[type="number"], 
+select {
+    width: 100%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #000000;
+    box-sizing: border-box;
+}
+
+button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #e0e0e0;
+    border: 1px solid #000000;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #cccccc;
+}
+
+/* Utilidades */
+.btn-danger {
+    color: #cc0000;
+}
+
+.filtro {
+    border: 1px solid #000000;
+    padding: 10px;
+    background-color: #f9f9f9;
+    margin-bottom: 15px;
+}

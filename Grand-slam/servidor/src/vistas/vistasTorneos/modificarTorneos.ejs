@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Selecciona un Torneo para Modificar</h1>
+    <table>
+        <tr><th>ID</th><th>Nombre</th><th>Año</th><th>Acción</th></tr>
+        <% torneos.forEach(t => { %>
+            <tr>
+                <td><%= t.id_torneo %></td>
+                <td><%= t.nombre %></td>
+                <td><%= t.anio %></td>
+                <td><a href="/torneos/modificar/<%= t.id_torneo %>">Editar</a></td>
+            </tr>
+        <% }) %>
+    </table>
+    <br><a href="/torneos">Volver</a>
+</body>
+</html>

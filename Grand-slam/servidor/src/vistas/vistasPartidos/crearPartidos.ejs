@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Partido</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Registrar Nuevo Partido</h1>
+    <form action="/partidos/crear" method="POST">
+        <label>Torneo:</label>
+        <select name="id_torneo" required>
+            <option value="">Seleccione...</option>
+            <% torneos.forEach(t => { %>
+                <option value="<%= t.id_torneo %>"><%= t.nombre %> (<%= t.anio %>)</option>
+            <% }) %>
+        </select>
+
+        <label>Modalidad:</label>
+        <select name="id_modalidad" required>
+            <option value="">Seleccione...</option>
+            <% modalidades.forEach(m => { %>
+                <option value="<%= m.id_modalidad %>"><%= m.nombre %></option>
+            <% }) %>
+        </select>
+
+        <label>Árbitro:</label>
+        <select name="id_arbitro" required>
+            <option value="">Seleccione...</option>
+            <% arbitros.forEach(a => { %>
+                <option value="<%= a.id_arbitro %>"><%= a.nombre %> <%= a.apellido %></option>
+            <% }) %>
+        </select>
+
+        <label>Fase:</label>
+        <input type="text" name="fase" required placeholder="Ej: Cuartos de final">
+
+        <label>Resultado:</label>
+        <input type="text" name="resultado" required placeholder="Ej: 6-3 4-6 7-5 6-0">
+
+        <label>Jugadores Participantes (Ctrl para varios):</label>
+        <select name="jugadores" multiple size="4" required>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>"><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <label>Jugador(es) Ganador(es) (Ctrl para varios):</label>
+        <select name="ganadores" multiple size="4" required>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>"><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <button type="submit">Guardar Partido</button>
+    </form>
+    <br><a href="/partidos">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>
