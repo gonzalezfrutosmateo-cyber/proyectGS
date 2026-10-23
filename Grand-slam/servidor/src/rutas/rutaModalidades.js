@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { 
     menuModalidades, listarModalidades, formularioCrear, crearModalidad, 
     seleccionarModificar, formularioEditar, editarModalidad, 
-    seleccionarEliminar, eliminarModalidad 
+    seleccionarEliminar, eliminarModalidad, buscarModalidades
 } from '../controllers/controladorModalidades.js';
 
 const router = Router();
 
 router.get('/', menuModalidades);
 router.get('/ver', listarModalidades);
+router.get('/buscar', buscarModalidades);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearModalidad);
 router.get('/modificar', seleccionarModificar);

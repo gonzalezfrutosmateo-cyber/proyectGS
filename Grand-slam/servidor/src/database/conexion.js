@@ -2,11 +2,11 @@ import mysql from 'mysql2/promise';
 
 export async function conectar() {
     try {
-       const bd=await mysql.createPool({
+        const bd = await mysql.createPool({
             host: "localhost",
             database: "grand_slam",
             user: "root",
-            password: "cerraduraVioleta",
+            password: "Puchus25",
         })
         console.log("Base de datos conectado, hola fabio");
         return bd;

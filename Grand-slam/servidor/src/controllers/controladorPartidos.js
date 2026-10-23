@@ -20,6 +20,23 @@ const validarDatosPartido = (fase, resultado, torneo, modalidad, arbitro) => {
         [torneo, modalidad, arbitro].every(id => /^[1-9]\d*$/.test(String(id || '')));
 };
 
+// Junta los sets elegidos en los desplegables en un solo texto, ej: "6-3 4-6 7-5"
+const armarResultado = (valor) => {
+    const sets = valor === undefined ? [] : Array.isArray(valor) ? valor : [valor];
+    const jugados = sets.filter(set => set !== '');
+
+    // El ganador del partido tiene que haber ganado más de la mitad de los sets
+    let setsGanados = 0;
+    for (const set of jugados) {
+        const [gamesGanador, gamesRival] = set.split('-').map(Number);
+        if (gamesGanador > gamesRival) setsGanados++;
+    }
+    if (jugados.length < 2 || setsGanados <= jugados.length / 2) {
+        return ''; // vacío = resultado inválido, lo rechaza validarDatosPartido
+    }
+    return jugados.join(' ');
+};
+
 const validarParticipantes = async (conexion, idModalidad, idsJugadores, idsGanadores) => {
     const [modalidades] = await conexion.query(
         'SELECT nombre FROM Modalidades WHERE id_modalidad = ?',
@@ -45,23 +62,12 @@ const validarParticipantes = async (conexion, idModalidad, idsJugadores, idsGana
 };
 
 const guardarEquiposDelPartido = async (conexion, idPartido, idsJugadores, idsGanadores) => {
-    const jugadoresPorEquipo = [[], []];
+    // Cada jugador que participó se guarda con 1 si ganó o 0 si perdió
     for (const idJugador of idsJugadores) {
-        const esGanador = idsGanadores.includes(idJugador);
-        jugadoresPorEquipo[esGanador ? 0 : 1].push(idJugador);
-    }
-
-    for (let i = 0; i < jugadoresPorEquipo.length; i++) {
-        const [equipo] = await conexion.query('INSERT INTO Equipos () VALUES ()');
-        for (const idJugador of jugadoresPorEquipo[i]) {
-            await conexion.query(
-                'INSERT INTO Equipo_Jugadores (id_equipo, id_jugador) VALUES (?, ?)',
-                [equipo.insertId, idJugador]
-            );
-        }
+        const esGanador = idsGanadores.includes(idJugador) ? 1 : 0;
         await conexion.query(
-            'INSERT INTO Participaciones_Partidos (id_partido, id_equipo, es_ganador) VALUES (?, ?, ?)',
-            [idPartido, equipo.insertId, i === 0 ? 1 : 0]
+            'INSERT INTO Participaciones_Partidos (id_partido, id_jugador, es_ganador) VALUES (?, ?, ?)',
+            [idPartido, idJugador, esGanador]
         );
     }
 };
@@ -70,6 +76,7 @@ const guardarEquiposDelPartido = async (conexion, idPartido, idsJugadores, idsGa
 export const menuPartidos = (req, res) => {
     res.render('vistasPartidos/menuPartidos');
 };
+
 
 // 2. Ver (Traemos los datos de las tablas relacionadas)
 export const listarPartidos = async (req, res) => {
@@ -83,9 +90,46 @@ export const listarPartidos = async (req, res) => {
         `;
         const [partidos] = await bd.query(consulta);
         res.render('vistasPartidos/verPartidos', { partidos, status: req.query.status, tipo: req.query.tipo });
-    } catch (error) { 
+    } catch (error) {
         console.error(error);
-        res.status(500).send('Error al listar partidos'); 
+        res.status(500).send('Error al listar partidos');
+    }
+};
+
+// Buscar: por categoría (modalidad) y/o por torneo o fase. Solo muestra resultados después de buscar
+export const buscarPartidos = async (req, res) => {
+    try {
+        const idModalidad = req.query.id_modalidad || '';
+        const buscar = req.query.buscar || '';
+        const [modalidades] = await bd.query('SELECT * FROM Modalidades');
+
+        let partidos = [];
+        if (idModalidad || buscar) {
+            // "WHERE 1 = 1" siempre es verdadero; sirve para ir sumando condiciones con AND
+            let consulta = `
+                SELECT p.*, t.nombre AS torneo, t.anio, m.nombre AS modalidad, CONCAT(a.nombre, ' ', a.apellido) AS arbitro
+                FROM Partidos p
+                JOIN Torneos t ON p.id_torneo = t.id_torneo
+                JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
+                JOIN Arbitros a ON p.id_arbitro = a.id_arbitro
+                WHERE 1 = 1
+            `;
+            const parametros = [];
+            if (idModalidad) {
+                consulta += ' AND p.id_modalidad = ?';
+                parametros.push(idModalidad);
+            }
+            if (buscar) {
+                consulta += ' AND (t.nombre LIKE ? OR p.fase LIKE ?)';
+                parametros.push(`%${buscar}%`, `%${buscar}%`);
+            }
+            const [resultado] = await bd.query(consulta, parametros);
+            partidos = resultado;
+        }
+        res.render('vistasPartidos/buscarPartidos', { partidos, modalidades, idModalidad, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar partidos');
     }
 };
 
@@ -96,7 +140,7 @@ export const formularioCrear = async (req, res) => {
         const [modalidades] = await bd.query('SELECT * FROM Modalidades');
         const [arbitros] = await bd.query('SELECT * FROM Arbitros');
         const [jugadores] = await bd.query('SELECT * FROM Jugadores');
-        
+
         res.render('vistasPartidos/crearPartidos', { torneos, modalidades, arbitros, jugadores, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
@@ -105,7 +149,8 @@ export const crearPartido = async (req, res) => {
     let conexion;
     let transaccionIniciada = false;
     try {
-        const { id_torneo, id_modalidad, id_arbitro, fase, resultado } = req.body;
+        const { id_torneo, id_modalidad, id_arbitro, fase } = req.body;
+        const resultado = armarResultado(req.body.sets);
         const idsJugadores = normalizarIds(req.body.jugadores);
         const idsGanadores = normalizarIds(req.body.ganadores);
         if (!validarDatosPartido(fase, resultado, id_torneo, id_modalidad, id_arbitro)) {
@@ -124,7 +169,7 @@ export const crearPartido = async (req, res) => {
         await conexion.commit();
         transaccionIniciada = false;
         res.redirect('/partidos/ver?status=success');
-    } catch (error) { 
+    } catch (error) {
         console.error(error);
         if (transaccionIniciada) {
             try {
@@ -133,11 +178,12 @@ export const crearPartido = async (req, res) => {
                 console.error('Error al revertir la creación del partido:', rollbackError);
             }
         }
-        res.redirect('/partidos/crear?status=error&tipo=datos'); 
+        res.redirect('/partidos/crear?status=error&tipo=datos');
     } finally {
         if (conexion) conexion.release();
     }
 };
+
 
 // 4. Modificar
 export const seleccionarModificar = async (req, res) => {
@@ -160,15 +206,14 @@ export const formularioEditar = async (req, res) => {
         const [modalidades] = await bd.query('SELECT * FROM Modalidades');
         const [arbitros] = await bd.query('SELECT * FROM Arbitros');
         const [jugadores] = await bd.query('SELECT * FROM Jugadores');
-        
+
         const [participaciones] = await bd.query(`
-            SELECT ej.id_jugador, pp.es_ganador
+            SELECT pp.id_jugador, pp.es_ganador
             FROM Participaciones_Partidos pp
-            JOIN Equipo_Jugadores ej ON pp.id_equipo = ej.id_equipo
             WHERE pp.id_partido = ?
         `, [req.params.id]);
 
-        res.render('vistasPartidos/editarPartido', { 
+        res.render('vistasPartidos/editarPartido', {
             partido: partido[0], torneos, modalidades, arbitros, jugadores, participaciones, status: req.query.status, tipo: req.query.tipo
         });
     } catch (error) { res.status(500).send('Error'); }
@@ -179,7 +224,8 @@ export const editarPartido = async (req, res) => {
     let transaccionIniciada = false;
     try {
         const idPartido = req.params.id;
-        const { id_torneo, id_modalidad, id_arbitro, fase, resultado } = req.body;
+        const { id_torneo, id_modalidad, id_arbitro, fase } = req.body;
+        const resultado = armarResultado(req.body.sets);
         const idsJugadores = normalizarIds(req.body.jugadores);
         const idsGanadores = normalizarIds(req.body.ganadores);
         if (!validarDatosPartido(fase, resultado, id_torneo, id_modalidad, id_arbitro)) {
@@ -192,29 +238,17 @@ export const editarPartido = async (req, res) => {
         await validarParticipantes(conexion, Number(id_modalidad), idsJugadores, idsGanadores);
 
         await conexion.query(
-            'UPDATE Partidos SET id_torneo = ?, id_modalidad = ?, id_arbitro = ?, fase = ?, resultado = ? WHERE id_partido = ?', 
+            'UPDATE Partidos SET id_torneo = ?, id_modalidad = ?, id_arbitro = ?, fase = ?, resultado = ? WHERE id_partido = ?',
             [id_torneo, id_modalidad, id_arbitro, fase.trim(), resultado.trim(), idPartido]
         );
 
-        const [equiposAnteriores] = await conexion.query(
-            'SELECT id_equipo FROM Participaciones_Partidos WHERE id_partido = ?',
-            [idPartido]
-        );
+        // Se borran los jugadores anteriores del partido y se guardan los nuevos
         await conexion.query('DELETE FROM Participaciones_Partidos WHERE id_partido = ?', [idPartido]);
-        for (const { id_equipo } of equiposAnteriores) {
-            await conexion.query(`
-                DELETE FROM Equipos
-                WHERE id_equipo = ?
-                  AND NOT EXISTS (
-                      SELECT 1 FROM Participaciones_Partidos WHERE id_equipo = ?
-                  )
-            `, [id_equipo, id_equipo]);
-        }
         await guardarEquiposDelPartido(conexion, idPartido, idsJugadores, idsGanadores);
         await conexion.commit();
         transaccionIniciada = false;
         res.redirect('/partidos/ver?status=success');
-    } catch (error) { 
+    } catch (error) {
         console.error(error);
         if (transaccionIniciada) {
             try {
@@ -223,7 +257,7 @@ export const editarPartido = async (req, res) => {
                 console.error('Error al revertir la edición del partido:', rollbackError);
             }
         }
-        res.redirect(`/partidos/modificar/${req.params.id}?status=error&tipo=datos`); 
+        res.redirect(`/partidos/modificar/${req.params.id}?status=error&tipo=datos`);
     } finally {
         if (conexion) conexion.release();
     }
@@ -250,20 +284,8 @@ export const eliminarPartido = async (req, res) => {
         conexion = await bd.getConnection();
         await conexion.beginTransaction();
         transaccionIniciada = true;
-        const [equipos] = await conexion.query(
-            'SELECT id_equipo FROM Participaciones_Partidos WHERE id_partido = ?',
-            [req.params.id]
-        );
+        // Las participaciones del partido se borran solas por el ON DELETE CASCADE
         await conexion.query('DELETE FROM Partidos WHERE id_partido = ?', [req.params.id]);
-        for (const { id_equipo } of equipos) {
-            await conexion.query(`
-                DELETE FROM Equipos
-                WHERE id_equipo = ?
-                  AND NOT EXISTS (
-                      SELECT 1 FROM Participaciones_Partidos WHERE id_equipo = ?
-                  )
-            `, [id_equipo, id_equipo]);
-        }
         await conexion.commit();
         transaccionIniciada = false;
         res.redirect('/partidos/eliminar?status=success');
@@ -287,7 +309,7 @@ export const verPartidosPorJugador = async (req, res) => {
     try {
         const idJugador = req.query.id_jugador;
         const [jugadores] = await bd.query('SELECT * FROM Jugadores');
-        
+
         let partidos = [];
         if (idJugador) {
             const consulta = `
@@ -298,12 +320,10 @@ export const verPartidosPorJugador = async (req, res) => {
                 JOIN Torneos t ON p.id_torneo = t.id_torneo
                 JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
                 JOIN Participaciones_Partidos pp1 ON p.id_partido = pp1.id_partido
-                JOIN Equipo_Jugadores ej1 ON pp1.id_equipo = ej1.id_equipo
-                LEFT JOIN Participaciones_Partidos pp2 ON p.id_partido = pp2.id_partido AND pp2.id_equipo != pp1.id_equipo
-                LEFT JOIN Equipo_Jugadores ej2 ON pp2.id_equipo = ej2.id_equipo
-                LEFT JOIN Jugadores j2 ON ej2.id_jugador = j2.id_jugador
-                WHERE ej1.id_jugador = ?
-                GROUP BY p.id_partido, pp1.id_equipo, pp1.es_ganador
+                LEFT JOIN Participaciones_Partidos pp2 ON p.id_partido = pp2.id_partido AND pp2.es_ganador != pp1.es_ganador
+                LEFT JOIN Jugadores j2 ON pp2.id_jugador = j2.id_jugador
+                WHERE pp1.id_jugador = ?
+                GROUP BY p.id_partido, pp1.es_ganador
             `;
             const [resultado] = await bd.query(consulta, [idJugador]);
             partidos = resultado;

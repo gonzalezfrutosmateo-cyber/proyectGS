@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { 
     menuSedes, listarSedes, formularioCrear, crearSede, 
     seleccionarModificar, formularioEditar, editarSede, 
-    seleccionarEliminar, eliminarSede 
+    seleccionarEliminar, eliminarSede, buscarSedes
 } from '../controllers/controladorSedes.js';
 
 const router = Router();
 
 router.get('/', menuSedes);
 router.get('/ver', listarSedes);
+router.get('/buscar', buscarSedes);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearSede);
 router.get('/modificar', seleccionarModificar);

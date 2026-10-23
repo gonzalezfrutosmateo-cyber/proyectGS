@@ -36,8 +36,8 @@
                 <% historial.forEach(h => { %>
                     <tr>
                         <td><%= h.nombre %> <%= h.apellido %></td>
-                        <td><%= h.fecha_inicio %></td>
-                        <td><%= h.fecha_fin ? h.fecha_fin : 'Actualidad' %></td>
+                        <td><%= h.fecha_inicio.toLocaleDateString('es-AR') %></td>
+                        <td><%= h.fecha_fin ? h.fecha_fin.toLocaleDateString('es-AR') : 'Actualidad' %></td>
                     </tr>
                 <% }) %>
             </table>

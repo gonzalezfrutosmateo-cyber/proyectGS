@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Sede</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Buscar Sede</h1>
+    <a href="/sedes">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/sedes/buscar" method="GET">
+            <label>Nombre de la sede o del país:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Wimbledon o Inglaterra" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (buscar) { %>
+        <h2>Resultados para "<%= buscar %>"</h2>
+        <% if (sedes.length > 0) { %>
+            <table>
+                <tr><th>ID</th><th>Nombre de la Sede</th><th>País</th></tr>
+                <% sedes.forEach(s => { %>
+                    <tr>
+                        <td><%= s.id_sede %></td>
+                        <td><%= s.nombre %></td>
+                        <td><%= s.pais %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No se encontró ninguna sede con ese nombre o país.</p>
+        <% } %>
+    <% } %>
+</body>
+</html>

@@ -20,6 +20,30 @@ export const listarTorneos = async (req, res) => {
     } catch (error) { res.status(500).send('Error al listar torneos'); }
 };
 
+// Buscar: solo muestra resultados después de escribir algo (por nombre, año, sede o país)
+export const buscarTorneos = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let torneos = [];
+        if (buscar) {
+            const consulta = `
+                SELECT t.*, s.nombre as sede_nombre, p.nombre as pais_nombre
+                FROM Torneos t
+                LEFT JOIN Sedes s ON t.id_sede = s.id_sede
+                LEFT JOIN Paises p ON s.id_pais = p.id_pais
+                WHERE t.nombre LIKE ? OR t.anio LIKE ? OR s.nombre LIKE ? OR p.nombre LIKE ?
+            `;
+            const texto = `%${buscar}%`;
+            const [resultado] = await bd.query(consulta, [texto, texto, texto, texto]);
+            torneos = resultado;
+        }
+        res.render('vistasTorneos/buscarTorneos', { torneos, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar torneos');
+    }
+};
+
 // Crear Torneo 
 export const formularioCrear = async (req, res) => {
     try {
@@ -129,8 +153,7 @@ export const verResultados = async (req, res) => {
             JOIN Modalidades m ON part.id_modalidad = m.id_modalidad
             JOIN Arbitros a ON part.id_arbitro = a.id_arbitro
             JOIN Participaciones_Partidos pp ON part.id_partido = pp.id_partido
-            JOIN Equipo_Jugadores ej ON pp.id_equipo = ej.id_equipo
-            JOIN Jugadores j ON ej.id_jugador = j.id_jugador
+            JOIN Jugadores j ON pp.id_jugador = j.id_jugador
             WHERE t.anio = ? AND t.id_torneo = ?
             GROUP BY part.id_partido, part.fase, part.resultado, m.nombre, a.nombre, a.apellido
         `;

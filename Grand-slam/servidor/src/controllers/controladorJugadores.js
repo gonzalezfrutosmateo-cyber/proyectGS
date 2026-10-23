@@ -39,6 +39,26 @@ export const verJugadoresJSON = async (req, res) => {
     }
 };
 
+// Buscar: solo muestra resultados después de escribir algo
+export const buscarJugadores = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let jugadores = [];
+        if (buscar) {
+            // Se busca en nombre y apellido juntos, así funciona escribir "juan rod"
+            const [resultado] = await bd.query(
+                "SELECT * FROM Jugadores WHERE CONCAT(nombre, ' ', apellido) LIKE ?",
+                [`%${buscar}%`]
+            );
+            jugadores = resultado;
+        }
+        res.render('vistasJugadores/buscarJugadores', { jugadores, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar jugadores');
+    }
+};
+
 export const listarParaModificar = async (req, res) => {
     try {
         const [jugadores] = await bd.query('SELECT * FROM Jugadores');
@@ -84,9 +104,8 @@ export const eliminarJugador = async (req, res) => {
     try {
         const [partidos] = await bd.query(`
             SELECT COUNT(*) AS cantidad
-            FROM Equipo_Jugadores ej
-            JOIN Participaciones_Partidos pp ON ej.id_equipo = pp.id_equipo
-            WHERE ej.id_jugador = ?
+            FROM Participaciones_Partidos pp
+            WHERE pp.id_jugador = ?
         `, [req.params.id]);
         if (partidos[0].cantidad > 0) {
             return res.redirect('/jugadores/eliminar?status=error&tipo=relacion');
@@ -106,8 +125,7 @@ export const verGanancias = async (req, res) => {
             SELECT j.nombre, j.apellido,
                    SUM(CASE WHEN pp.es_ganador = 1 THEN p.monto_ganador ELSE p.monto_perdedor END) as total_ganado
             FROM Jugadores j
-            JOIN Equipo_Jugadores ej ON j.id_jugador = ej.id_jugador
-            JOIN Participaciones_Partidos pp ON ej.id_equipo = pp.id_equipo
+            JOIN Participaciones_Partidos pp ON j.id_jugador = pp.id_jugador
             JOIN Partidos part ON pp.id_partido = part.id_partido
             JOIN Premios p ON part.id_torneo = p.id_torneo AND part.fase = p.fase
             WHERE j.id_jugador = ?

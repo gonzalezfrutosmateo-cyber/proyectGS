@@ -15,6 +15,22 @@
         <label>Apellido:</label>
         <input type="text" name="apellido" value="<%= entrenador.apellido %>" required>
 
+        <label>Jugador que entrena:</label>
+        <% if (actual) { %>
+            <p>Actualmente entrena a <b><%= actual.nombre %> <%= actual.apellido %></b> desde el <%= actual.fecha_inicio.toLocaleDateString('es-AR') %>.</p>
+        <% } else { %>
+            <p>Actualmente no entrena a ningún jugador.</p>
+        <% } %>
+        <select name="id_jugador">
+            <option value=""><%= actual ? 'Ninguno (finalizar el entrenamiento)' : 'Ninguno' %></option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>" <%= actual && actual.id_jugador === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <label>Fecha del cambio (solo si cambiás de jugador o finalizás el entrenamiento):</label>
+        <input type="date" name="fecha_cambio">
+
         <button type="submit">Guardar Cambios</button>
     </form>
     <br><a href="/entrenadores/modificar">Cancelar</a>
@@ -34,7 +50,7 @@
         Swal.fire({
             icon: 'error',
             title: 'Datos inválidos',
-            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+            text: 'Revisá el nombre y apellido. Si cambiaste de jugador o finalizaste el entrenamiento, poné la fecha del cambio (no puede ser anterior al inicio del entrenamiento actual).'
         });
     </script>
     <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>

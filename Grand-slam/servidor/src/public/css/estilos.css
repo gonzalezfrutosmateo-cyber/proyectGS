@@ -108,3 +108,17 @@ button:hover {
     background-color: #f9f9f9;
     margin-bottom: 15px;
 }
+
+/* Desplegables de sets del resultado, uno al lado del otro */
+.sets {
+    display: flex;
+    gap: 5px;
+}
+
+.sets div {
+    flex: 1;
+}
+
+.sets label {
+    font-weight: normal;
+}

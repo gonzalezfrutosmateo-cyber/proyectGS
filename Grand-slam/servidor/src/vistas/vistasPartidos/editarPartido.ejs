@@ -36,11 +36,32 @@
             <% }) %>
         </select>
 
-        <label>Fase:</label>
-        <input type="text" name="fase" value="<%= partido.fase %>" required>
+        <label>Fase (ronda del torneo):</label>
+        <select name="fase" required>
+            <% ['Primera ronda', 'Segunda ronda', 'Tercera ronda', 'Octavos de final', 'Cuartos de final', 'Semifinal', 'Final'].forEach(f => { %>
+                <option value="<%= f %>" <%= partido.fase === f ? 'selected' : '' %>><%= f %></option>
+            <% }) %>
+        </select>
 
-        <label>Resultado:</label>
-        <input type="text" name="resultado" value="<%= partido.resultado %>" required>
+        <label>Resultado (cada set desde el lado del ganador del partido; los sets 3, 4 y 5 solo si se jugaron):</label>
+        <%
+            const opcionesSet = ['6-0', '6-1', '6-2', '6-3', '6-4', '7-5', '7-6', '0-6', '1-6', '2-6', '3-6', '4-6', '5-7', '6-7'];
+            // Separamos el resultado guardado ("6-3 4-6 7-5") para marcar cada set
+            const setsGuardados = (partido.resultado || '').split(' ');
+        %>
+        <div class="sets">
+            <% for (let i = 1; i <= 5; i++) { %>
+                <div>
+                    <label>Set <%= i %></label>
+                    <select name="sets" <%= i <= 2 ? 'required' : '' %>>
+                        <option value="">—</option>
+                        <% opcionesSet.forEach(s => { %>
+                            <option value="<%= s %>" <%= setsGuardados[i - 1] === s ? 'selected' : '' %>><%= s %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            <% } %>
+        </div>
 
         <label>Jugadores (Ctrl para varios):</label>
         <select name="jugadores" multiple size="4" required>
@@ -85,7 +106,7 @@
         Swal.fire({
             icon: 'error',
             title: 'Datos inválidos',
-            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+            text: 'Revisá: individual = 2 jugadores y 1 ganador, dobles = 4 jugadores y 2 ganadores. Los ganadores tienen que estar entre los que jugaron, y en el resultado el ganador tiene que haber ganado más sets.'
         });
     </script>
     <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>

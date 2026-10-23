@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { 
     menuEntrenadores, listarEntrenadores, formularioCrear, crearEntrenador, 
     seleccionarModificar, formularioEditar, editarEntrenador,
-    seleccionarEliminar, eliminarEntrenador, verEntrenadoresJugador 
+    seleccionarEliminar, eliminarEntrenador, verEntrenadoresJugador, buscarEntrenadores
 } from '../controllers/controladorEntrenadores.js';
 
 const router = Router();
 
 router.get('/', menuEntrenadores);
 router.get('/ver', listarEntrenadores);
+router.get('/buscar', buscarEntrenadores);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearEntrenador);
 router.get('/modificar', seleccionarModificar);

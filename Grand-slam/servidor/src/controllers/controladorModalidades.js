@@ -10,6 +10,22 @@ export const listarModalidades = async (req, res) => {
     } catch (error) { res.status(500).send('Error'); }
 };
 
+// Buscar: solo muestra resultados después de escribir algo
+export const buscarModalidades = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let modalidades = [];
+        if (buscar) {
+            const [resultado] = await bd.query('SELECT * FROM Modalidades WHERE nombre LIKE ?', [`%${buscar}%`]);
+            modalidades = resultado;
+        }
+        res.render('vistasModalidades/buscarModalidades', { modalidades, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar modalidades');
+    }
+};
+
 export const formularioCrear = (req, res) => res.render('vistasModalidades/crearModalidades', { status: req.query.status, tipo: req.query.tipo });
 
 export const crearModalidad = async (req, res) => {

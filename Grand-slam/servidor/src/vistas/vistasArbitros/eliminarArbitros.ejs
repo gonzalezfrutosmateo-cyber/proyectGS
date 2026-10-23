@@ -1,64 +1,76 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <title>Eliminar Árbitro</title>
     <link rel="stylesheet" href="/css/estilos.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
     <h1>Selecciona un Árbitro para Eliminar</h1>
     <table>
-        <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Acción</th></tr>
-        <% arbitros.forEach(a => { %>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Acción</th>
+        </tr>
+        <% arbitros.forEach(a=> { %>
             <tr>
-                <td><%= a.id_arbitro %></td>
-                <td><%= a.nombre %></td>
-                <td><%= a.apellido %></td>
-                <td><a href="/arbitros/eliminar/<%= a.id_arbitro %>" class="btn-danger" onclick="return confirm('¿Seguro que querés eliminar este árbitro?')">Eliminar</a></td>
+                <td>
+                    <%= a.id_arbitro %>
+                </td>
+                <td>
+                    <%= a.nombre %>
+                </td>
+                <td>
+                    <%= a.apellido %>
+                </td>
+                <td><a href="/arbitros/eliminar/<%= a.id_arbitro %>" class="btn-danger"
+                        onclick="return confirm('¿Seguro que querés eliminar este árbitro?')">Eliminar</a></td>
             </tr>
-        <% }) %>
+            <% }) %>
     </table>
     <br><a href="/arbitros">Volver</a>
-    <% if (typeof status !== 'undefined' && status === 'success') { %>
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Operación realizada',
-            timer: 2000,
-            showConfirmButton: false
-        });
-    </script>
-    <% } %>
+    <% if (typeof status !=='undefined' && status==='success' ) { %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Operación realizada',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+        <% } %>
 
-    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Datos inválidos',
-            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
-        });
-    </script>
-    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'No se pudo completar',
-            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
-        });
-    </script>
-    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'No se pudo completar',
-            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
-        });
-    </script>
-    <% } %>
+            <% if (typeof status !=='undefined' && status==='error' && tipo==='datos' ) { %>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos inválidos',
+                        text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+                    });
+                </script>
+                <% } else if (typeof status !=='undefined' && status==='error' && tipo==='relacion' ) { %>
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo completar',
+                            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+                        });
+                    </script>
+                    <% } else if (typeof status !=='undefined' && status==='error' ) { %>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se pudo completar',
+                                text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+                            });
+                        </script>
+                        <% } %>
+
 </body>
+
 </html>
-
-//swal es una librería de JavaScript que permite mostrar alertas y mensajes emergentes de manera más atractiva y personalizable que las alertas nativas del navegador. En este código, se utiliza para mostrar mensajes de éxito o error después de realizar operaciones como crear, editar o eliminar registros en la aplicación.
-
-// Mateo, nacho. la simbologia "<%= %>" se utiliza en EJS (Embedded JavaScript) para insertar valores dinámicos en la plantilla HTML. En este caso, se usa para mostrar los datos de los árbitros y sus identificadores en la tabla, así como para pasar el ID del árbitro a la ruta de eliminación cuando se hace clic en el enlace "Eliminar". En otras palabras, permite que el contenido de la página se genere dinámicamente en función de los datos proporcionados por el servidor. 

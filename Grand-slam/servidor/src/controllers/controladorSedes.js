@@ -6,13 +6,35 @@ export const menuSedes = (req, res) => res.render('vistasSedes/menuSedes');
 export const listarSedes = async (req, res) => {
     try {
         const consulta = `
-            SELECT s.id_sede, s.nombre, p.nombre AS pais 
+            SELECT s.id_sede, s.nombre, p.nombre AS pais
             FROM Sedes s
             LEFT JOIN Paises p ON s.id_pais = p.id_pais
         `;
         const [sedes] = await bd.query(consulta);
         res.render('vistasSedes/verSedes', { sedes, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
+};
+
+// Buscar: solo muestra resultados después de escribir algo (por nombre de la sede o del país)
+export const buscarSedes = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let sedes = [];
+        if (buscar) {
+            const consulta = `
+                SELECT s.id_sede, s.nombre, p.nombre AS pais
+                FROM Sedes s
+                LEFT JOIN Paises p ON s.id_pais = p.id_pais
+                WHERE s.nombre LIKE ? OR p.nombre LIKE ?
+            `;
+            const [resultado] = await bd.query(consulta, [`%${buscar}%`, `%${buscar}%`]);
+            sedes = resultado;
+        }
+        res.render('vistasSedes/buscarSedes', { sedes, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar sedes');
+    }
 };
 
 export const formularioCrear = async (req, res) => {

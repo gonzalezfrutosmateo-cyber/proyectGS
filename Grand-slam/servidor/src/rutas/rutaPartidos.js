@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { 
     menuPartidos, listarPartidos, formularioCrear, crearPartido, 
     seleccionarModificar, formularioEditar, editarPartido,
-    seleccionarEliminar, eliminarPartido, verPartidosPorJugador
+    seleccionarEliminar, eliminarPartido, verPartidosPorJugador, buscarPartidos
 } from '../controllers/controladorPartidos.js';
 
 const router = Router();
 
 router.get('/', menuPartidos);
 router.get('/ver', listarPartidos);
+router.get('/buscar', buscarPartidos);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearPartido);
 router.get('/modificar', seleccionarModificar);

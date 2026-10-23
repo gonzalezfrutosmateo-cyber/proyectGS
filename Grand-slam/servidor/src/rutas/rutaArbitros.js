@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
     menuArbitros, listarArbitros, formularioCrear, crearArbitro, 
     seleccionarModificar, formularioEditar, editarArbitro,
-    seleccionarEliminar, eliminarArbitro, verArbitrosPorTorneo 
+    seleccionarEliminar, eliminarArbitro, verArbitrosPorTorneo, buscarArbitros
 } from '../controllers/controladorArbitros.js';
 
 const router = Router();
@@ -11,6 +11,7 @@ router.get('/', menuArbitros);
 
 // CRUD
 router.get('/ver', listarArbitros);
+router.get('/buscar', buscarArbitros);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearArbitro);
 

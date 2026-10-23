@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Buscar Torneo</h1>
+    <a href="/torneos">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/torneos/buscar" method="GET">
+            <label>Nombre, año, sede o país del torneo:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Wimbledon o 2024" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (buscar) { %>
+        <h2>Resultados para "<%= buscar %>"</h2>
+        <% if (torneos.length > 0) { %>
+            <table>
+                <tr><th>ID</th><th>Nombre</th><th>Año</th><th>Sede</th><th>País</th></tr>
+                <% torneos.forEach(t => { %>
+                    <tr>
+                        <td><%= t.id_torneo %></td>
+                        <td><%= t.nombre %></td>
+                        <td><%= t.anio %></td>
+                        <td><%= t.sede_nombre %></td>
+                        <td><%= t.pais_nombre %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No se encontró ningún torneo con ese nombre, año, sede o país.</p>
+        <% } %>
+    <% } %>
+</body>
+</html>

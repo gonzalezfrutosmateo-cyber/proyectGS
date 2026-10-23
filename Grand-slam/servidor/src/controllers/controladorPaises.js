@@ -10,6 +10,23 @@ export const listarPaises = async (req, res) => {
     } catch (error) { res.status(500).send('Error'); }
 };
 
+// Buscar: solo muestra resultados después de escribir algo
+export const buscarPaises = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let paises = [];
+        if (buscar) {
+            // % = cualquier texto antes o después, así encuentra "Fra" dentro de "Francia"
+            const [resultado] = await bd.query('SELECT * FROM Paises WHERE nombre LIKE ?', [`%${buscar}%`]);
+            paises = resultado;
+        }
+        res.render('vistasPaises/buscarPaises', { paises, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar países');
+    }
+};
+
 export const formularioCrear = (req, res) => res.render('vistasPaises/crearPaises', { status: req.query.status, tipo: req.query.tipo });
 
 export const crearPais = async (req, res) => {

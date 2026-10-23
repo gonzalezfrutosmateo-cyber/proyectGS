@@ -2,13 +2,14 @@ import { Router } from 'express';
 import { 
     menuPremios, listarPremios, formularioCrear, crearPremio, 
     seleccionarModificar, formularioEditar, editarPremio, 
-    seleccionarEliminar, eliminarPremio 
+    seleccionarEliminar, eliminarPremio, buscarPremios
 } from '../controllers/controladorPremios.js';
 
 const router = Router();
 
 router.get('/', menuPremios);
 router.get('/ver', listarPremios);
+router.get('/buscar', buscarPremios);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearPremio);
 router.get('/modificar', seleccionarModificar);

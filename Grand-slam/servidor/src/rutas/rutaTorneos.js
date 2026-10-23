@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
     menuTorneos, listarTorneos, formularioCrear, crearTorneo, 
     seleccionarModificar, formularioEditar, editarTorneo,
-    seleccionarEliminar, eliminarTorneo, verResultados 
+    seleccionarEliminar, eliminarTorneo, verResultados, buscarTorneos
 } from '../controllers/controladorTorneos.js';
 
 const router = Router();
@@ -11,6 +11,7 @@ router.get('/', menuTorneos);
 
 // CRUD
 router.get('/ver', listarTorneos);
+router.get('/buscar', buscarTorneos);
 router.get('/crear', formularioCrear);
 router.post('/crear', crearTorneo);
 

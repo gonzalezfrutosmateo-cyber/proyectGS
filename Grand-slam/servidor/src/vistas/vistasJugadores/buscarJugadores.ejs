@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Jugador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Buscar Jugador</h1>
+    <a href="/jugadores">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/jugadores/buscar" method="GET">
+            <label>Nombre o apellido del jugador:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Nadal" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (buscar) { %>
+        <h2>Resultados para "<%= buscar %>"</h2>
+        <% if (jugadores.length > 0) { %>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Reporte</th>
+                </tr>
+                <% jugadores.forEach(j => { %>
+                    <tr>
+                        <td><%= j.id_jugador %></td>
+                        <td><%= j.nombre %></td>
+                        <td><%= j.apellido %></td>
+                        <td><a href="/jugadores/ganancias/<%= j.id_jugador %>?nombre=<%= encodeURIComponent(j.nombre) %>">Ver Ganancias</a></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No se encontró ningún jugador con ese nombre o apellido.</p>
+        <% } %>
+    <% } %>
+</body>
+</html>

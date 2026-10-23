@@ -14,6 +14,25 @@ export const listarArbitros = async (req, res) => {
     } catch (error) { res.status(500).send('Error'); }
 };
 
+// Buscar: solo muestra resultados después de escribir algo (nombre y apellido juntos)
+export const buscarArbitros = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let arbitros = [];
+        if (buscar) {
+            const [resultado] = await bd.query(
+                "SELECT * FROM Arbitros WHERE CONCAT(nombre, ' ', apellido) LIKE ?",
+                [`%${buscar}%`]
+            );
+            arbitros = resultado;
+        }
+        res.render('vistasArbitros/buscarArbitros', { arbitros, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar árbitros');
+    }
+};
+
 // 3. Crear
 export const formularioCrear = (req, res) => {
     res.render('vistasArbitros/crearArbitros', { status: req.query.status, tipo: req.query.tipo });

@@ -10,13 +10,35 @@ export const menuPremios = (req, res) => {
 export const listarPremios = async (req, res) => {
     try {
         const consulta = `
-            SELECT p.*, t.nombre AS torneo_nombre, t.anio AS torneo_anio 
+            SELECT p.*, t.nombre AS torneo_nombre, t.anio AS torneo_anio
             FROM Premios p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
         `;
         const [premios] = await bd.query(consulta);
         res.render('vistasPremios/verPremios', { premios, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
+};
+
+// Buscar: solo muestra resultados después de escribir algo (por nombre del torneo o por fase)
+export const buscarPremios = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        let premios = [];
+        if (buscar) {
+            const consulta = `
+                SELECT p.*, t.nombre AS torneo_nombre, t.anio AS torneo_anio
+                FROM Premios p
+                JOIN Torneos t ON p.id_torneo = t.id_torneo
+                WHERE t.nombre LIKE ? OR p.fase LIKE ?
+            `;
+            const [resultado] = await bd.query(consulta, [`%${buscar}%`, `%${buscar}%`]);
+            premios = resultado;
+        }
+        res.render('vistasPremios/buscarPremios', { premios, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar premios');
+    }
 };
 
 // 3. Crear
