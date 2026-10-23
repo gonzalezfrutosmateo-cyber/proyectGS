@@ -17,8 +17,17 @@
             <% }) %>
         </select>
 
-        <label>Fase:</label>
-        <input type="text" name="fase" required placeholder="Ej: Cuartos de final, Final">
+        <label>Fase (ronda del torneo):</label>
+        <select name="fase" required>
+            <option value="">Elegí la ronda...</option>
+            <option value="Primera ronda">Primera ronda</option>
+            <option value="Segunda ronda">Segunda ronda</option>
+            <option value="Tercera ronda">Tercera ronda</option>
+            <option value="Octavos de final">Octavos de final</option>
+            <option value="Cuartos de final">Cuartos de final</option>
+            <option value="Semifinal">Semifinal</option>
+            <option value="Final">Final</option>
+        </select>
 
         <label>Monto Ganador ($):</label>
         <input type="number" name="monto_ganador" required step="0.01" placeholder="Ej: 2000000">

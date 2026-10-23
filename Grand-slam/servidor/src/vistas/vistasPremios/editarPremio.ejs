@@ -18,8 +18,12 @@
             <% }) %>
         </select>
 
-        <label>Fase:</label>
-        <input type="text" name="fase" value="<%= premio.fase %>" required>
+        <label>Fase (ronda del torneo):</label>
+        <select name="fase" required>
+            <% ['Primera ronda', 'Segunda ronda', 'Tercera ronda', 'Octavos de final', 'Cuartos de final', 'Semifinal', 'Final'].forEach(f => { %>
+                <option value="<%= f %>" <%= premio.fase === f ? 'selected' : '' %>><%= f %></option>
+            <% }) %>
+        </select>
 
         <label>Monto Ganador ($):</label>
         <input type="number" name="monto_ganador" value="<%= premio.monto_ganador %>" required step="0.01">
