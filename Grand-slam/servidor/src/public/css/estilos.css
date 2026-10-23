@@ -1,124 +1,381 @@
-/* Estilos súper simples y clásicos */
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: #ffffff;
-    color: #000000;
-    margin: 20px;
+/* ==========================================================================
+   SISTEMA DE GESTIÓN GRAND SLAM - ESTILOS SOBRIOS Y ELEGANTES
+   Paleta: Blanco (Línea de cal), Naranja (Arcilla), Verde (Césped), Azul (Pista rápida)
+   Tipografía: Fina, accesible y funcional (Plus Jakarta Sans)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
+
+:root {
+    /* Paleta Inspirada en Canchas de Tenis */
+    --azul-hardcourt: #11294A;       /* Azul marino profundo para encabezados y estructura */
+    --azul-pista: #1D5494;           /* Azul intermedio de cancha de tenis para enlaces y focos */
+    --azul-suave: #EDF3FA;           /* Fondo tenue azulado para selecciones y filas activas */
+
+    --naranja-arcilla: #D4501D;      /* Naranja terracota (Roland Garros) para botones principales */
+    --naranja-arcilla-hover: #B83E12; /* Naranja más oscuro al interactuar */
+
+    --verde-cesped: #1E633F;         /* Verde clásico (Wimbledon) para consultas y confirmaciones */
+    --verde-cesped-hover: #164D31;   /* Verde oscuro al interactuar */
+    --verde-suave: #EEF8F2;          /* Fondo tenue verde para botones de consulta */
+
+    --blanco-cal: #FFFFFF;           /* Blanco puro de líneas de tenis y tarjetas */
+    --gris-fondo: #F4F6F9;           /* Gris hielo muy claro para el fondo general */
+    --gris-borde: #DCE3EC;           /* Borde sutil para tarjetas, tablas e inputs */
+    --gris-texto: #1F2937;           /* Gris carbón de alto contraste y legibilidad */
+    --gris-secundario: #64748B;      /* Gris intermedio para subtítulos y textos secundarios */
+
+    --rojo-peligro: #C53030;         /* Rojo sobrio para acciones de eliminación */
+    --rojo-suave: #FDE8E8;           /* Fondo suave para acciones de peligro */
+
+    /* Tipografía y Espaciado */
+    --fuente-principal: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --radio-borde: 6px;
+    --radio-tarjeta: 8px;
 }
 
-h1, h2 {
-    color: #333333;
-}
-
-a {
-    color: #0000ee; /* Azul clásico de enlace de HTML */
-    text-decoration: underline;
-}
-
-/* Contenedor del menú */
-.contenedor {
-    width: 300px;
-    margin: 0 auto; /* Centrado en la pantalla */
-    border: 1px solid #000000;
-    padding: 20px;
-    background-color: #f9f9f9;
-}
-
-/* Botones del menú (simples) */
-.menu-btn {
-    display: block;
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 5px;
-    background-color: #e0e0e0;
-    color: #000000;
-    text-decoration: none;
-    border: 1px solid #000000;
-    text-align: center;
+/* --------------------------------------------------------------------------
+   Reset Base y Tipografía
+   -------------------------------------------------------------------------- */
+* {
     box-sizing: border-box;
 }
 
-.menu-btn:hover {
-    background-color: #cccccc;
+body {
+    font-family: var(--fuente-principal);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.5;
+    background-color: var(--gris-fondo);
+    color: var(--gris-texto);
+    margin: 0;
+    padding: 28px 24px;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Tablas básicas */
-table {
+h1, h2, h3 {
+    color: var(--azul-hardcourt);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-top: 0;
+    margin-bottom: 14px;
+}
+
+h1 {
+    font-size: 1.55rem;
+}
+
+h2 {
+    font-size: 1.25rem;
+    margin-top: 24px;
+}
+
+p {
+    color: var(--gris-secundario);
+    font-size: 0.95rem;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+a {
+    color: var(--azul-pista);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Enlaces independientes de navegación (Volver, Cancelar) */
+a[href="/"],
+a[href$="/partidos"],
+a[href$="/torneos"],
+a[href$="/premios"],
+a[href$="/jugadores"],
+a[href$="/arbitros"],
+a[href$="/sedes"],
+a[href$="/paises"],
+a[href$="/modalidades"],
+a[href$="/entrenadores"],
+a[href$="/modificar"] {
+    display: inline-block;
+    margin-bottom: 14px;
+    color: var(--azul-pista);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   Contenedor Principal de Menús
+   -------------------------------------------------------------------------- */
+.contenedor {
+    max-width: 440px;
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 32px auto;
+    background-color: var(--blanco-cal);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-tarjeta);
+    padding: 28px 24px;
+    box-shadow: 0 1px 3px rgba(17, 41, 74, 0.04);
 }
 
-th, td {
-    border: 1px solid #000000;
-    padding: 8px;
-    text-align: left;
+.contenedor h1 {
+    text-align: center;
+    margin-bottom: 8px;
 }
 
-th {
-    background-color: #e0e0e0;
+.contenedor p {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Formularios básicos */
+/* --------------------------------------------------------------------------
+   Botones de Menú
+   -------------------------------------------------------------------------- */
+.menu-btn {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    margin-bottom: 8px;
+    background-color: var(--blanco-cal);
+    color: var(--azul-hardcourt);
+    text-decoration: none;
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-borde);
+    text-align: center;
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+.menu-btn:hover {
+    background-color: var(--azul-suave);
+    border-color: var(--azul-pista);
+    color: var(--azul-hardcourt);
+    text-decoration: none;
+}
+
+/* Variante Verde Wimbledon para consultas */
+.menu-btn.btn-consulta {
+    background-color: var(--verde-suave);
+    border-color: #BBE3CC;
+    color: var(--verde-cesped);
+}
+
+.menu-btn.btn-consulta:hover {
+    background-color: #DEF2E6;
+    border-color: var(--verde-cesped);
+    color: var(--verde-cesped-hover);
+}
+
+/* Variante Volver */
+.menu-btn.btn-volver {
+    margin-top: 14px;
+    background-color: var(--gris-fondo);
+    border-color: var(--gris-borde);
+    color: var(--gris-secundario);
+}
+
+.menu-btn.btn-volver:hover {
+    background-color: #E7EDF3;
+    color: var(--gris-texto);
+}
+
+/* --------------------------------------------------------------------------
+   Formularios
+   -------------------------------------------------------------------------- */
 form {
-    border: 1px solid #000000;
-    padding: 15px;
-    width: 400px;
-    background-color: #f9f9f9;
-    margin-bottom: 15px;
+    max-width: 520px;
+    width: 100%;
+    background-color: var(--blanco-cal);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-tarjeta);
+    padding: 24px 26px;
+    margin-top: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(17, 41, 74, 0.04);
 }
 
 label {
     display: block;
-    margin-top: 10px;
-    font-weight: bold;
+    margin-top: 14px;
+    margin-bottom: 5px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--gris-texto);
 }
 
-input[type="text"], 
-input[type="number"], 
+input[type="text"],
+input[type="number"],
+input[type="date"],
 select {
     width: 100%;
-    padding: 5px;
-    margin-top: 5px;
-    border: 1px solid #000000;
-    box-sizing: border-box;
+    padding: 9px 12px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: var(--gris-texto);
+    background-color: var(--blanco-cal);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-borde);
+    outline: none;
 }
 
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: var(--azul-pista);
+    box-shadow: 0 0 0 3px rgba(29, 84, 148, 0.15);
+}
+
+/* Botón principal de guardado (Naranja Arcilla / Roland Garros) */
 button {
-    margin-top: 15px;
-    padding: 8px 15px;
-    background-color: #e0e0e0;
-    border: 1px solid #000000;
+    display: inline-block;
+    margin-top: 18px;
+    padding: 10px 20px;
+    background-color: var(--naranja-arcilla);
+    color: var(--blanco-cal);
+    font-family: inherit;
+    font-size: 0.92rem;
+    font-weight: 500;
+    border: none;
+    border-radius: var(--radio-borde);
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #cccccc;
+    background-color: var(--naranja-arcilla-hover);
 }
 
-/* Utilidades */
-.btn-danger {
-    color: #cc0000;
+button:active {
+    background-color: #9C330D;
 }
 
+/* --------------------------------------------------------------------------
+   Filtros y Búsqueda
+   -------------------------------------------------------------------------- */
 .filtro {
-    border: 1px solid #000000;
-    padding: 10px;
-    background-color: #f9f9f9;
-    margin-bottom: 15px;
+    max-width: 620px;
+    width: 100%;
+    background-color: var(--blanco-cal);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-tarjeta);
+    padding: 18px 20px;
+    margin-top: 12px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 3px rgba(17, 41, 74, 0.04);
 }
 
-/* Desplegables de sets del resultado, uno al lado del otro */
+.filtro form {
+    border: none;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    max-width: 100%;
+    box-shadow: none;
+}
+
+.filtro button {
+    margin-top: 14px;
+    background-color: var(--azul-pista);
+}
+
+.filtro button:hover {
+    background-color: var(--azul-hardcourt);
+}
+
+/* --------------------------------------------------------------------------
+   Desplegables de Sets (Formulario de Partidos)
+   -------------------------------------------------------------------------- */
 .sets {
     display: flex;
-    gap: 5px;
+    gap: 6px;
+    margin-top: 4px;
 }
 
 .sets div {
     flex: 1;
+    min-width: 0;
 }
 
 .sets label {
-    font-weight: normal;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--gris-secundario);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.sets select {
+    padding: 7px 2px;
+    text-align-last: center;
+    font-size: 0.85rem;
+}
+
+/* --------------------------------------------------------------------------
+   Tablas de Datos
+   -------------------------------------------------------------------------- */
+table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--blanco-cal);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-tarjeta);
+    overflow: hidden;
+    margin-top: 14px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(17, 41, 74, 0.04);
+}
+
+th, td {
+    padding: 11px 14px;
+    text-align: left;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--gris-borde);
+}
+
+th {
+    background-color: var(--azul-hardcourt);
+    color: var(--blanco-cal);
+    font-weight: 500;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-bottom: none;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #FAFCFE;
+}
+
+tbody tr:hover {
+    background-color: var(--azul-suave);
+}
+
+/* --------------------------------------------------------------------------
+   Utilidades y Botones de Peligro
+   -------------------------------------------------------------------------- */
+.btn-danger {
+    color: var(--rojo-peligro);
+    font-weight: 500;
+    font-size: 0.86rem;
+    padding: 4px 8px;
+    background-color: var(--rojo-suave);
+    border-radius: 4px;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-danger:hover {
+    background-color: #F9CECE;
+    color: #9B1C1C;
+    text-decoration: none;
 }
