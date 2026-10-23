@@ -10,11 +10,12 @@
     <h1>Modalidades Registradas</h1>
     <a href="/modalidades">Volver al menú</a>
     <table>
-        <tr><th>ID</th><th>Nombre</th></tr>
+        <tr><th>ID</th><th>Nombre</th><th>Tipo</th></tr>
         <% modalidades.forEach(m => { %>
             <tr>
                 <td><%= m.id_modalidad %></td>
                 <td><%= m.nombre %></td>
+                <td><%= m.jugadores_por_lado === 2 ? 'Dobles (2 vs 2)' : 'Individual (1 vs 1)' %></td>
             </tr>
         <% }) %>
     </table>

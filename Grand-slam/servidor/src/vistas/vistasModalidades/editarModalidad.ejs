@@ -11,6 +11,13 @@
     <form action="/modalidades/modificar/<%= modalidad.id_modalidad %>" method="POST">
         <label>Nombre de la Modalidad:</label>
         <input type="text" name="nombre" value="<%= modalidad.nombre %>" required>
+
+        <label>Tipo (cuántos jugadores hay de cada lado):</label>
+        <select name="jugadores_por_lado" required>
+            <option value="1" <%= modalidad.jugadores_por_lado === 1 ? 'selected' : '' %>>Individual (1 vs 1)</option>
+            <option value="2" <%= modalidad.jugadores_por_lado === 2 ? 'selected' : '' %>>Dobles (2 vs 2)</option>
+        </select>
+
         <button type="submit">Guardar Cambios</button>
     </form>
     <br><a href="/modalidades/modificar">Cancelar</a>

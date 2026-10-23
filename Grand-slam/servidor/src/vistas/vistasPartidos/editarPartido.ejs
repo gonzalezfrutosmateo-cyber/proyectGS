@@ -18,11 +18,11 @@
             <% }) %>
         </select>
 
-        <label>Modalidad:</label>
+        <label>Modalidad (al lado dice cuántos juegan de cada lado):</label>
         <select name="id_modalidad" required>
             <% modalidades.forEach(m => { %>
-                <option value="<%= m.id_modalidad %>" <%= m.id_modalidad === partido.id_modalidad ? 'selected' : '' %>>
-                    <%= m.nombre %>
+                <option value="<%= m.id_modalidad %>" data-jugadores="<%= m.jugadores_por_lado %>" <%= m.id_modalidad === partido.id_modalidad ? 'selected' : '' %>>
+                    <%= m.nombre %> (<%= m.jugadores_por_lado %> vs <%= m.jugadores_por_lado %>)
                 </option>
             <% }) %>
         </select>
@@ -63,29 +63,48 @@
             <% } %>
         </div>
 
-        <label>Jugadores (Ctrl para varios):</label>
-        <select name="jugadores" multiple size="4" required>
-            <% jugadores.forEach(j => { 
-                // Verificamos si el jugador ya estaba en este partido
-                const estaEnPartido = participaciones.some(p => p.id_jugador === j.id_jugador);
-            %>
-                <option value="<%= j.id_jugador %>" <%= estaEnPartido ? 'selected' : '' %>>
-                    <%= j.nombre %> <%= j.apellido %>
-                </option>
+        <%
+            // Separamos a los jugadores guardados del partido en ganadores y perdedores
+            // (posición 0 = jugador, posición 1 = compañero en dobles)
+            const ganadoresGuardados = participaciones.filter(p => p.es_ganador === 1).map(p => p.id_jugador);
+            const perdedoresGuardados = participaciones.filter(p => p.es_ganador === 0).map(p => p.id_jugador);
+        %>
+        <label>Ganador del partido:</label>
+        <select name="ganadores" required>
+            <option value="">Elegí el jugador...</option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>" <%= ganadoresGuardados[0] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
             <% }) %>
         </select>
 
-        <label>Ganador(es) (Ctrl para varios):</label>
-        <select name="ganadores" multiple size="4" required>
-            <% jugadores.forEach(j => { 
-                // Verificamos si el jugador ya estaba y si ganó
-                const gano = participaciones.some(p => p.id_jugador === j.id_jugador && p.es_ganador === 1);
-            %>
-                <option value="<%= j.id_jugador %>" <%= gano ? 'selected' : '' %>>
-                    <%= j.nombre %> <%= j.apellido %>
-                </option>
+        <!-- Los "Compañero" solo se muestran si la modalidad es de dobles (lo maneja script.js) -->
+        <div class="companero">
+            <label>Compañero del ganador:</label>
+            <select name="ganadores">
+                <option value="">Elegí el compañero...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>" <%= ganadoresGuardados[1] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <label>Perdedor del partido:</label>
+        <select name="perdedores" required>
+            <option value="">Elegí el jugador...</option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>" <%= perdedoresGuardados[0] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
             <% }) %>
         </select>
+
+        <div class="companero">
+            <label>Compañero del perdedor:</label>
+            <select name="perdedores">
+                <option value="">Elegí el compañero...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>" <%= perdedoresGuardados[1] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+                <% }) %>
+            </select>
+        </div>
 
         <button type="submit">Guardar Cambios</button>
     </form>
@@ -106,7 +125,7 @@
         Swal.fire({
             icon: 'error',
             title: 'Datos inválidos',
-            text: 'Revisá: individual = 2 jugadores y 1 ganador, dobles = 4 jugadores y 2 ganadores. Los ganadores tienen que estar entre los que jugaron, y en el resultado el ganador tiene que haber ganado más sets.'
+            text: 'Revisá: no repitas jugadores, en dobles completá los compañeros, y en el resultado el ganador tiene que haber ganado más sets.'
         });
     </script>
     <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>

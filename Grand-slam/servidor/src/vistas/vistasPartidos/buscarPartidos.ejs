@@ -15,7 +15,7 @@
             <select name="id_modalidad">
                 <option value="">Todas</option>
                 <% modalidades.forEach(m => { %>
-                    <option value="<%= m.id_modalidad %>" <%= idModalidad == m.id_modalidad ? 'selected' : '' %>><%= m.nombre %></option>
+                    <option value="<%= m.id_modalidad %>" <%= idModalidad == m.id_modalidad ? 'selected' : '' %>><%= m.nombre %> (<%= m.jugadores_por_lado %> vs <%= m.jugadores_por_lado %>)</option>
                 <% }) %>
             </select>
 

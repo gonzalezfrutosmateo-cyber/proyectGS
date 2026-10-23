@@ -58,7 +58,7 @@ export const crearPremio = async (req, res) => {
         }
         const consulta = 'INSERT INTO Premios (id_torneo, fase, monto_ganador, monto_perdedor) VALUES (?, ?, ?, ?)';
         await bd.query(consulta, [id_torneo, fase.trim(), monto_ganador, monto_perdedor]);
-        res.redirect('/premios/ver?status=success');
+        res.redirect('/premios/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/premios/crear?status=error');
@@ -94,7 +94,7 @@ export const editarPremio = async (req, res) => {
         }
         const consulta = 'UPDATE Premios SET id_torneo = ?, fase = ?, monto_ganador = ?, monto_perdedor = ? WHERE id_premio = ?';
         await bd.query(consulta, [id_torneo, fase.trim(), monto_ganador, monto_perdedor, req.params.id]);
-        res.redirect('/premios/ver?status=success');
+        res.redirect('/premios/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/premios/modificar/${req.params.id}?status=error`);

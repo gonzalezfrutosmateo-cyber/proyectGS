@@ -3,7 +3,8 @@ const bd = await conectar();
 
 const normalizarIds = (valor) => {
     const ids = valor === undefined ? [] : Array.isArray(valor) ? valor : [valor];
-    const normalizados = ids.map(Number);
+    // Se ignoran los desplegables que quedaron en "—" (ej: el compañero en individual)
+    const normalizados = ids.filter(id => id !== '').map(Number);
 
     if (normalizados.some(id => !Number.isInteger(id) || id < 1)) {
         throw new Error('La selección de jugadores no es válida');
@@ -39,14 +40,15 @@ const armarResultado = (valor) => {
 
 const validarParticipantes = async (conexion, idModalidad, idsJugadores, idsGanadores) => {
     const [modalidades] = await conexion.query(
-        'SELECT nombre FROM Modalidades WHERE id_modalidad = ?',
+        'SELECT jugadores_por_lado FROM Modalidades WHERE id_modalidad = ?',
         [idModalidad]
     );
     if (modalidades.length === 0) {
         throw new Error('La modalidad seleccionada no existe');
     }
 
-    const cantidadPorEquipo = modalidades[0].nombre.toLowerCase().includes('dobles') ? 2 : 1;
+    // Cada modalidad guarda cuántos jugadores hay de cada lado: 1 (individual) o 2 (dobles)
+    const cantidadPorEquipo = modalidades[0].jugadores_por_lado;
     const cantidadEsperada = cantidadPorEquipo * 2;
 
     if (idsJugadores.length !== cantidadEsperada || idsGanadores.length !== cantidadPorEquipo) {
@@ -151,8 +153,10 @@ export const crearPartido = async (req, res) => {
     try {
         const { id_torneo, id_modalidad, id_arbitro, fase } = req.body;
         const resultado = armarResultado(req.body.sets);
-        const idsJugadores = normalizarIds(req.body.jugadores);
         const idsGanadores = normalizarIds(req.body.ganadores);
+        const idsPerdedores = normalizarIds(req.body.perdedores);
+        // Los jugadores del partido son los ganadores más los perdedores
+        const idsJugadores = idsGanadores.concat(idsPerdedores);
         if (!validarDatosPartido(fase, resultado, id_torneo, id_modalidad, id_arbitro)) {
             return res.redirect('/partidos/crear?status=error&tipo=datos');
         }
@@ -168,7 +172,7 @@ export const crearPartido = async (req, res) => {
         await guardarEquiposDelPartido(conexion, idPartido, idsJugadores, idsGanadores);
         await conexion.commit();
         transaccionIniciada = false;
-        res.redirect('/partidos/ver?status=success');
+        res.redirect('/partidos/crear?status=success');
     } catch (error) {
         console.error(error);
         if (transaccionIniciada) {
@@ -226,8 +230,10 @@ export const editarPartido = async (req, res) => {
         const idPartido = req.params.id;
         const { id_torneo, id_modalidad, id_arbitro, fase } = req.body;
         const resultado = armarResultado(req.body.sets);
-        const idsJugadores = normalizarIds(req.body.jugadores);
         const idsGanadores = normalizarIds(req.body.ganadores);
+        const idsPerdedores = normalizarIds(req.body.perdedores);
+        // Los jugadores del partido son los ganadores más los perdedores
+        const idsJugadores = idsGanadores.concat(idsPerdedores);
         if (!validarDatosPartido(fase, resultado, id_torneo, id_modalidad, id_arbitro)) {
             return res.redirect(`/partidos/modificar/${req.params.id}?status=error&tipo=datos`);
         }
@@ -247,7 +253,7 @@ export const editarPartido = async (req, res) => {
         await guardarEquiposDelPartido(conexion, idPartido, idsJugadores, idsGanadores);
         await conexion.commit();
         transaccionIniciada = false;
-        res.redirect('/partidos/ver?status=success');
+        res.redirect('/partidos/modificar?status=success');
     } catch (error) {
         console.error(error);
         if (transaccionIniciada) {

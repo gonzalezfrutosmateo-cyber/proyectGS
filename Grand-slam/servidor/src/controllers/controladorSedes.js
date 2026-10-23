@@ -49,7 +49,7 @@ export const crearSede = async (req, res) => {
         const { nombre, id_pais } = req.body;
         if (!validarNombre(nombre) || !validarId(id_pais)) return res.redirect('/sedes/crear?status=error&tipo=datos');
         await bd.query('INSERT INTO Sedes (nombre, id_pais) VALUES (?, ?)', [nombre.trim(), id_pais]);
-        res.redirect('/sedes/ver?status=success');
+        res.redirect('/sedes/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/sedes/crear?status=error');
@@ -76,7 +76,7 @@ export const editarSede = async (req, res) => {
         const { nombre, id_pais } = req.body;
         if (!validarNombre(nombre) || !validarId(id_pais)) return res.redirect(`/sedes/modificar/${req.params.id}?status=error&tipo=datos`);
         await bd.query('UPDATE Sedes SET nombre = ?, id_pais = ? WHERE id_sede = ?', [nombre.trim(), id_pais, req.params.id]);
-        res.redirect('/sedes/ver?status=success');
+        res.redirect('/sedes/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/sedes/modificar/${req.params.id}?status=error`);

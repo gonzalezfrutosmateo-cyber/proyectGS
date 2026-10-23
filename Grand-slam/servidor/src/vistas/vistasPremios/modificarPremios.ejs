@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Modificar Premio</title>
     <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h1>Selecciona un Premio para Modificar</h1>
@@ -19,5 +20,15 @@
         <% }) %>
     </table>
     <br><a href="/premios">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
 </body>
 </html>

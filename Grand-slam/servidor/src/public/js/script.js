@@ -54,6 +54,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
+    // Formulario de partidos: los "Compañero" solo se muestran si la modalidad elegida es de dobles.
+    // Cada opción de modalidad trae data-jugadores="1" (individual) o "2" (dobles).
+    const selectModalidad = document.querySelector('select[name="id_modalidad"]');
+    const companeros = document.querySelectorAll('.companero');
+    if (selectModalidad && companeros.length > 0) {
+        const mostrarCompaneros = () => {
+            const opcion = selectModalidad.options[selectModalidad.selectedIndex];
+            const esDobles = opcion.getAttribute('data-jugadores') === '2';
+            companeros.forEach(companero => {
+                companero.style.display = esDobles ? 'block' : 'none';
+                // Si se esconde, se vacía para que no se mande un compañero en individual
+                if (!esDobles) companero.querySelector('select').value = '';
+            });
+        };
+        selectModalidad.addEventListener('change', mostrarCompaneros);
+        mostrarCompaneros();
+    }
+
     document.querySelectorAll('form').forEach(formulario => {
         if (formulario.method === 'get' || !formulario.querySelector('input, select, textarea')) return;
 

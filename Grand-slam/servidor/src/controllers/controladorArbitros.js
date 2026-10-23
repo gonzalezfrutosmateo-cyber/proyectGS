@@ -45,7 +45,7 @@ export const crearArbitro = async (req, res) => {
             return res.redirect('/arbitros/crear?status=error&tipo=datos');
         }
         await bd.query('INSERT INTO Arbitros (nombre, apellido) VALUES (?, ?)', [nombre.trim(), apellido.trim()]);
-        res.redirect('/arbitros/ver?status=success');
+        res.redirect('/arbitros/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/arbitros/crear?status=error');
@@ -76,7 +76,7 @@ export const editarArbitro = async (req, res) => {
             return res.redirect(`/arbitros/modificar/${req.params.id}?status=error&tipo=datos`);
         }
         await bd.query('UPDATE Arbitros SET nombre = ?, apellido = ? WHERE id_arbitro = ?', [nombre.trim(), apellido.trim(), id]);
-        res.redirect('/arbitros/ver?status=success');
+        res.redirect('/arbitros/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/arbitros/modificar/${req.params.id}?status=error`);

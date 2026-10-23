@@ -16,7 +16,7 @@ export const crearJugador = async (req, res) => {
             return res.redirect('/jugadores/crear?status=error&tipo=datos');
         }
         await bd.query('INSERT INTO Jugadores (nombre, apellido) VALUES (?, ?)', [nombre.trim(), apellido.trim()]);
-        res.redirect('/jugadores/ver?status=success');
+        res.redirect('/jugadores/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/jugadores/crear?status=error');
@@ -80,7 +80,7 @@ export const modificarJugador = async (req, res) => {
             return res.redirect(`/jugadores/modificar/${req.params.id}?status=error&tipo=datos`);
         }
         await bd.query('UPDATE Jugadores SET nombre = ?, apellido = ? WHERE id_jugador = ?', [nombre.trim(), apellido.trim(), req.params.id]);
-        res.redirect('/jugadores/ver?status=success');
+        res.redirect('/jugadores/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/jugadores/modificar/${req.params.id}?status=error`);

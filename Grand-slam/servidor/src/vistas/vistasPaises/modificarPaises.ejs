@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Modificar País</title>
     <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h1>Selecciona un País para Modificar</h1>
@@ -18,5 +19,15 @@
         <% }) %>
     </table>
     <br><a href="/paises">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
 </body>
 </html>

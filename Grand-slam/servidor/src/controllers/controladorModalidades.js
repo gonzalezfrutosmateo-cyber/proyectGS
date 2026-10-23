@@ -30,10 +30,12 @@ export const formularioCrear = (req, res) => res.render('vistasModalidades/crear
 
 export const crearModalidad = async (req, res) => {
     try {
-        const { nombre } = req.body;
-        if (!validarNombre(nombre)) return res.redirect('/modalidades/crear?status=error&tipo=datos');
-        await bd.query('INSERT INTO Modalidades (nombre) VALUES (?)', [nombre.trim()]);
-        res.redirect('/modalidades/ver?status=success');
+        const { nombre, jugadores_por_lado } = req.body;
+        if (!validarNombre(nombre) || !validarJugadoresPorLado(jugadores_por_lado)) {
+            return res.redirect('/modalidades/crear?status=error&tipo=datos');
+        }
+        await bd.query('INSERT INTO Modalidades (nombre, jugadores_por_lado) VALUES (?, ?)', [nombre.trim(), jugadores_por_lado]);
+        res.redirect('/modalidades/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/modalidades/crear?status=error');
@@ -56,10 +58,12 @@ export const formularioEditar = async (req, res) => {
 
 export const editarModalidad = async (req, res) => {
     try {
-        const { nombre } = req.body;
-        if (!validarNombre(nombre)) return res.redirect(`/modalidades/modificar/${req.params.id}?status=error&tipo=datos`);
-        await bd.query('UPDATE Modalidades SET nombre = ? WHERE id_modalidad = ?', [nombre.trim(), req.params.id]);
-        res.redirect('/modalidades/ver?status=success');
+        const { nombre, jugadores_por_lado } = req.body;
+        if (!validarNombre(nombre) || !validarJugadoresPorLado(jugadores_por_lado)) {
+            return res.redirect(`/modalidades/modificar/${req.params.id}?status=error&tipo=datos`);
+        }
+        await bd.query('UPDATE Modalidades SET nombre = ?, jugadores_por_lado = ? WHERE id_modalidad = ?', [nombre.trim(), jugadores_por_lado, req.params.id]);
+        res.redirect('/modalidades/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/modalidades/modificar/${req.params.id}?status=error`);
@@ -77,6 +81,11 @@ function validarNombre(valor) {
     return typeof valor === 'string' &&
         valor.trim().length <= 50 &&
         /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ][A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ\s.'-]*$/.test(valor.trim());
+}
+
+// Solo se aceptan 1 (individual, 1 vs 1) o 2 (dobles, 2 vs 2)
+function validarJugadoresPorLado(valor) {
+    return valor === '1' || valor === '2';
 }
 
 export const eliminarModalidad = async (req, res) => {

@@ -11,6 +11,14 @@
     <form action="/modalidades/crear" method="POST">
         <label>Nombre de la Modalidad:</label>
         <input type="text" name="nombre" required placeholder="Ej: Dobles Mixtos">
+
+        <label>Tipo (cuántos jugadores hay de cada lado):</label>
+        <select name="jugadores_por_lado" required>
+            <option value="">Elegí el tipo...</option>
+            <option value="1">Individual (1 vs 1)</option>
+            <option value="2">Dobles (2 vs 2)</option>
+        </select>
+
         <button type="submit">Guardar Modalidad</button>
     </form>
     <br><a href="/modalidades">Volver</a>

@@ -34,7 +34,7 @@ export const crearPais = async (req, res) => {
         const { nombre } = req.body;
         if (!validarNombre(nombre)) return res.redirect('/paises/crear?status=error&tipo=datos');
         await bd.query('INSERT INTO Paises (nombre) VALUES (?)', [nombre.trim()]);
-        res.redirect('/paises/ver?status=success');
+        res.redirect('/paises/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/paises/crear?status=error');
@@ -60,7 +60,7 @@ export const editarPais = async (req, res) => {
         const { nombre } = req.body;
         if (!validarNombre(nombre)) return res.redirect(`/paises/modificar/${req.params.id}?status=error&tipo=datos`);
         await bd.query('UPDATE Paises SET nombre = ? WHERE id_pais = ?', [nombre.trim(), req.params.id]);
-        res.redirect('/paises/ver?status=success');
+        res.redirect('/paises/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/paises/modificar/${req.params.id}?status=error`);

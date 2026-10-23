@@ -61,7 +61,7 @@ export const crearEntrenador = async (req, res) => {
                 [id_jugador, resEntrenador.insertId, fecha_inicio, fecha_fin || null]
             );
         }
-        res.redirect('/entrenadores/ver?status=success');
+        res.redirect('/entrenadores/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/entrenadores/crear?status=error');
@@ -146,7 +146,7 @@ export const editarEntrenador = async (req, res) => {
 
         await conexion.commit();
         transaccionIniciada = false;
-        res.redirect('/entrenadores/ver?status=success');
+        res.redirect('/entrenadores/modificar?status=success');
     } catch (error) {
         console.error(error);
         if (transaccionIniciada) {

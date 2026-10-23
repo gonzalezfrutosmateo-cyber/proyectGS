@@ -59,7 +59,7 @@ export const crearTorneo = async (req, res) => {
             return res.redirect('/torneos/crear?status=error&tipo=datos');
         }
         await bd.query('INSERT INTO Torneos (nombre, anio, id_sede) VALUES (?, ?, ?)', [nombre.trim(), anio, id_sede]);
-        res.redirect('/torneos/ver?status=success');
+        res.redirect('/torneos/crear?status=success');
     } catch (error) {
         console.error(error);
         res.redirect('/torneos/crear?status=error');
@@ -91,7 +91,7 @@ export const editarTorneo = async (req, res) => {
             return res.redirect(`/torneos/modificar/${req.params.id}?status=error&tipo=datos`);
         }
         await bd.query('UPDATE Torneos SET nombre = ?, anio = ?, id_sede = ? WHERE id_torneo = ?', [nombre.trim(), anio, id_sede, id]);
-        res.redirect('/torneos/ver?status=success');
+        res.redirect('/torneos/modificar?status=success');
     } catch (error) {
         console.error(error);
         res.redirect(`/torneos/modificar/${req.params.id}?status=error`);
