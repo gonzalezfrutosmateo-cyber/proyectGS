@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resumen de torneos</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Resumen de participaciones por torneo</h1>
+    <a href="/torneos">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/torneos/resumen" method="GET">
+            <label>Buscar torneo o año:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Roland Garros o 2024">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (torneos.length > 0) { %>
+        <table>
+            <tr>
+                <th>Torneo</th>
+                <th>Año</th>
+                <th>Partidos</th>
+                <th>Modalidades</th>
+                <th>Jugadores participantes</th>
+            </tr>
+            <% torneos.forEach(torneo => { %>
+                <tr>
+                    <td><%= torneo.nombre %></td>
+                    <td><%= torneo.anio %></td>
+                    <td><%= torneo.partidos %></td>
+                    <td><%= torneo.modalidades %></td>
+                    <td><%= torneo.jugadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No se encontraron torneos.</p>
+    <% } %>
+    <% if (buscar && torneos.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No se encontraron torneos con esa búsqueda.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

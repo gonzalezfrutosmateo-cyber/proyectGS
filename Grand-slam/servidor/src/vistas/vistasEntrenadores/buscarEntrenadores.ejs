@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Entrenador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Buscar Entrenador</h1>
+    <a href="/entrenadores">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/entrenadores/buscar" method="GET">
+            <label>Nombre o apellido del entrenador:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Toni" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (buscar) { %>
+        <h2>Resultados para "<%= buscar %>"</h2>
+        <% if (entrenadores.length > 0) { %>
+            <table>
+                <tr><th>ID</th><th>Nombre</th><th>Apellido</th></tr>
+                <% entrenadores.forEach(e => { %>
+                    <tr>
+                        <td><%= e.id_entrenador %></td>
+                        <td><%= e.nombre %></td>
+                        <td><%= e.apellido %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No se encontró ningún entrenador con ese nombre o apellido.</p>
+        <% } %>
+    <% } %>
+    <% if (buscar && entrenadores.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No se encontró ningún entrenador con ese nombre o apellido.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

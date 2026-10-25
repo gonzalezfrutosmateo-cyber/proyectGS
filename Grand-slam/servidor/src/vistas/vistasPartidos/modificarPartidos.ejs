@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Partido</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Selecciona un Partido para Modificar</h1>
+    <table>
+        <tr><th>ID</th><th>Torneo</th><th>Fase</th><th>Acción</th></tr>
+        <% partidos.forEach(p => { %>
+            <tr>
+                <td><%= p.id_partido %></td>
+                <td><%= p.torneo %></td>
+                <td><%= p.fase %></td>
+                <td><a href="/partidos/modificar/<%= p.id_partido %>">Editar</a></td>
+            </tr>
+        <% }) %>
+    </table>
+    <br><a href="/partidos">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+</body>
+</html>

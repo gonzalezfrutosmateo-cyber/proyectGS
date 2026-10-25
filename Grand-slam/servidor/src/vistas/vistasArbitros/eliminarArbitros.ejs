@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Árbitro</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <h1>Selecciona un Árbitro para Eliminar</h1>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Acción</th>
+        </tr>
+        <% arbitros.forEach(a=> { %>
+            <tr>
+                <td>
+                    <%= a.id_arbitro %>
+                </td>
+                <td>
+                    <%= a.nombre %>
+                </td>
+                <td>
+                    <%= a.apellido %>
+                </td>
+                <td><a href="/arbitros/eliminar/<%= a.id_arbitro %>" class="btn-danger"
+                        onclick="return confirm('¿Seguro que querés eliminar este árbitro?')">Eliminar</a></td>
+            </tr>
+            <% }) %>
+    </table>
+    <br><a href="/arbitros">Volver</a>
+    <% if (typeof status !=='undefined' && status==='success' ) { %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Operación realizada',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+        <% } %>
+
+            <% if (typeof status !=='undefined' && status==='error' && tipo==='datos' ) { %>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos inválidos',
+                        text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+                    });
+                </script>
+                <% } else if (typeof status !=='undefined' && status==='error' && tipo==='relacion' ) { %>
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo completar',
+                            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+                        });
+                    </script>
+                    <% } else if (typeof status !=='undefined' && status==='error' ) { %>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se pudo completar',
+                                text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+                            });
+                        </script>
+                        <% } %>
+
+</body>
+
+</html>

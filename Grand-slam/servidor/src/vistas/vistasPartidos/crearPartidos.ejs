@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Partido</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <h1>Registrar Nuevo Partido</h1>
+    <form action="/partidos/crear" method="POST">
+        <label>Torneo (nombre y año):</label>
+        <select name="id_torneo" required>
+            <option value="">Elegí el torneo...</option>
+            <% torneos.forEach(t=> { %>
+                <option value="<%= t.id_torneo %>">
+                    <%= t.nombre %> (<%= t.anio %>)
+                </option>
+                <% }) %>
+        </select>
+
+        <label>Modalidad (al lado dice cuántos juegan de cada lado):</label>
+        <select name="id_modalidad" required>
+            <option value="">Elegí la modalidad...</option>
+            <% modalidades.forEach(m=> { %>
+                <option value="<%= m.id_modalidad %>" data-jugadores="<%= m.jugadores_por_lado %>">
+                    <%= m.nombre %> (<%= m.jugadores_por_lado %> vs <%= m.jugadores_por_lado %>)
+                </option>
+                <% }) %>
+        </select>
+
+        <label>Árbitro del partido:</label>
+        <select name="id_arbitro" required>
+            <option value="">Elegí el árbitro...</option>
+            <% arbitros.forEach(a=> { %>
+                <option value="<%= a.id_arbitro %>">
+                    <%= a.nombre %>
+                        <%= a.apellido %>
+                </option>
+                <% }) %>
+        </select>
+
+        <label>Fase (ronda del torneo):</label>
+        <select name="fase" required>
+            <option value="">Elegí la ronda...</option>
+            <option value="Primera ronda">Primera ronda</option>
+            <option value="Segunda ronda">Segunda ronda</option>
+            <option value="Tercera ronda">Tercera ronda</option>
+            <option value="Octavos de final">Octavos de final</option>
+            <option value="Cuartos de final">Cuartos de final</option>
+            <option value="Semifinal">Semifinal</option>
+            <option value="Final">Final</option>
+        </select>
+
+        <label>Resultado (cada set desde el lado del ganador del partido; los sets 3, 4 y 5 solo si se jugaron):</label>
+        <% const opcionesSet = ['6-0', '6-1', '6-2', '6-3', '6-4', '7-5', '7-6', '0-6', '1-6', '2-6', '3-6', '4-6', '5-7', '6-7']; %>
+        <div class="sets">
+            <% for (let i = 1; i <= 5; i++) { %>
+                <div>
+                    <label>Set <%= i %></label>
+                    <select name="sets" <%= i <= 2 ? 'required' : '' %>>
+                        <option value="">—</option>
+                        <% opcionesSet.forEach(s => { %>
+                            <option value="<%= s %>"><%= s %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            <% } %>
+        </div>
+
+        <label>Ganador del partido:</label>
+        <select name="ganadores" required>
+            <option value="">Elegí el jugador...</option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>"><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <!-- Los "Compañero" solo se muestran si la modalidad es de dobles (lo maneja script.js) -->
+        <div class="companero">
+            <label>Compañero del ganador:</label>
+            <select name="ganadores">
+                <option value="">Elegí el compañero...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>"><%= j.nombre %> <%= j.apellido %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <label>Perdedor del partido:</label>
+        <select name="perdedores" required>
+            <option value="">Elegí el jugador...</option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>"><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <div class="companero">
+            <label>Compañero del perdedor:</label>
+            <select name="perdedores">
+                <option value="">Elegí el compañero...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>"><%= j.nombre %> <%= j.apellido %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <button type="submit">Guardar Partido</button>
+    </form>
+    <br><a href="/partidos">Volver</a>
+    <% if (typeof status !=='undefined' && status==='success' ) { %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Operación realizada',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+        <% } %>
+
+            <% if (typeof status !=='undefined' && status==='error' && tipo==='datos' ) { %>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos inválidos',
+                        text: 'Revisá: no repitas jugadores, en dobles completá los compañeros, y en el resultado el ganador tiene que haber ganado más sets.'
+                    });
+                </script>
+                <% } else if (typeof status !=='undefined' && status==='error' && tipo==='relacion' ) { %>
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo completar',
+                            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+                        });
+                    </script>
+                    <% } else if (typeof status !=='undefined' && status==='error' ) { %>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se pudo completar',
+                                text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+                            });
+                        </script>
+                        <% } %>
+                            <script src="/js/script.js" defer></script>
+</body>
+
+</html>

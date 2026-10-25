@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Partido</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Editando Partido</h1>
+    <form action="/partidos/modificar/<%= partido.id_partido %>" method="POST">
+        <label>Torneo:</label>
+        <select name="id_torneo" required>
+            <% torneos.forEach(t => { %>
+                <option value="<%= t.id_torneo %>" <%= t.id_torneo === partido.id_torneo ? 'selected' : '' %>>
+                    <%= t.nombre %> (<%= t.anio %>)
+                </option>
+            <% }) %>
+        </select>
+
+        <label>Modalidad (al lado dice cuántos juegan de cada lado):</label>
+        <select name="id_modalidad" required>
+            <% modalidades.forEach(m => { %>
+                <option value="<%= m.id_modalidad %>" data-jugadores="<%= m.jugadores_por_lado %>" <%= m.id_modalidad === partido.id_modalidad ? 'selected' : '' %>>
+                    <%= m.nombre %> (<%= m.jugadores_por_lado %> vs <%= m.jugadores_por_lado %>)
+                </option>
+            <% }) %>
+        </select>
+
+        <label>Árbitro:</label>
+        <select name="id_arbitro" required>
+            <% arbitros.forEach(a => { %>
+                <option value="<%= a.id_arbitro %>" <%= a.id_arbitro === partido.id_arbitro ? 'selected' : '' %>>
+                    <%= a.nombre %> <%= a.apellido %>
+                </option>
+            <% }) %>
+        </select>
+
+        <label>Fase (ronda del torneo):</label>
+        <select name="fase" required>
+            <% ['Primera ronda', 'Segunda ronda', 'Tercera ronda', 'Octavos de final', 'Cuartos de final', 'Semifinal', 'Final'].forEach(f => { %>
+                <option value="<%= f %>" <%= partido.fase === f ? 'selected' : '' %>><%= f %></option>
+            <% }) %>
+        </select>
+
+        <label>Resultado (cada set desde el lado del ganador del partido; los sets 3, 4 y 5 solo si se jugaron):</label>
+        <%
+            const opcionesSet = ['6-0', '6-1', '6-2', '6-3', '6-4', '7-5', '7-6', '0-6', '1-6', '2-6', '3-6', '4-6', '5-7', '6-7'];
+            // Separamos el resultado guardado ("6-3 4-6 7-5") para marcar cada set
+            const setsGuardados = (partido.resultado || '').split(' ');
+        %>
+        <div class="sets">
+            <% for (let i = 1; i <= 5; i++) { %>
+                <div>
+                    <label>Set <%= i %></label>
+                    <select name="sets" <%= i <= 2 ? 'required' : '' %>>
+                        <option value="">—</option>
+                        <% opcionesSet.forEach(s => { %>
+                            <option value="<%= s %>" <%= setsGuardados[i - 1] === s ? 'selected' : '' %>><%= s %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            <% } %>
+        </div>
+
+        <%
+            // Separamos a los jugadores guardados del partido en ganadores y perdedores
+            // (posición 0 = jugador, posición 1 = compañero en dobles)
+            const ganadoresGuardados = participaciones.filter(p => p.es_ganador === 1).map(p => p.id_jugador);
+            const perdedoresGuardados = participaciones.filter(p => p.es_ganador === 0).map(p => p.id_jugador);
+        %>
+        <label>Ganador del partido:</label>
+        <select name="ganadores" required>
+            <option value="">Elegí el jugador...</option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>" <%= ganadoresGuardados[0] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <!-- Los "Compañero" solo se muestran si la modalidad es de dobles (lo maneja script.js) -->
+        <div class="companero">
+            <label>Compañero del ganador:</label>
+            <select name="ganadores">
+                <option value="">Elegí el compañero...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>" <%= ganadoresGuardados[1] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <label>Perdedor del partido:</label>
+        <select name="perdedores" required>
+            <option value="">Elegí el jugador...</option>
+            <% jugadores.forEach(j => { %>
+                <option value="<%= j.id_jugador %>" <%= perdedoresGuardados[0] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+            <% }) %>
+        </select>
+
+        <div class="companero">
+            <label>Compañero del perdedor:</label>
+            <select name="perdedores">
+                <option value="">Elegí el compañero...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>" <%= perdedoresGuardados[1] === j.id_jugador ? 'selected' : '' %>><%= j.nombre %> <%= j.apellido %></option>
+                <% }) %>
+            </select>
+        </div>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    <br><a href="/partidos/modificar">Cancelar</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisá: no repitas jugadores, en dobles completá los compañeros, y en el resultado el ganador tiene que haber ganado más sets.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial de Entrenadores</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Consulta: Entrenadores por Jugador</h1>
+    <a href="/entrenadores">Volver al menú</a>
+    
+    <div class="filtro">
+        <form action="/entrenadores/jugador" method="GET">
+            <label>Seleccione un Jugador:</label>
+            <select name="id_jugador" required>
+                <option value="">Seleccione...</option>
+                <% jugadores.forEach(j => { %>
+                    <option value="<%= j.id_jugador %>" <%= idJugador == j.id_jugador ? 'selected' : '' %>>
+                        <%= j.nombre %> <%= j.apellido %>
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit">Buscar Historial</button>
+        </form>
+    </div>
+
+    <% if (typeof idJugador !== 'undefined' && idJugador) { %>
+        <h2>Historial de Entrenadores</h2>
+        <% if (historial.length > 0) { %>
+            <table>
+                <tr>
+                    <th>Entrenador</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                </tr>
+                <% historial.forEach(h => { %>
+                    <tr>
+                        <td><%= h.nombre %> <%= h.apellido %></td>
+                        <td><%= h.fecha_inicio.toLocaleDateString('es-AR') %></td>
+                        <td><%= h.fecha_fin ? h.fecha_fin.toLocaleDateString('es-AR') : 'Actualidad' %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>Este jugador no tiene entrenadores registrados.</p>
+        <% } %>
+    <% } %>
+    <% if (typeof idJugador !== 'undefined' && idJugador && historial.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin entrenadores registrados',
+            text: 'Este jugador no tiene entrenadores registrados.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Árbitros por Torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Consulta: Árbitros por Torneo</h1>
+    <a href="/arbitros">Volver al menú</a>
+    
+    <div class="filtro">
+        <form action="/arbitros/torneo" method="GET">
+            <label>Seleccione un Torneo:</label>
+            <select name="id_torneo" required>
+                <option value="">Seleccione...</option>
+                <% torneos.forEach(t => { %>
+                    <option value="<%= t.id_torneo %>" <%= idTorneo == t.id_torneo ? 'selected' : '' %>>
+                        <%= t.nombre %> (<%= t.anio %>)
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit">Buscar Árbitros</button>
+        </form>
+    </div>
+
+    <% if (typeof idTorneo !== 'undefined' && idTorneo) { %>
+        <h2>Árbitros que participaron</h2>
+        <% if (arbitros.length > 0) { %>
+            <table>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                </tr>
+                <% arbitros.forEach(a => { %>
+                    <tr>
+                        <td><%= a.nombre %></td>
+                        <td><%= a.apellido %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No hay árbitros registrados en partidos de este torneo.</p>
+        <% } %>
+    <% } %>
+    <% if (typeof idTorneo !== 'undefined' && idTorneo && arbitros.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin árbitros registrados',
+            text: 'No hay árbitros registrados en partidos de este torneo.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

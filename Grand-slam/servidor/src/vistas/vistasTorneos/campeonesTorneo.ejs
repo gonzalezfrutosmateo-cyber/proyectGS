@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Campeones por torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Campeones por torneo y año</h1>
+    <a href="/torneos">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/torneos/campeones" method="GET">
+            <label>Buscar torneo o año:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Wimbledon o 2024">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (campeones.length > 0) { %>
+        <table>
+            <tr>
+                <th>Torneo</th>
+                <th>Año</th>
+                <th>Modalidad</th>
+                <th>Campeón o campeones</th>
+                <th>Resultado final</th>
+            </tr>
+            <% campeones.forEach(campeon => { %>
+                <tr>
+                    <td><%= campeon.torneo %></td>
+                    <td><%= campeon.anio %></td>
+                    <td><%= campeon.modalidad %></td>
+                    <td><%= campeon.campeones %></td>
+                    <td><%= campeon.resultado %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay campeones registrados para esa búsqueda.</p>
+    <% } %>
+    <% if (buscar && campeones.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No hay campeones registrados para esa búsqueda.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

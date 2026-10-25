@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Entrenador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body>
+    <h1>Registrar Nuevo Entrenador</h1>
+    <form action="/entrenadores/crear" method="POST">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required placeholder="Ej: Toni">
+
+        <label>Apellido:</label>
+        <input type="text" name="apellido" required placeholder="Ej: Nadal">
+        <label>Asignar a jugador (opcional):</label>
+        <select name="id_jugador">
+            <option value="">Sin asignar</option>
+            <% jugadores.forEach(j=> { %>
+                <option value="<%= j.id_jugador %>">
+                    <%= j.nombre %>
+                        <%= j.apellido %>
+                </option>
+                <% }) %>
+        </select>
+
+        <label>Fecha de inicio (obligatoria si elegiste jugador):</label>
+        <input type="date" name="fecha_inicio">
+
+        <label>Fecha de fin (vacía si todavía lo entrena):</label>
+        <input type="date" name="fecha_fin">
+
+        <button type="submit">Guardar Entrenador</button>
+    </form>
+    <br><a href="/entrenadores">Volver</a>
+    <% if (typeof status !=='undefined' && status==='success' ) { %>
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: 'Operación realizada',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        </script>
+        <% } %>
+
+            <% if (typeof status !=='undefined' && status==='error' && tipo==='datos' ) { %>
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Datos inválidos',
+                        text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+                    });
+                </script>
+                <% } else if (typeof status !=='undefined' && status==='error' && tipo==='relacion' ) { %>
+                    <script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'No se pudo completar',
+                            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+                        });
+                    </script>
+                    <% } else if (typeof status !=='undefined' && status==='error' ) { %>
+                        <script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'No se pudo completar',
+                                text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+                            });
+                        </script>
+                        <% } %>
+                            <script src="/js/script.js" defer></script>
+</body>
+
+</html>

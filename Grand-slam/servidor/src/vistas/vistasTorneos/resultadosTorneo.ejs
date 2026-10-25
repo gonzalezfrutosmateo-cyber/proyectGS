@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados de Torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Consulta: Resultados por Año y Torneo</h1>
+    <a href="/torneos">Volver al menú</a>
+    
+    <div class="filtro">
+        <form action="/torneos/resultados" method="GET">
+            <label>Año:</label>
+            <input type="number" name="anio" value="<%= typeof anio !== 'undefined' ? anio : '' %>" required>
+            
+            <label>Torneo:</label>
+            <select name="id_torneo" required>
+                <option value="">Seleccione...</option>
+                <% torneos.forEach(t => { %>
+                    <option value="<%= t.id_torneo %>" <%= typeof id_torneo !== 'undefined' && id_torneo == t.id_torneo ? 'selected' : '' %>>
+                        <%= t.nombre %>
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit">Buscar Resultados</button>
+        </form>
+    </div>
+
+    <% if (typeof resultados !== 'undefined' && resultados.length > 0) { %>
+        <h2>Partidos Encontrados</h2>
+        <table>
+            <tr>
+                <th>Fase</th>
+                <th>Jugadores</th>
+                <th>Resultado</th>
+                <th>Modalidad</th>
+                <th>Árbitro</th>
+            </tr>
+            <% resultados.forEach(r => { %>
+                <tr>
+                    <td><%= r.fase %></td>
+                    <td><%= r.jugadores %></td>
+                    <td><%= r.resultado %></td>
+                    <td><%= r.modalidad %></td>
+                    <td><%= r.arbitro %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else if (typeof anio !== 'undefined') { %>
+        <p>No se encontraron partidos para ese año y torneo.</p>
+    <% } %>
+    <% if (typeof anio !== 'undefined' && resultados.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No se encontraron partidos para ese año y torneo.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

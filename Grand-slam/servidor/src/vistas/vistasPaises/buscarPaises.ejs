@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar País</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Buscar País</h1>
+    <a href="/paises">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/paises/buscar" method="GET">
+            <label>Nombre del país:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Francia" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (buscar) { %>
+        <h2>Resultados para "<%= buscar %>"</h2>
+        <% if (paises.length > 0) { %>
+            <table>
+                <tr><th>ID</th><th>Nombre</th></tr>
+                <% paises.forEach(p => { %>
+                    <tr>
+                        <td><%= p.id_pais %></td>
+                        <td><%= p.nombre %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No se encontró ningún país con ese nombre.</p>
+        <% } %>
+    <% } %>
+    <% if (buscar && paises.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No se encontró ningún país con ese nombre.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

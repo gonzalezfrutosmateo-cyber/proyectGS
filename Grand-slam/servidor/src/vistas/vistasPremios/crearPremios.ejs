@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Premio</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Registrar Nuevo Premio</h1>
+    <form action="/premios/crear" method="POST">
+        <label>Torneo:</label>
+        <select name="id_torneo" required>
+            <option value="">Seleccione un torneo...</option>
+            <% torneos.forEach(t => { %>
+                <option value="<%= t.id_torneo %>"><%= t.nombre %> (<%= t.anio %>)</option>
+            <% }) %>
+        </select>
+
+        <label>Fase (ronda del torneo):</label>
+        <select name="fase" required>
+            <option value="">Elegí la ronda...</option>
+            <option value="Primera ronda">Primera ronda</option>
+            <option value="Segunda ronda">Segunda ronda</option>
+            <option value="Tercera ronda">Tercera ronda</option>
+            <option value="Octavos de final">Octavos de final</option>
+            <option value="Cuartos de final">Cuartos de final</option>
+            <option value="Semifinal">Semifinal</option>
+            <option value="Final">Final</option>
+        </select>
+
+        <label>Monto Ganador ($):</label>
+        <input type="number" name="monto_ganador" required step="0.01" placeholder="Ej: 2000000">
+
+        <label>Monto Perdedor ($):</label>
+        <input type="number" name="monto_perdedor" required step="0.01" placeholder="Ej: 5000">
+
+        <button type="submit">Guardar Premio</button>
+    </form>
+    <br><a href="/premios">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Torneo</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Editando Torneo</h1>
+    <form action="/torneos/modificar/<%= torneo.id_torneo %>" method="POST">
+        <label>Nombre del Torneo:</label>
+        <input type="text" name="nombre" value="<%= torneo.nombre %>" required>
+
+        <label>Año:</label>
+        <input type="number" name="anio" value="<%= torneo.anio %>" required>
+
+        <label>Sede:</label>
+        <select name="id_sede" required>
+            <% sedes.forEach(s => { %>
+                <option value="<%= s.id_sede %>" <%= s.id_sede === torneo.id_sede ? 'selected' : '' %>>
+                    <%= s.nombre %>
+                </option>
+            <% }) %>
+        </select>
+
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    <br><a href="/torneos/modificar">Cancelar</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

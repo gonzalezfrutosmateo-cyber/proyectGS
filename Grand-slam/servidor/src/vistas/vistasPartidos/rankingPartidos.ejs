@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Partidos ganados por jugador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Jugadores con más partidos ganados</h1>
+    <a href="/partidos">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/partidos/ranking" method="GET">
+            <label>Buscar jugador:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Nombre o apellido">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (jugadores.length > 0) { %>
+        <table>
+            <tr>
+                <th>Jugador</th>
+                <th>Partidos jugados</th>
+                <th>Partidos ganados</th>
+                <th>Partidos perdidos</th>
+            </tr>
+            <% jugadores.forEach(jugador => { %>
+                <tr>
+                    <td><%= jugador.nombre %> <%= jugador.apellido %></td>
+                    <td><%= jugador.partidos_jugados %></td>
+                    <td><%= jugador.partidos_ganados %></td>
+                    <td><%= jugador.partidos_perdidos %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No se encontraron jugadores.</p>
+    <% } %>
+    <% if (buscar && jugadores.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No se encontraron jugadores con esa búsqueda.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

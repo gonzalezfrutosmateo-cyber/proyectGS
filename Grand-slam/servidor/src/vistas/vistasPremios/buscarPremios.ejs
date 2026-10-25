@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Premio</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Buscar Premio</h1>
+    <a href="/premios">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/premios/buscar" method="GET">
+            <label>Nombre del torneo o fase:</label>
+            <input type="text" name="buscar" value="<%= buscar %>" placeholder="Ej: Roland Garros o Final" required>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (buscar) { %>
+        <h2>Resultados para "<%= buscar %>"</h2>
+        <% if (premios.length > 0) { %>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Torneo</th>
+                    <th>Fase</th>
+                    <th>Monto Ganador</th>
+                    <th>Monto Perdedor</th>
+                </tr>
+                <% premios.forEach(p => { %>
+                    <tr>
+                        <td><%= p.id_premio %></td>
+                        <td><%= p.torneo_nombre %> (<%= p.torneo_anio %>)</td>
+                        <td><%= p.fase %></td>
+                        <td>$<%= p.monto_ganador %></td>
+                        <td>$<%= p.monto_perdedor %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No se encontró ningún premio para ese torneo o fase.</p>
+        <% } %>
+    <% } %>
+    <% if (buscar && premios.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'No se encontró ningún premio para ese torneo o fase.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

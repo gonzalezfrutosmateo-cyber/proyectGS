@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Premios</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Premios Registrados</h1>
+    <a href="/premios">Volver al menú</a>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Torneo</th>
+            <th>Fase</th>
+            <th>Monto Ganador</th>
+            <th>Monto Perdedor</th>
+        </tr>
+        <% premios.forEach(p => { %>
+            <tr>
+                <td><%= p.id_premio %></td>
+                <td><%= p.torneo_nombre %> (<%= p.torneo_anio %>)</td>
+                <td><%= p.fase %></td>
+                <td>$<%= p.monto_ganador %></td>
+                <td>$<%= p.monto_perdedor %></td>
+            </tr>
+        <% }) %>
+    </table>
+
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'datos') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Datos inválidos',
+            text: 'Revisa los datos ingresados e inténtalo de nuevo.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'relacion') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se puede eliminar este registro porque está relacionado con otros datos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'No se pudo completar',
+            text: 'No se pudo completar la operación. Comprueba los datos e inténtalo de nuevo.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

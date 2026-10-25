@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Modificar Entrenador</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Selecciona un Entrenador para Modificar</h1>
+    <table>
+        <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Acción</th></tr>
+        <% entrenadores.forEach(e => { %>
+            <tr>
+                <td><%= e.id_entrenador %></td>
+                <td><%= e.nombre %></td>
+                <td><%= e.apellido %></td>
+                <td><a href="/entrenadores/modificar/<%= e.id_entrenador %>">Editar</a></td>
+            </tr>
+        <% }) %>
+    </table>
+    <br><a href="/entrenadores">Volver</a>
+    <% if (typeof status !== 'undefined' && status === 'success') { %>
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Operación realizada',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    </script>
+    <% } %>
+</body>
+</html>
