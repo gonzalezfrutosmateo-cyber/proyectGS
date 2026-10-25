@@ -5,17 +5,34 @@ export const menuJugadores = (req, res) => {
     res.render('vistasJugadores/menuJugadores');
 };
 
-export const formularioCrear = (req, res) => {
-    res.render('vistasJugadores/crearJugadores', { status: req.query.status, tipo: req.query.tipo });
+export const formularioCrear = async (req, res) => {
+    try {
+        // Traemos los países para el select
+        const [paises] = await bd.query('SELECT * FROM Paises');
+        res.render('vistasJugadores/crearJugadores', { paises, status: req.query.status, tipo: req.query.tipo });
+    } catch (error) { res.status(500).send('Error'); }
 };
 
 export const crearJugador = async (req, res) => {
     try {
-        const { nombre, apellido } = req.body;
-        if (!validarNombre(nombre) || !validarNombre(apellido)) {
+        const { nombre, apellido, id_pais } = req.body;
+        // El país es opcional (vacío = apátrida), pero si viene tiene que ser un id válido
+        if (!validarNombre(nombre) || !validarNombre(apellido) || (id_pais && !validarId(id_pais))) {
             return res.redirect('/jugadores/crear?status=error&tipo=datos');
         }
-        await bd.query('INSERT INTO Jugadores (nombre, apellido) VALUES (?, ?)', [nombre.trim(), apellido.trim()]);
+        // Se revisa antes de crear el jugador, así no queda un jugador cargado sin su país
+        if (id_pais) {
+            const [paisExiste] = await bd.query('SELECT id_pais FROM Paises WHERE id_pais = ?', [id_pais]);
+            if (paisExiste.length === 0) {
+                return res.redirect('/jugadores/crear?status=error&tipo=datos');
+            }
+        }
+        const [resJugador] = await bd.query('INSERT INTO Jugadores (nombre, apellido) VALUES (?, ?)', [nombre.trim(), apellido.trim()]);
+
+        // Se usa el id del jugador recién creado para guardar su nacionalidad
+        if (id_pais) {
+            await bd.query('INSERT INTO Jugador_Nacionalidad (id_jugador, id_pais) VALUES (?, ?)', [resJugador.insertId, id_pais]);
+        }
         res.redirect('/jugadores/crear?status=success');
     } catch (error) {
         console.error(error);
@@ -185,6 +202,10 @@ function validarNombre(valor) {
     return typeof valor === 'string' &&
         valor.trim().length <= 50 &&
         /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ][A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ\s.'-]*$/.test(valor.trim());
+}
+
+function validarId(valor) {
+    return /^[1-9]\d*$/.test(String(valor || ''));
 }
 
 export const eliminarJugador = async (req, res) => {

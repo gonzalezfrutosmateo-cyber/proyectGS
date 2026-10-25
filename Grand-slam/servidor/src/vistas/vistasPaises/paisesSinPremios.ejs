@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Países sin premios</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Países sin ningún premio ganado</h1>
+    <a href="/paises">Volver al menú</a>
+
+    <% if (paises.length > 0) { %>
+        <table>
+            <tr>
+                <th>País</th>
+                <th>Jugadores del país</th>
+            </tr>
+            <% paises.forEach(pais => { %>
+                <tr>
+                    <td><%= pais.nombre %></td>
+                    <td><%= pais.jugadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>Todos los países ganaron al menos un premio.</p>
+    <% } %>
+</body>
+</html>

@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { 
     menuSedes, listarSedes, formularioCrear, crearSede, 
     seleccionarModificar, formularioEditar, editarSede, 
-    seleccionarEliminar, eliminarSede, buscarSedes
+    seleccionarEliminar, eliminarSede, buscarSedes,
+    verSedesPorPremios, verSedesPorPaises, verSedesPorJugadores,
+    verSedesSinPremios, verSedesPorPais
 } from '../controllers/controladorSedes.js';
 
 const router = Router();
@@ -17,5 +19,12 @@ router.get('/modificar/:id', formularioEditar);
 router.post('/modificar/:id', editarSede);
 router.get('/eliminar', seleccionarEliminar);
 router.get('/eliminar/:id', eliminarSede);
+
+// Consultas
+router.get('/premios', verSedesPorPremios);
+router.get('/paises', verSedesPorPaises);
+router.get('/jugadores', verSedesPorJugadores);
+router.get('/sinPremios', verSedesSinPremios);
+router.get('/pais', verSedesPorPais);
 
 export default router;

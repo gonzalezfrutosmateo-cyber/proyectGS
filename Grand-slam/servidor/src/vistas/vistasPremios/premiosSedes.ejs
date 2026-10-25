@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Premios por sedes</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Premios entregados en más/menos sedes diferentes</h1>
+    <a href="/premios">Volver al menú</a>
+    <p>Cada premio es una fase (Final, Semifinal...) sumando todos los torneos.</p>
+
+    <div class="filtro">
+        <form action="/premios/sedes" method="GET">
+            <label>Ordenar:</label>
+            <select name="orden">
+                <option value="mas" <%= orden === 'mas' ? 'selected' : '' %>>De más a menos</option>
+                <option value="menos" <%= orden === 'menos' ? 'selected' : '' %>>De menos a más</option>
+            </select>
+            <button type="submit">Ordenar</button>
+        </form>
+    </div>
+
+    <% if (premios.length > 0) { %>
+        <table>
+            <tr>
+                <th>Premio (fase)</th>
+                <th>Sedes diferentes</th>
+                <th>Sedes</th>
+            </tr>
+            <% premios.forEach(premio => { %>
+                <tr>
+                    <td><%= premio.fase %></td>
+                    <td><%= premio.sedes %></td>
+                    <td><%= premio.nombres_sedes || '-' %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay premios cargados.</p>
+    <% } %>
+</body>
+</html>

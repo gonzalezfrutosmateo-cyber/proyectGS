@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Premios ganados por un país</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Premios más/menos ganados por un país</h1>
+    <a href="/premios">Volver al menú</a>
+    <p>Cada premio es una fase (Final, Semifinal...) sumando todos los torneos.</p>
+
+    <div class="filtro">
+        <form action="/premios/pais" method="GET">
+            <label>Seleccione un País:</label>
+            <select name="id_pais" required>
+                <option value="">Seleccione...</option>
+                <% paises.forEach(p => { %>
+                    <option value="<%= p.id_pais %>" <%= idPais == p.id_pais ? 'selected' : '' %>>
+                        <%= p.nombre %>
+                    </option>
+                <% }) %>
+            </select>
+            <label>Ordenar:</label>
+            <select name="orden">
+                <option value="mas" <%= orden === 'mas' ? 'selected' : '' %>>De más a menos</option>
+                <option value="menos" <%= orden === 'menos' ? 'selected' : '' %>>De menos a más</option>
+            </select>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (typeof idPais !== 'undefined' && idPais) { %>
+        <% if (premios.length > 0) { %>
+            <table>
+                <tr>
+                    <th>Premio (fase)</th>
+                    <th>Veces ganado por el país</th>
+                </tr>
+                <% premios.forEach(premio => { %>
+                    <tr>
+                        <td><%= premio.fase %></td>
+                        <td><%= premio.ganados %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No hay premios cargados.</p>
+        <% } %>
+    <% } %>
+</body>
+</html>
