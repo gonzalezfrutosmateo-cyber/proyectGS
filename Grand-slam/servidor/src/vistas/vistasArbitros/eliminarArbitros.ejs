@@ -10,6 +10,17 @@
 
 <body>
     <h1>Selecciona un Árbitro para Eliminar</h1>
+    <div class="filtro">
+        <form action="/arbitros/eliminar" method="GET">
+            <label>Buscar árbitro:</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>"
+                placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !=='undefined' && buscar) { %>
+                <a href="/arbitros/eliminar" style="margin-left: 10px;">Mostrar todos</a>
+                <% } %>
+        </form>
+    </div>
     <table>
         <tr>
             <th>ID</th>
@@ -29,7 +40,7 @@
                     <%= a.apellido %>
                 </td>
                 <td><a href="/arbitros/eliminar/<%= a.id_arbitro %>" class="btn-danger"
-                        onclick="return confirm('¿Seguro que querés eliminar este árbitro?')">Eliminar</a></td>
+                        onclick="confirmarEliminar(event, this.href)">Eliminar</a></td>
             </tr>
             <% }) %>
     </table>
@@ -70,7 +81,25 @@
                             });
                         </script>
                         <% } %>
-
+                        <script>
+                            function confirmarEliminar(event, url) {
+                                event.preventDefault();
+                                Swal.fire({
+                                    title: '¿Estás seguro?',
+                                    text: '¡posta?!',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Sí, eliminar',
+                                    cancelButtonText: 'Cancelar'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = url;
+                                    }
+                                });
+                            }
+                        </script>
 </body>
 
 </html>

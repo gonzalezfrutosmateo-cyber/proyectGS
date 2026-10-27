@@ -8,6 +8,16 @@
 </head>
 <body>
     <h1>Selecciona un País para Modificar</h1>
+    <div class="filtro">
+        <form action="/paises/modificar" method="GET">
+            <label>Buscar país:</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/paises/modificar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
     <table>
         <tr><th>ID</th><th>Nombre</th><th>Acción</th></tr>
         <% paises.forEach(p => { %>

@@ -8,6 +8,16 @@
 </head>
 <body>
     <h1>Selecciona un Árbitro para Modificar</h1>
+    <div class="filtro">
+        <form action="/arbitros/modificar" method="GET">
+            <label>Buscar árbitro:</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/arbitros/modificar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
     <table>
         <tr><th>ID</th><th>Nombre</th><th>Apellido</th><th>Acción</th></tr>
         <% arbitros.forEach(a => { %>

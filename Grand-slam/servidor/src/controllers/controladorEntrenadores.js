@@ -20,9 +20,10 @@ export const buscarEntrenadores = async (req, res) => {
         const buscar = req.query.buscar || '';
         let entrenadores = [];
         if (buscar) {
+            const patron = `${buscar}%`;
             const [resultado] = await bd.query(
-                "SELECT * FROM Entrenadores WHERE CONCAT(nombre, ' ', apellido) LIKE ?",
-                [`%${buscar}%`]
+                "SELECT * FROM Entrenadores WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?",
+                [patron, patron, patron]
             );
             entrenadores = resultado;
         }
@@ -71,8 +72,16 @@ export const crearEntrenador = async (req, res) => {
 // 4. Modificar
 export const seleccionarModificar = async (req, res) => {
     try {
-        const [entrenadores] = await bd.query('SELECT * FROM Entrenadores');
-        res.render('vistasEntrenadores/modificarEntrenadores', { entrenadores, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Entrenadores';
+        const params = [];
+        if (buscar) {
+            consulta += " WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?";
+            const patron = `${buscar}%`;
+            params.push(patron, patron, patron);
+        }
+        const [entrenadores] = await bd.query(consulta, params);
+        res.render('vistasEntrenadores/modificarEntrenadores', { entrenadores, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -165,8 +174,16 @@ export const editarEntrenador = async (req, res) => {
 // 5. Eliminar
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const [entrenadores] = await bd.query('SELECT * FROM Entrenadores');
-        res.render('vistasEntrenadores/eliminarEntrenadores', { entrenadores, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Entrenadores';
+        const params = [];
+        if (buscar) {
+            consulta += " WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?";
+            const patron = `${buscar}%`;
+            params.push(patron, patron, patron);
+        }
+        const [entrenadores] = await bd.query(consulta, params);
+        res.render('vistasEntrenadores/eliminarEntrenadores', { entrenadores, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -208,6 +225,60 @@ export const verEntrenadoresJugador = async (req, res) => {
         }
 
         res.render('vistasEntrenadores/entrenadoresJugador', { jugadores, historial, idJugador });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error en la consulta');
+    }
+};
+
+// Arma el ranking de entrenadores por cantidad de jugadores distintos.
+// soloActivos = true  -> solo entrenamientos sin fecha de fin (los que siguen hoy)
+// soloActivos = false -> todo el historial (activos y finalizados)
+async function rankingEntrenadores(soloActivos) {
+    const filtro = soloActivos ? 'WHERE je.fecha_fin IS NULL' : '';
+    const [ranking] = await bd.query(`
+        SELECT e.id_entrenador, e.nombre, e.apellido,
+               COUNT(DISTINCT je.id_jugador) AS total_jugadores,
+               GROUP_CONCAT(DISTINCT CONCAT(j.nombre, ' ', j.apellido) ORDER BY j.apellido, j.nombre SEPARATOR ', ') AS jugadores
+        FROM entrenadores e
+        JOIN jugador_entrenador je ON e.id_entrenador = je.id_entrenador
+        JOIN jugadores j ON je.id_jugador = j.id_jugador
+        ${filtro}
+        GROUP BY e.id_entrenador, e.nombre, e.apellido
+        ORDER BY total_jugadores DESC, e.apellido, e.nombre
+    `);
+    // Si hay empate en el primer puesto, se muestran todos los empatados
+    const maximo = ranking.length > 0 ? ranking[0].total_jugadores : 0;
+    const lideres = ranking.filter(r => r.total_jugadores === maximo);
+    return { ranking, lideres, maximo };
+}
+
+// 7. CONSULTA: Entrenador con más jugadores entrenando actualmente
+export const verEntrenadorMasJugadoresActivos = async (req, res) => {
+    try {
+        const datos = await rankingEntrenadores(true);
+        res.render('vistasEntrenadores/entrenadorMasJugadores', {
+            ...datos,
+            titulo: 'Entrenador con más jugadores entrenando actualmente',
+            subtitulo: 'Se cuentan solo los entrenamientos sin fecha de fin.',
+            columna: 'Jugadores actuales'
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error en la consulta');
+    }
+};
+
+// 8. CONSULTA: Entrenador con más jugadores entrenados (activos o retirados)
+export const verEntrenadorMasJugadoresHistorico = async (req, res) => {
+    try {
+        const datos = await rankingEntrenadores(false);
+        res.render('vistasEntrenadores/entrenadorMasJugadores', {
+            ...datos,
+            titulo: 'Entrenador con más jugadores entrenados en su carrera',
+            subtitulo: 'Se cuenta todo el historial: entrenamientos activos y finalizados (cada jugador cuenta una sola vez).',
+            columna: 'Jugadores entrenados'
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error en la consulta');

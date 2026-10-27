@@ -31,7 +31,7 @@ export const buscarPremios = async (req, res) => {
                 JOIN Torneos t ON p.id_torneo = t.id_torneo
                 WHERE t.nombre LIKE ? OR p.fase LIKE ?
             `;
-            const [resultado] = await bd.query(consulta, [`%${buscar}%`, `%${buscar}%`]);
+            const [resultado] = await bd.query(consulta, [`${buscar}%`, `${buscar}%`]);
             premios = resultado;
         }
         res.render('vistasPremios/buscarPremios', { premios, buscar });
@@ -68,13 +68,19 @@ export const crearPremio = async (req, res) => {
 // 4. Modificar
 export const seleccionarModificar = async (req, res) => {
     try {
-        const consulta = `
+        const buscar = req.query.buscar || '';
+        let consulta = `
             SELECT p.*, t.nombre AS torneo_nombre 
             FROM Premios p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
         `;
-        const [premios] = await bd.query(consulta);
-        res.render('vistasPremios/modificarPremios', { premios, status: req.query.status, tipo: req.query.tipo });
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE t.nombre LIKE ? OR p.fase LIKE ?';
+            params.push(`${buscar}%`, `${buscar}%`);
+        }
+        const [premios] = await bd.query(consulta, params);
+        res.render('vistasPremios/modificarPremios', { premios, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -104,13 +110,19 @@ export const editarPremio = async (req, res) => {
 // 5. Eliminar
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const consulta = `
+        const buscar = req.query.buscar || '';
+        let consulta = `
             SELECT p.*, t.nombre AS torneo_nombre 
             FROM Premios p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
         `;
-        const [premios] = await bd.query(consulta);
-        res.render('vistasPremios/eliminarPremios', { premios, status: req.query.status, tipo: req.query.tipo });
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE t.nombre LIKE ? OR p.fase LIKE ?';
+            params.push(`${buscar}%`, `${buscar}%`);
+        }
+        const [premios] = await bd.query(consulta, params);
+        res.render('vistasPremios/eliminarPremios', { premios, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 

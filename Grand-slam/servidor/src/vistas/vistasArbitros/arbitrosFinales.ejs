@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Árbitros de las finales</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Consulta: Árbitros de las finales de los torneos</h1>
+    <a href="/arbitros">Volver al menú</a>
+
+    <% if (finales.length > 0) { %>
+        <table>
+            <tr>
+                <th>Torneo</th>
+                <th>Año</th>
+                <th>Modalidad</th>
+                <th>Árbitro</th>
+                <th>Resultado</th>
+            </tr>
+            <% finales.forEach(f => { %>
+                <tr>
+                    <td><%= f.torneo %></td>
+                    <td><%= f.anio %></td>
+                    <td><%= f.modalidad %></td>
+                    <td><%= f.arbitro_nombre %> <%= f.arbitro_apellido %></td>
+                    <td><%= f.resultado || '-' %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>Todavía no hay finales registradas.</p>
+    <% } %>
+</body>
+</html>

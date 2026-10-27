@@ -17,7 +17,7 @@ export const buscarPaises = async (req, res) => {
         let paises = [];
         if (buscar) {
             // % = cualquier texto antes o después, así encuentra "Fra" dentro de "Francia"
-            const [resultado] = await bd.query('SELECT * FROM Paises WHERE nombre LIKE ?', [`%${buscar}%`]);
+            const [resultado] = await bd.query('SELECT * FROM Paises WHERE nombre LIKE ?', [`${buscar}%`]);
             paises = resultado;
         }
         res.render('vistasPaises/buscarPaises', { paises, buscar });
@@ -43,8 +43,15 @@ export const crearPais = async (req, res) => {
 
 export const seleccionarModificar = async (req, res) => {
     try {
-        const [paises] = await bd.query('SELECT * FROM Paises');
-        res.render('vistasPaises/modificarPaises', { paises, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Paises';
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE nombre LIKE ?';
+            params.push(`${buscar}%`);
+        }
+        const [paises] = await bd.query(consulta, params);
+        res.render('vistasPaises/modificarPaises', { paises, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -69,8 +76,15 @@ export const editarPais = async (req, res) => {
 
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const [paises] = await bd.query('SELECT * FROM Paises');
-        res.render('vistasPaises/eliminarPaises', { paises, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Paises';
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE nombre LIKE ?';
+            params.push(`${buscar}%`);
+        }
+        const [paises] = await bd.query(consulta, params);
+        res.render('vistasPaises/eliminarPaises', { paises, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 

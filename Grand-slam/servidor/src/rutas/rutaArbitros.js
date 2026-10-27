@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { 
     menuArbitros, listarArbitros, formularioCrear, crearArbitro, 
     seleccionarModificar, formularioEditar, editarArbitro,
-    seleccionarEliminar, eliminarArbitro, verArbitrosPorTorneo, buscarArbitros
+    seleccionarEliminar, eliminarArbitro, verArbitrosPorTorneo, buscarArbitros,
+    verArbitroMasPartidos, verArbitrosFinales
 } from '../controllers/controladorArbitros.js';
 
 const router = Router();
@@ -24,5 +25,9 @@ router.get('/eliminar/:id', eliminarArbitro);
 
 // Consulta 2
 router.get('/torneo', verArbitrosPorTorneo);
+
+// Consultas nuevas
+router.get('/mas-partidos', verArbitroMasPartidos);
+router.get('/finales', verArbitrosFinales);
 
 export default router;

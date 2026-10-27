@@ -20,9 +20,10 @@ export const buscarArbitros = async (req, res) => {
         const buscar = req.query.buscar || '';
         let arbitros = [];
         if (buscar) {
+            const patron = `${buscar}%`;
             const [resultado] = await bd.query(
-                "SELECT * FROM Arbitros WHERE CONCAT(nombre, ' ', apellido) LIKE ?",
-                [`%${buscar}%`]
+                "SELECT * FROM Arbitros WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?",
+                [patron, patron, patron]
             );
             arbitros = resultado;
         }
@@ -55,8 +56,16 @@ export const crearArbitro = async (req, res) => {
 // 4. Modificar
 export const seleccionarModificar = async (req, res) => {
     try {
-        const [arbitros] = await bd.query('SELECT * FROM Arbitros');
-        res.render('vistasArbitros/modificarArbitros', { arbitros, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Arbitros';
+        const params = [];
+        if (buscar) {
+            consulta += " WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?";
+            const patron = `${buscar}%`;
+            params.push(patron, patron, patron);
+        }
+        const [arbitros] = await bd.query(consulta, params);
+        res.render('vistasArbitros/modificarArbitros', { arbitros, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -86,8 +95,16 @@ export const editarArbitro = async (req, res) => {
 // 5. Eliminar
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const [arbitros] = await bd.query('SELECT * FROM Arbitros');
-        res.render('vistasArbitros/eliminarArbitros', { arbitros, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Arbitros';
+        const params = [];
+        if (buscar) {
+            consulta += " WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?";
+            const patron = `${buscar}%`;
+            params.push(patron, patron, patron);
+        }
+        const [arbitros] = await bd.query(consulta, params);
+        res.render('vistasArbitros/eliminarArbitros', { arbitros, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -134,3 +151,47 @@ export const verArbitrosPorTorneo = async (req, res) => {
         res.status(500).send('Error al buscar árbitros');
     }
 };
+
+// 7. CONSULTA: Árbitro con mayor cantidad de partidos arbitrados
+export const verArbitroMasPartidos = async (req, res) => {
+    try {
+        // Ranking completo (solo árbitros que arbitraron al menos un partido)
+        const [ranking] = await bd.query(`
+            SELECT a.id_arbitro, a.nombre, a.apellido, COUNT(p.id_partido) AS total_partidos
+            FROM arbitros a
+            JOIN partidos p ON a.id_arbitro = p.id_arbitro
+            GROUP BY a.id_arbitro, a.nombre, a.apellido
+            ORDER BY total_partidos DESC, a.apellido, a.nombre
+        `);
+
+        // Si hay empate en el primer puesto, se muestran todos los empatados
+        const maximo = ranking.length > 0 ? ranking[0].total_partidos : 0;
+        const lideres = ranking.filter(r => r.total_partidos === maximo);
+
+        res.render('vistasArbitros/arbitroMasPartidos', { ranking, lideres, maximo });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar el árbitro con más partidos');
+    }
+};
+
+// 8. CONSULTA: Árbitros de las finales de los torneos
+export const verArbitrosFinales = async (req, res) => {
+    try {
+        const [finales] = await bd.query(`
+            SELECT a.nombre AS arbitro_nombre, a.apellido AS arbitro_apellido,
+                   t.nombre AS torneo, t.anio, m.nombre AS modalidad, p.resultado
+            FROM partidos p
+            JOIN arbitros a ON p.id_arbitro = a.id_arbitro
+            JOIN torneos t ON p.id_torneo = t.id_torneo
+            JOIN modalidades m ON p.id_modalidad = m.id_modalidad
+            WHERE p.fase = 'Final'
+            ORDER BY t.anio DESC, t.nombre ASC, m.nombre ASC
+        `);
+        res.render('vistasArbitros/arbitrosFinales', { finales });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al buscar los árbitros de las finales');
+    }
+};
+

@@ -33,7 +33,7 @@ export const buscarTorneos = async (req, res) => {
                 LEFT JOIN Paises p ON s.id_pais = p.id_pais
                 WHERE t.nombre LIKE ? OR t.anio LIKE ? OR s.nombre LIKE ? OR p.nombre LIKE ?
             `;
-            const texto = `%${buscar}%`;
+            const texto = `${buscar}%`;
             const [resultado] = await bd.query(consulta, [texto, texto, texto, texto]);
             torneos = resultado;
         }
@@ -69,8 +69,15 @@ export const crearTorneo = async (req, res) => {
 // Modificar Torneo
 export const seleccionarModificar = async (req, res) => {
     try {
-        const [torneos] = await bd.query('SELECT * FROM Torneos');
-        res.render('vistasTorneos/modificarTorneos', { torneos, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Torneos';
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE nombre LIKE ? OR anio LIKE ?';
+            params.push(`${buscar}%`, `${buscar}%`);
+        }
+        const [torneos] = await bd.query(consulta, params);
+        res.render('vistasTorneos/modificarTorneos', { torneos, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -101,8 +108,15 @@ export const editarTorneo = async (req, res) => {
 // Eliminar Torneo
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const [torneos] = await bd.query('SELECT * FROM Torneos');
-        res.render('vistasTorneos/eliminarTorneos', { torneos, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Torneos';
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE nombre LIKE ? OR anio LIKE ?';
+            params.push(`${buscar}%`, `${buscar}%`);
+        }
+        const [torneos] = await bd.query(consulta, params);
+        res.render('vistasTorneos/eliminarTorneos', { torneos, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 

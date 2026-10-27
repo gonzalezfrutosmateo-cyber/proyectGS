@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
     menuModalidades, listarModalidades, formularioCrear, crearModalidad, 
     seleccionarModificar, formularioEditar, editarModalidad, 
-    seleccionarEliminar, eliminarModalidad, buscarModalidades
+    seleccionarEliminar, eliminarModalidad, buscarModalidades, verEstadisticasModalidades
 } from '../controllers/controladorModalidades.js';
 
 const router = Router();
@@ -17,5 +17,8 @@ router.get('/modificar/:id', formularioEditar);
 router.post('/modificar/:id', editarModalidad);
 router.get('/eliminar', seleccionarEliminar);
 router.get('/eliminar/:id', eliminarModalidad);
+
+// Consulta nueva
+router.get('/estadisticas', verEstadisticasModalidades);
 
 export default router;

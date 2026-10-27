@@ -10,6 +10,17 @@
     <h1>Eliminar Jugadores</h1>
     <a href="/jugadores" class="menu-btn" style="width: 200px; display: inline-block; margin-bottom: 10px;">⬅ Volver al Menú</a>
 
+    <div class="filtro">
+        <form action="/jugadores/eliminar" method="GET">
+            <label>Buscar jugador:</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/jugadores/eliminar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
+
     <table>
         <thead>
             <tr>
@@ -44,9 +55,11 @@
                 e.preventDefault();
                 Swal.fire({
                     title: '¿Estás seguro?',
-                    text: "Esta acción no se puede deshacer",
+                    text: '¡No vas a poder revertir esto!',
                     icon: 'warning',
                     showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
                     confirmButtonText: 'Sí, eliminar',
                     cancelButtonText: 'Cancelar'
                 }).then((result) => {

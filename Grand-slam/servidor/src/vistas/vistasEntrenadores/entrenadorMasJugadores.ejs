@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title><%= titulo %></title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Consulta: <%= titulo %></h1>
+    <a href="/entrenadores">Volver al menú</a>
+    <p><%= subtitulo %></p>
+
+    <% if (ranking.length > 0) { %>
+        <h2><%= lideres.length > 1 ? 'Entrenadores en primer lugar (empate)' : 'Entrenador en primer lugar' %></h2>
+        <table>
+            <tr>
+                <th>Entrenador</th>
+                <th><%= columna %></th>
+                <th>Jugadores</th>
+            </tr>
+            <% lideres.forEach(l => { %>
+                <tr>
+                    <td><%= l.nombre %> <%= l.apellido %></td>
+                    <td><%= l.total_jugadores %></td>
+                    <td><%= l.jugadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+
+        <h2>Ranking completo</h2>
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Entrenador</th>
+                <th><%= columna %></th>
+            </tr>
+            <% ranking.forEach((r, i) => { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= r.nombre %> <%= r.apellido %></td>
+                    <td><%= r.total_jugadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay entrenamientos registrados para esta consulta.</p>
+    <% } %>
+</body>
+</html>

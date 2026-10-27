@@ -123,7 +123,7 @@ export const buscarPartidos = async (req, res) => {
             }
             if (buscar) {
                 consulta += ' AND (t.nombre LIKE ? OR p.fase LIKE ?)';
-                parametros.push(`%${buscar}%`, `%${buscar}%`);
+                parametros.push(`${buscar}%`, `${buscar}%`);
             }
             const [resultado] = await bd.query(consulta, parametros);
             partidos = resultado;
@@ -192,14 +192,20 @@ export const crearPartido = async (req, res) => {
 // 4. Modificar
 export const seleccionarModificar = async (req, res) => {
     try {
-        const consulta = `
+        const buscar = req.query.buscar || '';
+        let consulta = `
             SELECT p.*, t.nombre AS torneo, m.nombre AS modalidad
             FROM Partidos p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
             JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
         `;
-        const [partidos] = await bd.query(consulta);
-        res.render('vistasPartidos/modificarPartidos', { partidos, status: req.query.status, tipo: req.query.tipo });
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE t.nombre LIKE ? OR p.fase LIKE ?';
+            params.push(`${buscar}%`, `${buscar}%`);
+        }
+        const [partidos] = await bd.query(consulta, params);
+        res.render('vistasPartidos/modificarPartidos', { partidos, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -272,14 +278,20 @@ export const editarPartido = async (req, res) => {
 // 5. Eliminar
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const consulta = `
+        const buscar = req.query.buscar || '';
+        let consulta = `
             SELECT p.*, t.nombre AS torneo, m.nombre AS modalidad
             FROM Partidos p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
             JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
         `;
-        const [partidos] = await bd.query(consulta);
-        res.render('vistasPartidos/eliminarPartidos', { partidos, status: req.query.status, tipo: req.query.tipo });
+        const params = [];
+        if (buscar) {
+            consulta += ' WHERE t.nombre LIKE ? OR p.fase LIKE ?';
+            params.push(`${buscar}%`, `${buscar}%`);
+        }
+        const [partidos] = await bd.query(consulta, params);
+        res.render('vistasPartidos/eliminarPartidos', { partidos, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 

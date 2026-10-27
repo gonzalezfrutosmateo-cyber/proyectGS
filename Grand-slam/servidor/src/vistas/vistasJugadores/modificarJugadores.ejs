@@ -10,6 +10,17 @@
     <h1>Seleccionar Jugador a Modificar</h1>
     <a href="/jugadores" class="menu-btn" style="width: 200px; display: inline-block; margin-bottom: 10px;">⬅ Volver al Menú</a>
 
+    <div class="filtro">
+        <form action="/jugadores/modificar" method="GET">
+            <label>Buscar jugador:</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/jugadores/modificar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
+
     <table>
         <thead>
             <tr>

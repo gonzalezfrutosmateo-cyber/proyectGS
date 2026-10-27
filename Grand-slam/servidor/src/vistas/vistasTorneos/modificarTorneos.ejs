@@ -8,6 +8,16 @@
 </head>
 <body>
     <h1>Selecciona un Torneo para Modificar</h1>
+    <div class="filtro">
+        <form action="/torneos/modificar" method="GET">
+            <label>Buscar torneo (nombre o año):</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/torneos/modificar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
     <table>
         <tr><th>ID</th><th>Nombre</th><th>Año</th><th>Acción</th></tr>
         <% torneos.forEach(t => { %>

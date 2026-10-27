@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Árbitro con más partidos</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Consulta: Árbitro con más partidos arbitrados</h1>
+    <a href="/arbitros">Volver al menú</a>
+
+    <% if (ranking.length > 0) { %>
+        <h2><%= lideres.length > 1 ? 'Árbitros con más partidos (empate)' : 'Árbitro con más partidos' %></h2>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Partidos arbitrados</th>
+            </tr>
+            <% lideres.forEach(l => { %>
+                <tr>
+                    <td><%= l.nombre %></td>
+                    <td><%= l.apellido %></td>
+                    <td><%= l.total_partidos %></td>
+                </tr>
+            <% }) %>
+        </table>
+
+        <h2>Ranking completo</h2>
+        <table>
+            <tr>
+                <th>#</th>
+                <th>Árbitro</th>
+                <th>Partidos arbitrados</th>
+            </tr>
+            <% ranking.forEach((r, i) => { %>
+                <tr>
+                    <td><%= i + 1 %></td>
+                    <td><%= r.nombre %> <%= r.apellido %></td>
+                    <td><%= r.total_partidos %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>Todavía no hay partidos con árbitro registrado.</p>
+    <% } %>
+</body>
+</html>

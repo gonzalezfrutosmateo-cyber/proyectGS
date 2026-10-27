@@ -45,10 +45,10 @@ export const buscarJugadores = async (req, res) => {
         const buscar = req.query.buscar || '';
         let jugadores = [];
         if (buscar) {
-            // Se busca en nombre y apellido juntos, así funciona escribir "juan rod"
+            const patron = `${buscar}%`;
             const [resultado] = await bd.query(
-                "SELECT * FROM Jugadores WHERE CONCAT(nombre, ' ', apellido) LIKE ?",
-                [`%${buscar}%`]
+                "SELECT * FROM Jugadores WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?",
+                [patron, patron, patron]
             );
             jugadores = resultado;
         }
@@ -61,8 +61,16 @@ export const buscarJugadores = async (req, res) => {
 
 export const listarParaModificar = async (req, res) => {
     try {
-        const [jugadores] = await bd.query('SELECT * FROM Jugadores');
-        res.render('vistasJugadores/modificarJugadores', { jugadores, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Jugadores';
+        const params = [];
+        if (buscar) {
+            consulta += " WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?";
+            const patron = `${buscar}%`;
+            params.push(patron, patron, patron);
+        }
+        const [jugadores] = await bd.query(consulta, params);
+        res.render('vistasJugadores/modificarJugadores', { jugadores, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -89,8 +97,16 @@ export const modificarJugador = async (req, res) => {
 
 export const listarParaEliminar = async (req, res) => {
     try {
-        const [jugadores] = await bd.query('SELECT * FROM Jugadores');
-        res.render('vistasJugadores/eliminarJugadores', { jugadores, status: req.query.status, tipo: req.query.tipo });
+        const buscar = req.query.buscar || '';
+        let consulta = 'SELECT * FROM Jugadores';
+        const params = [];
+        if (buscar) {
+            consulta += " WHERE nombre LIKE ? OR apellido LIKE ? OR CONCAT(nombre, ' ', apellido) LIKE ?";
+            const patron = `${buscar}%`;
+            params.push(patron, patron, patron);
+        }
+        const [jugadores] = await bd.query(consulta, params);
+        res.render('vistasJugadores/eliminarJugadores', { jugadores, buscar, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 

@@ -15,7 +15,7 @@
                 <td><%= m.id_modalidad %></td>
                 <td><%= m.nombre %></td>
                 <td><%= m.jugadores_por_lado === 2 ? 'Dobles (2 vs 2)' : 'Individual (1 vs 1)' %></td>
-                <td><a href="/modalidades/eliminar/<%= m.id_modalidad %>" class="btn-danger" onclick="return confirm('¿Eliminar modalidad?')">Eliminar</a></td>
+                <td><a href="/modalidades/eliminar/<%= m.id_modalidad %>" class="btn-danger" onclick="confirmarEliminar(event, this.href)">Eliminar</a></td>
             </tr>
         <% }) %>
     </table>
@@ -56,5 +56,24 @@
         });
     </script>
     <% } %>
+    <script>
+        function confirmarEliminar(event, url) {
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¡No vas a poder revertir esto!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
 </body>
 </html>

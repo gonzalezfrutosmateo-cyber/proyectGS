@@ -8,6 +8,16 @@
 </head>
 <body>
     <h1>Selecciona un Premio para Modificar</h1>
+    <div class="filtro">
+        <form action="/premios/modificar" method="GET">
+            <label>Buscar premio (torneo o fase):</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/premios/modificar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
     <table>
         <tr><th>ID</th><th>Torneo</th><th>Fase</th><th>Acción</th></tr>
         <% premios.forEach(p => { %>

@@ -16,7 +16,7 @@ export const buscarModalidades = async (req, res) => {
         const buscar = req.query.buscar || '';
         let modalidades = [];
         if (buscar) {
-            const [resultado] = await bd.query('SELECT * FROM Modalidades WHERE nombre LIKE ?', [`%${buscar}%`]);
+            const [resultado] = await bd.query('SELECT * FROM Modalidades WHERE nombre LIKE ?', [`${buscar}%`]);
             modalidades = resultado;
         }
         res.render('vistasModalidades/buscarModalidades', { modalidades, buscar });
@@ -95,5 +95,31 @@ export const eliminarModalidad = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.redirect('/modalidades/eliminar?status=error&tipo=relacion');
+    }
+};
+
+// CONSULTA: Estadísticas por modalidad (partidos, torneos y jugadores distintos)
+export const verEstadisticasModalidades = async (req, res) => {
+    try {
+        const [estadisticas] = await bd.query(`
+            SELECT m.id_modalidad, m.nombre, m.jugadores_por_lado,
+                   COUNT(DISTINCT p.id_partido) AS total_partidos,
+                   COUNT(DISTINCT p.id_torneo) AS total_torneos,
+                   COUNT(DISTINCT pp.id_jugador) AS total_jugadores
+            FROM modalidades m
+            LEFT JOIN partidos p ON m.id_modalidad = p.id_modalidad
+            LEFT JOIN participaciones_partidos pp ON p.id_partido = pp.id_partido
+            GROUP BY m.id_modalidad, m.nombre, m.jugadores_por_lado
+            ORDER BY total_partidos DESC, m.nombre
+        `);
+
+        // Modalidad(es) con más partidos (solo si hay al menos un partido jugado)
+        const maximo = estadisticas.length > 0 ? estadisticas[0].total_partidos : 0;
+        const lideres = maximo > 0 ? estadisticas.filter(e => e.total_partidos === maximo) : [];
+
+        res.render('vistasModalidades/estadisticasModalidades', { estadisticas, lideres, maximo });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al calcular las estadísticas de modalidades');
     }
 };

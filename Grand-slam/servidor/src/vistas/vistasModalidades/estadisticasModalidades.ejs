@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de modalidades</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+    <h1>Consulta: Modalidad con más partidos disputados</h1>
+    <a href="/modalidades">Volver al menú</a>
+    <p>Compara cada modalidad por partidos jugados, torneos en que se disputó y jugadores distintos que participaron.</p>
+
+    <% if (lideres.length > 0) { %>
+        <h2><%= lideres.length > 1 ? 'Modalidades más jugadas (empate)' : 'Modalidad más jugada' %></h2>
+        <p>
+            <% lideres.forEach((l, i) => { %><%= i > 0 ? ' / ' : '' %><strong><%= l.nombre %></strong><% }) %>
+            con <%= maximo %> partido<%= maximo === 1 ? '' : 's' %>.
+        </p>
+    <% } else { %>
+        <p>Todavía no se jugó ningún partido.</p>
+    <% } %>
+
+    <h2>Detalle por modalidad</h2>
+    <% if (estadisticas.length > 0) { %>
+        <table>
+            <tr>
+                <th>Modalidad</th>
+                <th>Formato</th>
+                <th>Partidos</th>
+                <th>Torneos</th>
+                <th>Jugadores distintos</th>
+            </tr>
+            <% estadisticas.forEach(e => { %>
+                <tr>
+                    <td><%= e.nombre %></td>
+                    <td><%= e.jugadores_por_lado %> vs <%= e.jugadores_por_lado %></td>
+                    <td><%= e.total_partidos %></td>
+                    <td><%= e.total_torneos %></td>
+                    <td><%= e.total_jugadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay modalidades registradas.</p>
+    <% } %>
+</body>
+</html>

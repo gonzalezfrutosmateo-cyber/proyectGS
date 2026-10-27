@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { 
     menuEntrenadores, listarEntrenadores, formularioCrear, crearEntrenador, 
     seleccionarModificar, formularioEditar, editarEntrenador,
-    seleccionarEliminar, eliminarEntrenador, verEntrenadoresJugador, buscarEntrenadores
+    seleccionarEliminar, eliminarEntrenador, verEntrenadoresJugador, buscarEntrenadores,
+    verEntrenadorMasJugadoresActivos, verEntrenadorMasJugadoresHistorico
 } from '../controllers/controladorEntrenadores.js';
 
 const router = Router();
@@ -20,5 +21,9 @@ router.get('/eliminar/:id', eliminarEntrenador);
 
 // Consulta 4
 router.get('/jugador', verEntrenadoresJugador);
+
+// Consultas nuevas
+router.get('/mas-activos', verEntrenadorMasJugadoresActivos);
+router.get('/mas-historicos', verEntrenadorMasJugadoresHistorico);
 
 export default router;

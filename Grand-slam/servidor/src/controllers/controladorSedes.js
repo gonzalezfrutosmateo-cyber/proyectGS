@@ -27,7 +27,7 @@ export const buscarSedes = async (req, res) => {
                 LEFT JOIN Paises p ON s.id_pais = p.id_pais
                 WHERE s.nombre LIKE ? OR p.nombre LIKE ?
             `;
-            const [resultado] = await bd.query(consulta, [`%${buscar}%`, `%${buscar}%`]);
+            const [resultado] = await bd.query(consulta, [`${buscar}%`, `${buscar}%`]);
             sedes = resultado;
         }
         res.render('vistasSedes/buscarSedes', { sedes, buscar });

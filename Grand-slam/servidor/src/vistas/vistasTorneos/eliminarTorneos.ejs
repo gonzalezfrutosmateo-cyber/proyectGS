@@ -8,6 +8,16 @@
 </head>
 <body>
     <h1>Selecciona un Torneo para Eliminar</h1>
+    <div class="filtro">
+        <form action="/torneos/eliminar" method="GET">
+            <label>Buscar torneo (nombre o año):</label>
+            <input type="text" name="buscar" value="<%= typeof buscar !== 'undefined' ? buscar : '' %>" placeholder="Escribe para filtrar...">
+            <button type="submit">Buscar</button>
+            <% if (typeof buscar !== 'undefined' && buscar) { %>
+                <a href="/torneos/eliminar" style="margin-left: 10px;">Mostrar todos</a>
+            <% } %>
+        </form>
+    </div>
     <table>
         <tr><th>ID</th><th>Nombre</th><th>Año</th><th>Acción</th></tr>
         <% torneos.forEach(t => { %>
@@ -15,7 +25,7 @@
                 <td><%= t.id_torneo %></td>
                 <td><%= t.nombre %></td>
                 <td><%= t.anio %></td>
-                <td><a href="/torneos/eliminar/<%= t.id_torneo %>" class="btn-danger" onclick="return confirm('¿Seguro que querés eliminar este torneo?')">Eliminar</a></td>
+                <td><a href="/torneos/eliminar/<%= t.id_torneo %>" class="btn-danger" onclick="confirmarEliminar(event, this.href)">Eliminar</a></td>
             </tr>
         <% }) %>
     </table>
@@ -56,5 +66,24 @@
         });
     </script>
     <% } %>
+    <script>
+        function confirmarEliminar(event, url) {
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: '¡No vas a poder revertir esto!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
 </body>
 </html>
