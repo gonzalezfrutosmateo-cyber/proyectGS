@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Países por premios en una sede</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Países con más premios ganados en una sede</h1>
+    <a href="/paises">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/paises/sede" method="GET">
+            <label>Seleccione una Sede:</label>
+            <select name="id_sede" required>
+                <option value="">Seleccione...</option>
+                <% sedes.forEach(s => { %>
+                    <option value="<%= s.id_sede %>" <%= idSede == s.id_sede ? 'selected' : '' %>>
+                        <%= s.nombre %>
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <% if (typeof idSede !== 'undefined' && idSede) { %>
+        <% if (paises.length > 0) { %>
+            <table>
+                <tr>
+                    <th>País</th>
+                    <th>Premios ganados en la sede</th>
+                </tr>
+                <% paises.forEach(pais => { %>
+                    <tr>
+                        <td><%= pais.nombre %></td>
+                        <td><%= pais.premios %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>Ningún país ganó premios en esta sede.</p>
+        <% } %>
+    <% } %>
+    <% if (typeof idSede !== 'undefined' && idSede && paises.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin resultados',
+            text: 'Ningún país ganó premios en esta sede.'
+        });
+    </script>
+    <% } %>
+</body>
+</html>

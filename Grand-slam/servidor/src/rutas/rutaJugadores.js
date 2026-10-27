@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
     menuJugadores, formularioCrear, crearJugador, verJugadores, verJugadoresJSON,
     listarParaModificar, formularioEditar, modificarJugador, 
-    listarParaEliminar, eliminarJugador, verGanancias, buscarJugadores
+    listarParaEliminar, eliminarJugador, verGanancias, buscarJugadores, verRankingJugadores, verHistorialJugador
 } from '../controllers/controladorJugadores.js';
 
 const router = Router();
@@ -17,6 +17,8 @@ router.post('/crear', crearJugador);
 // Ver
 router.get('/ver', verJugadores);
 router.get('/buscar', buscarJugadores);
+router.get('/ranking', verRankingJugadores);
+router.get('/historial', verHistorialJugador);
 router.get('/verTablaJugadores', verJugadoresJSON);
 
 // Modificar (Usa method-override para el PUT)

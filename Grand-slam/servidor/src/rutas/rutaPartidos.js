@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { 
     menuPartidos, listarPartidos, formularioCrear, crearPartido, 
     seleccionarModificar, formularioEditar, editarPartido,
-    seleccionarEliminar, eliminarPartido, verPartidosPorJugador, buscarPartidos
+    seleccionarEliminar, eliminarPartido, verPartidosPorJugador, buscarPartidos, verRankingPartidos, verEnfrentamientos
 } from '../controllers/controladorPartidos.js';
 
 const router = Router();
@@ -20,5 +20,7 @@ router.get('/eliminar/:id', eliminarPartido);
 
 // Consulta extra
 router.get('/jugador', verPartidosPorJugador);
+router.get('/ranking', verRankingPartidos);
+router.get('/enfrentamientos', verEnfrentamientos);
 
 export default router;

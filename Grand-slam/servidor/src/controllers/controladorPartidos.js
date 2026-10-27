@@ -123,7 +123,7 @@ export const buscarPartidos = async (req, res) => {
             }
             if (buscar) {
                 consulta += ' AND (t.nombre LIKE ? OR p.fase LIKE ?)';
-                parametros.push(`${buscar}%`, `${buscar}%`);
+                parametros.push(`%${buscar}%`, `%${buscar}%`);
             }
             const [resultado] = await bd.query(consulta, parametros);
             partidos = resultado;
@@ -132,6 +132,91 @@ export const buscarPartidos = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al buscar partidos');
+    }
+};
+
+export const verRankingPartidos = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        const consulta = `
+            SELECT j.id_jugador, j.nombre, j.apellido,
+                   COUNT(pp.id_partido) AS partidos_jugados,
+                   SUM(CASE WHEN pp.es_ganador = 1 THEN 1 ELSE 0 END) AS partidos_ganados,
+                   SUM(CASE WHEN pp.es_ganador = 0 THEN 1 ELSE 0 END) AS partidos_perdidos
+            FROM Jugadores j
+            LEFT JOIN Participaciones_Partidos pp ON j.id_jugador = pp.id_jugador
+            WHERE ? = '' OR CONCAT(j.nombre, ' ', j.apellido) LIKE ?
+            GROUP BY j.id_jugador, j.nombre, j.apellido
+            ORDER BY partidos_ganados DESC, partidos_perdidos ASC, j.apellido, j.nombre
+        `;
+        const [jugadores] = await bd.query(consulta, [buscar, `%${buscar}%`]);
+        res.render('vistasPartidos/rankingPartidos', { jugadores, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al consultar el ranking de partidos');
+    }
+};
+
+export const verEnfrentamientos = async (req, res) => {
+    try {
+        const idJugador = req.query.id_jugador || '';
+        const idRival = req.query.id_rival || '';
+        const [jugadores] = await bd.query('SELECT id_jugador, nombre, apellido FROM Jugadores ORDER BY apellido, nombre');
+        let partidos = [];
+
+        if ((idJugador && !/^[1-9]\d*$/.test(idJugador)) ||
+            (idRival && !/^[1-9]\d*$/.test(idRival))) {
+            return res.render('vistasPartidos/enfrentamientosJugadores', {
+                jugadores, partidos, idJugador: '', idRival: '', status: 'error', tipo: 'jugador'
+            });
+        }
+        if (('id_jugador' in req.query || 'id_rival' in req.query) && (!idJugador || !idRival)) {
+            return res.render('vistasPartidos/enfrentamientosJugadores', {
+                jugadores, partidos, idJugador, idRival, status: 'error', tipo: 'faltan'
+            });
+        }
+        if (idJugador && idRival && idJugador === idRival) {
+            return res.render('vistasPartidos/enfrentamientosJugadores', {
+                jugadores, partidos, idJugador, idRival, status: 'error', tipo: 'iguales'
+            });
+        }
+        if (idJugador && idRival && idJugador !== idRival) {
+            const [jugadoresExiste] = await bd.query(
+                'SELECT id_jugador FROM Jugadores WHERE id_jugador IN (?, ?)',
+                [idJugador, idRival]
+            );
+            if (jugadoresExiste.length !== 2) {
+                return res.render('vistasPartidos/enfrentamientosJugadores', {
+                    jugadores, partidos, idJugador: '', idRival: '', status: 'error', tipo: 'jugador'
+                });
+            }
+            const consulta = `
+                SELECT p.id_partido, t.nombre AS torneo, t.anio, p.fase, p.resultado,
+                       m.nombre AS modalidad,
+                       CASE WHEN pp1.es_ganador = pp2.es_ganador
+                            THEN 'Jugaron en el mismo equipo'
+                            WHEN pp1.es_ganador = 1
+                            THEN CONCAT(j1.nombre, ' ', j1.apellido, ' ganó')
+                            ELSE CONCAT(j2.nombre, ' ', j2.apellido, ' ganó')
+                       END AS resultado_jugadores
+                FROM Participaciones_Partidos pp1
+                JOIN Participaciones_Partidos pp2 ON pp1.id_partido = pp2.id_partido
+                JOIN Partidos p ON pp1.id_partido = p.id_partido
+                JOIN Torneos t ON p.id_torneo = t.id_torneo
+                JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
+                JOIN Jugadores j1 ON pp1.id_jugador = j1.id_jugador
+                JOIN Jugadores j2 ON pp2.id_jugador = j2.id_jugador
+                WHERE pp1.id_jugador = ? AND pp2.id_jugador = ?
+                ORDER BY t.anio DESC, t.nombre, p.id_partido
+            `;
+            const [resultado] = await bd.query(consulta, [idJugador, idRival]);
+            partidos = resultado;
+        }
+
+        res.render('vistasPartidos/enfrentamientosJugadores', { jugadores, partidos, idJugador, idRival });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al consultar los enfrentamientos');
     }
 };
 
@@ -192,20 +277,14 @@ export const crearPartido = async (req, res) => {
 // 4. Modificar
 export const seleccionarModificar = async (req, res) => {
     try {
-        const buscar = req.query.buscar || '';
-        let consulta = `
+        const consulta = `
             SELECT p.*, t.nombre AS torneo, m.nombre AS modalidad
             FROM Partidos p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
             JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
         `;
-        const params = [];
-        if (buscar) {
-            consulta += ' WHERE t.nombre LIKE ? OR p.fase LIKE ?';
-            params.push(`${buscar}%`, `${buscar}%`);
-        }
-        const [partidos] = await bd.query(consulta, params);
-        res.render('vistasPartidos/modificarPartidos', { partidos, buscar, status: req.query.status, tipo: req.query.tipo });
+        const [partidos] = await bd.query(consulta);
+        res.render('vistasPartidos/modificarPartidos', { partidos, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -278,20 +357,14 @@ export const editarPartido = async (req, res) => {
 // 5. Eliminar
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const buscar = req.query.buscar || '';
-        let consulta = `
+        const consulta = `
             SELECT p.*, t.nombre AS torneo, m.nombre AS modalidad
             FROM Partidos p
             JOIN Torneos t ON p.id_torneo = t.id_torneo
             JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
         `;
-        const params = [];
-        if (buscar) {
-            consulta += ' WHERE t.nombre LIKE ? OR p.fase LIKE ?';
-            params.push(`${buscar}%`, `${buscar}%`);
-        }
-        const [partidos] = await bd.query(consulta, params);
-        res.render('vistasPartidos/eliminarPartidos', { partidos, buscar, status: req.query.status, tipo: req.query.tipo });
+        const [partidos] = await bd.query(consulta);
+        res.render('vistasPartidos/eliminarPartidos', { partidos, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 

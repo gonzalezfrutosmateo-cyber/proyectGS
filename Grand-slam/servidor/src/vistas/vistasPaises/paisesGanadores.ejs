@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Países por ganadores de premios</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Países con más/menos ganadores de premios</h1>
+    <a href="/paises">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/paises/ganadores" method="GET">
+            <label>Ordenar:</label>
+            <select name="orden">
+                <option value="mas" <%= orden === 'mas' ? 'selected' : '' %>>De más a menos</option>
+                <option value="menos" <%= orden === 'menos' ? 'selected' : '' %>>De menos a más</option>
+            </select>
+            <button type="submit">Ordenar</button>
+        </form>
+    </div>
+
+    <% if (paises.length > 0) { %>
+        <table>
+            <tr>
+                <th>País</th>
+                <th>Jugadores que ganaron premios</th>
+            </tr>
+            <% paises.forEach(pais => { %>
+                <tr>
+                    <td><%= pais.nombre %></td>
+                    <td><%= pais.ganadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay países cargados.</p>
+    <% } %>
+</body>
+</html>

@@ -2,7 +2,8 @@ import { Router } from 'express';
 import { 
     menuPremios, listarPremios, formularioCrear, crearPremio, 
     seleccionarModificar, formularioEditar, editarPremio, 
-    seleccionarEliminar, eliminarPremio, buscarPremios
+    seleccionarEliminar, eliminarPremio, buscarPremios,
+    verPremiosPorSedes, verPremiosPorPais, verPremiosUnaSede, verPremiosPorJugadores
 } from '../controllers/controladorPremios.js';
 
 const router = Router();
@@ -17,5 +18,11 @@ router.get('/modificar/:id', formularioEditar);
 router.post('/modificar/:id', editarPremio);
 router.get('/eliminar', seleccionarEliminar);
 router.get('/eliminar/:id', eliminarPremio);
+
+// Consultas
+router.get('/sedes', verPremiosPorSedes);
+router.get('/pais', verPremiosPorPais);
+router.get('/unaSede', verPremiosUnaSede);
+router.get('/jugadores', verPremiosPorJugadores);
 
 export default router;

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sedes sin premios</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Sedes que nunca entregaron un premio</h1>
+    <a href="/sedes">Volver al menú</a>
+
+    <% if (sedes.length > 0) { %>
+        <table>
+            <tr>
+                <th>Sede</th>
+                <th>País</th>
+                <th>Torneos jugados</th>
+            </tr>
+            <% sedes.forEach(sede => { %>
+                <tr>
+                    <td><%= sede.nombre %></td>
+                    <td><%= sede.pais %></td>
+                    <td><%= sede.torneos %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>Todas las sedes entregaron al menos un premio.</p>
+    <% } %>
+</body>
+</html>

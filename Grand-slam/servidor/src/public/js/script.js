@@ -73,12 +73,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('form').forEach(formulario => {
-        if (formulario.method === 'get' || !formulario.querySelector('input, select, textarea')) return;
+        const rutaFormulario = new URL(formulario.action).pathname;
+        const esHistorialJugador = rutaFormulario === '/jugadores/historial';
+        const esEnfrentamiento = rutaFormulario === '/partidos/enfrentamientos';
 
-        // Desactivar la validación nativa del navegador
+        if (!formulario.querySelector('input, select, textarea')) return;
+
         formulario.noValidate = true;
         formulario.addEventListener('submit', evento => {
             let mensaje = '';
+            const datos = new FormData(formulario);
+
+            if (esHistorialJugador) {
+                const idJugador = datos.get('id_jugador');
+                const anio = datos.get('anio').trim();
+
+                if (!idJugador) {
+                    mensaje = 'Selecciona un jugador para consultar su historial.';
+                } else if (anio && (!/^\d{4}$/.test(anio) || Number(anio) < 1877 || Number(anio) > new Date().getFullYear())) {
+                    mensaje = `Ingresa un año entre 1877 y ${new Date().getFullYear()}.`;
+                }
+            } else if (esEnfrentamiento) {
+                const idJugador = datos.get('id_jugador');
+                const idRival = datos.get('id_rival');
+
+                if (!idJugador || !idRival) {
+                    mensaje = 'Selecciona los dos jugadores para buscar sus partidos.';
+                } else if (idJugador === idRival) {
+                    mensaje = 'Selecciona dos jugadores diferentes.';
+                }
+            }
+
+            if (formulario.method === 'get' && !mensaje) {
+                for (const campo of formulario.elements) {
+                    if (!campo.name) continue;
+                    const valor = campo.value.trim();
+
+                    if (campo.required && !valor) {
+                        mensaje = 'Completa los campos obligatorios para realizar la consulta.';
+                        break;
+                    }
+                    if (campo.name === 'anio' && valor &&
+                        (!/^\d{4}$/.test(valor) || Number(valor) < 1877 || Number(valor) > new Date().getFullYear())) {
+                        mensaje = `Ingresa un año entre 1877 y ${new Date().getFullYear()}.`;
+                        break;
+                    }
+                    if (!campo.checkValidity()) {
+                        mensaje = 'Revisa los filtros ingresados e inténtalo de nuevo.';
+                        break;
+                    }
+                }
+            }
+
+            if (mensaje) {
+                evento.preventDefault();
+                Swal.fire({ icon: 'error', title: 'Datos inválidos', text: mensaje });
+                return;
+            }
+
+            if (formulario.method === 'get') return;
+
             const patronNombre = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ][A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ\s.'-]*$/; //esta const es para validar nombres y apellidos, permitiendo letras, acentos, espacios y algunos caracteres especiales como puntos y guiones. Se asegura de que el nombre o apellido comience con una letra y no contenga números ni otros caracteres no permitidos.
             const patronFase = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñÀ-ÿ0-9\s.'-]+$/; //lo mismo aca 
             const patronResultado = /^[0-9]+-[0-9]+(?:[\s/]+[0-9]+-[0-9]+)*$/; //y aca para validar el resultado de un partido, permitiendo el formato "6-3 4-6 7-5" o "6-3/4-6/7-5", asegurando que solo se ingresen números y guiones en el formato correcto. Aun me falta arreglar algunas cosas sobre las tandas de desempate y los resultados de dobles, tema de que no toma correctamente la cantidad de partidos ganados y perdidas, pero por ahora esto es lo que hay. Tengo miedo.

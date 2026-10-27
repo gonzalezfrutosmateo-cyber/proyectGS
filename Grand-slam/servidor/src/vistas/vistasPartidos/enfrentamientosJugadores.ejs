@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Enfrentamientos entre jugadores</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <h1>Historial entre dos jugadores</h1>
+    <a href="/partidos">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/partidos/enfrentamientos" method="GET">
+            <label>Primer jugador:</label>
+            <select name="id_jugador" required>
+                <option value="">Seleccione...</option>
+                <% jugadores.forEach(jugador => { %>
+                    <option value="<%= jugador.id_jugador %>" <%= idJugador == jugador.id_jugador ? 'selected' : '' %>>
+                        <%= jugador.nombre %> <%= jugador.apellido %>
+                    </option>
+                <% }) %>
+            </select>
+            <label>Segundo jugador:</label>
+            <select name="id_rival" required>
+                <option value="">Seleccione...</option>
+                <% jugadores.forEach(jugador => { %>
+                    <option value="<%= jugador.id_jugador %>" <%= idRival == jugador.id_jugador ? 'selected' : '' %>>
+                        <%= jugador.nombre %> <%= jugador.apellido %>
+                    </option>
+                <% }) %>
+            </select>
+            <button type="submit">Buscar partidos</button>
+        </form>
+    </div>
+
+    <% if (idJugador && idRival) { %>
+        <% if (idJugador === idRival) { %>
+            <p>Selecciona dos jugadores diferentes.</p>
+        <% } else if (partidos.length > 0) { %>
+            <table>
+                <tr>
+                    <th>Torneo</th>
+                    <th>Año</th>
+                    <th>Fase</th>
+                    <th>Modalidad</th>
+                    <th>Resultado</th>
+                    <th>Resultado entre jugadores</th>
+                </tr>
+                <% partidos.forEach(partido => { %>
+                    <tr>
+                        <td><%= partido.torneo %></td>
+                        <td><%= partido.anio %></td>
+                        <td><%= partido.fase %></td>
+                        <td><%= partido.modalidad %></td>
+                        <td><%= partido.resultado %></td>
+                        <td><%= partido.resultado_jugadores %></td>
+                    </tr>
+                <% }) %>
+            </table>
+        <% } else { %>
+            <p>No hay partidos registrados entre esos jugadores.</p>
+        <% } %>
+    <% } %>
+    <% if (typeof status !== 'undefined' && status === 'error' && tipo === 'iguales') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Selección inválida',
+            text: 'Selecciona dos jugadores diferentes.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'faltan') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Faltan jugadores',
+            text: 'Selecciona los dos jugadores para buscar sus partidos.'
+        });
+    </script>
+    <% } else if (typeof status !== 'undefined' && status === 'error' && tipo === 'jugador') { %>
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Jugador inválido',
+            text: 'Selecciona dos jugadores de la lista.'
+        });
+    </script>
+    <% } else if (idJugador && idRival && idJugador !== idRival && partidos.length === 0) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin partidos en común',
+            text: 'No hay partidos registrados entre esos jugadores.'
+        });
+    </script>
+    <% } %>
+    <script src="/js/script.js" defer></script>
+</body>
+</html>

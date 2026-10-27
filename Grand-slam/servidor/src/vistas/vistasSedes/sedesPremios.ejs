@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sedes por premios entregados</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Sedes con más/menos premios entregados</h1>
+    <a href="/sedes">Volver al menú</a>
+
+    <div class="filtro">
+        <form action="/sedes/premios" method="GET">
+            <label>Ordenar:</label>
+            <select name="orden">
+                <option value="mas" <%= orden === 'mas' ? 'selected' : '' %>>De más a menos</option>
+                <option value="menos" <%= orden === 'menos' ? 'selected' : '' %>>De menos a más</option>
+            </select>
+            <button type="submit">Ordenar</button>
+        </form>
+    </div>
+
+    <% if (sedes.length > 0) { %>
+        <table>
+            <tr>
+                <th>Sede</th>
+                <th>País</th>
+                <th>Premios entregados</th>
+            </tr>
+            <% sedes.forEach(sede => { %>
+                <tr>
+                    <td><%= sede.nombre %></td>
+                    <td><%= sede.pais %></td>
+                    <td><%= sede.premios %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay sedes cargadas.</p>
+    <% } %>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Premios de una sola sede</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Premios ganados únicamente en una sola sede</h1>
+    <a href="/premios">Volver al menú</a>
+    <p>Cada premio es una fase (Final, Semifinal...) sumando todos los torneos.</p>
+
+    <% if (premios.length > 0) { %>
+        <table>
+            <tr>
+                <th>Premio (fase)</th>
+                <th>Sede</th>
+                <th>Veces entregado</th>
+            </tr>
+            <% premios.forEach(premio => { %>
+                <tr>
+                    <td><%= premio.fase %></td>
+                    <td><%= premio.sede %></td>
+                    <td><%= premio.entregados %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay premios que se hayan ganado en una sola sede.</p>
+    <% } %>
+</body>
+</html>

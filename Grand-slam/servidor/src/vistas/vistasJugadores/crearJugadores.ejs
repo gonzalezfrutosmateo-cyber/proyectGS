@@ -16,6 +16,14 @@
         <label>Apellido:</label>
         <input type="text" name="apellido" required>
 
+        <label>País (opcional):</label>
+        <select name="id_pais">
+            <option value="">Sin país (apátrida)</option>
+            <% paises.forEach(p => { %>
+                <option value="<%= p.id_pais %>"><%= p.nombre %></option>
+            <% }) %>
+        </select>
+
         <button type="submit">Guardar Jugador</button>
         <a href="/jugadores" style="margin-left: 10px;">Cancelar</a>
     </form>

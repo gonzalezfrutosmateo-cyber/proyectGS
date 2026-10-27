@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Ganancias</title>
     <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <h1>Ganancias del Jugador</h1>
@@ -13,5 +14,14 @@
     </div>
     <br>
     <a href="/jugadores/ver" class="menu-btn" style="width: 200px; display: inline-block;">⬅ Volver a la Lista</a>
+    <% if (sinPremios) { %>
+    <script>
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin premios registrados',
+            text: 'Este jugador todavía no tiene premios asociados a sus partidos.'
+        });
+    </script>
+    <% } %>
 </body>
 </html>

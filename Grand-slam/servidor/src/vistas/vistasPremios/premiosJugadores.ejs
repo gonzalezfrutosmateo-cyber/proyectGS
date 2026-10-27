@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Premios por jugadores</title>
+    <link rel="stylesheet" href="/css/estilos.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js" defer></script>
+</head>
+<body>
+    <h1>Premios con más/menos jugadores postulados o ganadores</h1>
+    <a href="/premios">Volver al menú</a>
+    <p>Cada premio es una fase (Final, Semifinal...) sumando todos los torneos. Postulados son los que jugaron un partido de esa fase; ganadores, los que lo ganaron.</p>
+
+    <div class="filtro">
+        <form action="/premios/jugadores" method="GET">
+            <label>Contar:</label>
+            <select name="criterio">
+                <option value="postulados" <%= criterio === 'postulados' ? 'selected' : '' %>>Jugadores postulados</option>
+                <option value="ganadores" <%= criterio === 'ganadores' ? 'selected' : '' %>>Jugadores ganadores</option>
+            </select>
+            <label>Ordenar:</label>
+            <select name="orden">
+                <option value="mas" <%= orden === 'mas' ? 'selected' : '' %>>De más a menos</option>
+                <option value="menos" <%= orden === 'menos' ? 'selected' : '' %>>De menos a más</option>
+            </select>
+            <button type="submit">Ordenar</button>
+        </form>
+    </div>
+
+    <% if (premios.length > 0) { %>
+        <table>
+            <tr>
+                <th>Premio (fase)</th>
+                <th>Jugadores postulados</th>
+                <th>Jugadores ganadores</th>
+            </tr>
+            <% premios.forEach(premio => { %>
+                <tr>
+                    <td><%= premio.fase %></td>
+                    <td><%= premio.postulados %></td>
+                    <td><%= premio.ganadores %></td>
+                </tr>
+            <% }) %>
+        </table>
+    <% } else { %>
+        <p>No hay premios cargados.</p>
+    <% } %>
+</body>
+</html>

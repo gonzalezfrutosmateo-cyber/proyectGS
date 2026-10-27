@@ -33,7 +33,7 @@ export const buscarTorneos = async (req, res) => {
                 LEFT JOIN Paises p ON s.id_pais = p.id_pais
                 WHERE t.nombre LIKE ? OR t.anio LIKE ? OR s.nombre LIKE ? OR p.nombre LIKE ?
             `;
-            const texto = `${buscar}%`;
+            const texto = `%${buscar}%`;
             const [resultado] = await bd.query(consulta, [texto, texto, texto, texto]);
             torneos = resultado;
         }
@@ -69,15 +69,8 @@ export const crearTorneo = async (req, res) => {
 // Modificar Torneo
 export const seleccionarModificar = async (req, res) => {
     try {
-        const buscar = req.query.buscar || '';
-        let consulta = 'SELECT * FROM Torneos';
-        const params = [];
-        if (buscar) {
-            consulta += ' WHERE nombre LIKE ? OR anio LIKE ?';
-            params.push(`${buscar}%`, `${buscar}%`);
-        }
-        const [torneos] = await bd.query(consulta, params);
-        res.render('vistasTorneos/modificarTorneos', { torneos, buscar, status: req.query.status, tipo: req.query.tipo });
+        const [torneos] = await bd.query('SELECT * FROM Torneos');
+        res.render('vistasTorneos/modificarTorneos', { torneos, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -108,15 +101,8 @@ export const editarTorneo = async (req, res) => {
 // Eliminar Torneo
 export const seleccionarEliminar = async (req, res) => {
     try {
-        const buscar = req.query.buscar || '';
-        let consulta = 'SELECT * FROM Torneos';
-        const params = [];
-        if (buscar) {
-            consulta += ' WHERE nombre LIKE ? OR anio LIKE ?';
-            params.push(`${buscar}%`, `${buscar}%`);
-        }
-        const [torneos] = await bd.query(consulta, params);
-        res.render('vistasTorneos/eliminarTorneos', { torneos, buscar, status: req.query.status, tipo: req.query.tipo });
+        const [torneos] = await bd.query('SELECT * FROM Torneos');
+        res.render('vistasTorneos/eliminarTorneos', { torneos, status: req.query.status, tipo: req.query.tipo });
     } catch (error) { res.status(500).send('Error'); }
 };
 
@@ -179,6 +165,56 @@ export const verResultados = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al buscar resultados');
+    }
+};
+
+export const verCampeones = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        const consulta = `
+            SELECT t.nombre AS torneo, t.anio, m.nombre AS modalidad, p.resultado,
+                   GROUP_CONCAT(CONCAT(j.nombre, ' ', j.apellido) SEPARATOR ' / ') AS campeones
+            FROM Torneos t
+            JOIN Partidos p ON t.id_torneo = p.id_torneo
+            JOIN Modalidades m ON p.id_modalidad = m.id_modalidad
+            JOIN Participaciones_Partidos pp ON p.id_partido = pp.id_partido
+            JOIN Jugadores j ON pp.id_jugador = j.id_jugador
+            WHERE LOWER(TRIM(p.fase)) = 'final'
+              AND pp.es_ganador = 1
+              AND (? = '' OR t.nombre LIKE ? OR CAST(t.anio AS CHAR) LIKE ?)
+            GROUP BY t.id_torneo, p.id_partido, t.nombre, t.anio, m.nombre, p.resultado
+            ORDER BY t.anio DESC, t.nombre, m.nombre
+        `;
+        const texto = `%${buscar}%`;
+        const [campeones] = await bd.query(consulta, [buscar, texto, texto]);
+        res.render('vistasTorneos/campeonesTorneo', { campeones, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al consultar los campeones de torneos');
+    }
+};
+
+export const verResumenTorneos = async (req, res) => {
+    try {
+        const buscar = req.query.buscar || '';
+        const texto = `%${buscar}%`;
+        const consulta = `
+            SELECT t.id_torneo, t.nombre, t.anio,
+                   COUNT(DISTINCT p.id_partido) AS partidos,
+                   COUNT(DISTINCT p.id_modalidad) AS modalidades,
+                   COUNT(DISTINCT pp.id_jugador) AS jugadores
+            FROM Torneos t
+            LEFT JOIN Partidos p ON t.id_torneo = p.id_torneo
+            LEFT JOIN Participaciones_Partidos pp ON p.id_partido = pp.id_partido
+            WHERE ? = '' OR t.nombre LIKE ? OR CAST(t.anio AS CHAR) LIKE ?
+            GROUP BY t.id_torneo, t.nombre, t.anio
+            ORDER BY t.anio DESC, t.nombre
+        `;
+        const [torneos] = await bd.query(consulta, [buscar, texto, texto]);
+        res.render('vistasTorneos/resumenTorneos', { torneos, buscar });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al consultar el resumen de torneos');
     }
 };
 
